@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('hotels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('password', 100);
-            $table->rememberToken();
+            $table->string('address');
+            $table->string('phone', 20);
+            $table->string('mobile', 20);
+            $table->string('email', 50);
+            $table->string('website', 100);
+            $table->text('term_and_condition');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('hotels');
     }
 };
