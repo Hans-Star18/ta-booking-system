@@ -2,9 +2,10 @@ import "./bootstrap";
 import "../css/app.css";
 import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
-import { route as routeFn } from "ziggy-js";
+import route from "ziggy-js";
 
-global.route = routeFn;
+const routeFn = route;
+globalThis.route = routeFn;
 
 const appName = import.meta.env.VITE_APP_NAME;
 
