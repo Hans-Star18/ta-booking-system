@@ -69,7 +69,7 @@ export default function Login() {
                                                 <span
                                                     onClick={() =>
                                                         setShowPassword(
-                                                            !showPassword
+                                                            !showPassword,
                                                         )
                                                     }
                                                     className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
@@ -122,7 +122,7 @@ export default function Login() {
                                                         checked={isChecked}
                                                         onChange={() =>
                                                             setIsChecked(
-                                                                !isChecked
+                                                                !isChecked,
                                                             )
                                                         }
                                                     />
