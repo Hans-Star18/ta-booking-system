@@ -1,7 +1,7 @@
 export default function CustomerHeader() {
     return (
-        <header className="border border-bottom border-gray-200 py-3 px-8">
-            <h1 className="text-center text-3xl font-extrabold md:text-start">
+        <header className="border border-bottom border-gray-200 py-3 px-10">
+            <h1 className="text-center text-3xl font-extrabold md:text-start container m-auto">
                 Brand
             </h1>
         </header>

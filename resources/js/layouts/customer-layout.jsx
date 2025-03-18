@@ -5,7 +5,9 @@ export default function CustomerLayout({ children }) {
         <>
             <CustomerHeader />
 
-            <div className="px-10 pt-10">{children}</div>
+            <div className="px-6 lg:px-10">
+                <div className="pt-10 container m-auto">{children}</div>
+            </div>
         </>
     );
 }

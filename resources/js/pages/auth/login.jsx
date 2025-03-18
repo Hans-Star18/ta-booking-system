@@ -1,6 +1,8 @@
 import { useState } from "react";
 import AuthLayout from "@/layouts/auth-layout";
 import { Head } from "@inertiajs/react";
+import Label from "@/components/form/label";
+import Input from "@/components/form/input";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -26,46 +28,37 @@ export default function Login() {
                                 <form>
                                     <div className="space-y-6">
                                         <div>
-                                            <label
-                                                htmlFor="email"
-                                                className="mb-1.5 block text-sm font-medium text-gray-700"
-                                            >
-                                                Email{" "}
-                                                <span className="text-red-500">
-                                                    *
-                                                </span>
-                                            </label>
+                                            <Label
+                                                htmlFor={"email"}
+                                                label={"Email"}
+                                                required={true}
+                                            />
 
-                                            <input
-                                                id="email"
-                                                type="text"
-                                                name="email"
-                                                placeholder="Enter your email"
-                                                className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-blue-300 focus:ring-blue-500/20"
+                                            <Input
+                                                id={"email"}
+                                                name={"email"}
+                                                type={"email"}
+                                                placeholder={"Enter your email"}
                                             />
                                         </div>
                                         <div>
-                                            <label
-                                                htmlFor="password"
-                                                className="mb-1.5 block text-sm font-medium text-gray-700"
-                                            >
-                                                Password{" "}
-                                                <span className="text-red-500">
-                                                    *
-                                                </span>
-                                            </label>
+                                            <Label
+                                                htmlFor={"password"}
+                                                label={"Password"}
+                                                required={true}
+                                            />
                                             <div className="relative">
-                                                <input
-                                                    id="password"
+                                                <Input
+                                                    id={"password"}
+                                                    name={"password"}
                                                     type={
                                                         showPassword
                                                             ? "text"
                                                             : "password"
                                                     }
-                                                    name="password"
                                                     placeholder="Enter your password"
-                                                    className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-blue-300 focus:ring-blue-500/20"
                                                 />
+
                                                 <span
                                                     onClick={() =>
                                                         setShowPassword(
@@ -149,7 +142,7 @@ export default function Login() {
                                             </div>
                                         </div>
                                         <div>
-                                            <button className="w-full bg-blue-500 text-white shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg transition px-4 py-3 text-sm">
+                                            <button className="w-full bg-blue-500 text-white shadow-xs hover:bg-blue-600 inline-flex items-center justify-center gap-2 rounded-lg transition px-4 py-3 text-sm">
                                                 Login
                                             </button>
                                         </div>
