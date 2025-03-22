@@ -2,6 +2,7 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import "flatpickr/dist/themes/material_blue.css";
 import Flatpickr from "react-flatpickr";
 import { useState } from "react";
+import Button from "@/components/form/button";
 
 export default function AvaibilityCheck() {
     const [checkInDate, setCheckInDate] = useState(null);
@@ -24,7 +25,7 @@ export default function AvaibilityCheck() {
                             value={checkInDate}
                             onChange={(selectedDates) => {
                                 setCheckInDate(selectedDates[0]);
-                                setCheckOutDate(null); // Reset check-out saat check-in berubah
+                                setCheckOutDate(null);
                             }}
                             options={{
                                 disableMobile: "true",
@@ -50,7 +51,7 @@ export default function AvaibilityCheck() {
                             }
                             options={{
                                 disableMobile: "true",
-                                minDate: getNextDay(checkInDate), // Minimal harus +1 hari dari check-in
+                                minDate: getNextDay(checkInDate),
                                 dateFormat: "d F Y",
                             }}
                             className="w-full h-full focus:outline-none"
@@ -63,9 +64,7 @@ export default function AvaibilityCheck() {
                 </div>
 
                 <div className="col-span-2 md:col-span-1">
-                    <button className="w-full bg-blue-500 text-white shadow-xs hover:bg-blue-600 inline-flex items-center justify-center gap-2 rounded-lg transition px-4 py-3 text-sm">
-                        Check Availability
-                    </button>
+                    <Button className={"w-full"}>Check Avaibility</Button>
                 </div>
             </div>
         </div>

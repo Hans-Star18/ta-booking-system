@@ -1,0 +1,25 @@
+import { twMerge } from "tailwind-merge";
+
+export default function Button({
+    children,
+    variant = "primary",
+    className,
+    onClick,
+}) {
+    const buttonClasses = {
+        primary: "bg-blue-500 hover:bg-blue-600 text-white",
+        secondary: "bg-gray-500 hover:bg-gray-600 text-white",
+    };
+
+    let baseClasses =
+        "shadow-xs rounded-lg transition px-4 py-3 text-sm cursor-pointer";
+
+    return (
+        <button
+            onClick={onClick}
+            className={twMerge(baseClasses, buttonClasses[variant], className)}
+        >
+            {children}
+        </button>
+    );
+}
