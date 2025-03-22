@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -8,5 +8,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: "Inter", sans-serif
+    --font-sans: "Inter", sans-serif;
+}
+
+@layer components {
+    .flatpickr-wrapper {
+        @apply w-100 !inline;
+    }
 }
