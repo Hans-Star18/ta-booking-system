@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import flatpickr from "flatpickr";
-import "flatpickr/dist/themes/material_blue.css"; // Sesuaikan dengan tema yang diinginkan
+import "flatpickr/dist/themes/material_blue.css";
 import { twMerge } from "tailwind-merge";
 
 export default function Input({
@@ -15,22 +15,18 @@ export default function Input({
     const inputRef = useRef(null);
     const flatpickrInstance = useRef(null);
 
-    // Initialize flatpickr
     useEffect(() => {
-        // Only initialize if it's a date input and the ref is available
         if (type === "date" && inputRef.current) {
-            // Clean up any existing instance first
             if (flatpickrInstance.current) {
                 flatpickrInstance.current.destroy();
             }
 
-            // Create new instance
             flatpickrInstance.current = flatpickr(inputRef.current, {
                 mode: "single",
                 static: true,
                 monthSelectorType: "static",
                 dateFormat: "d F Y",
-                // enableTime: false,
+                minDate: "today",
                 prevArrow:
                     '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
                 nextArrow:
@@ -44,7 +40,6 @@ export default function Input({
             });
         }
 
-        // Clean up function
         return () => {
             if (flatpickrInstance.current) {
                 flatpickrInstance.current.destroy();
@@ -57,15 +52,15 @@ export default function Input({
         <input
             ref={inputRef}
             id={id}
-            type={type === "date" ? "text" : type} // Change to text for flatpickr
+            type={type == "date" ? "text" : type}
             name={name}
             placeholder={placeholder}
             defaultValue={value}
             className={twMerge(
                 "h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-blue-300 focus:ring-blue-500/20",
-                className,
+                className
             )}
-            readOnly={type === "date"} // Make the input readonly for date picker
+            readOnly={type === "date"}
         />
     );
 }
