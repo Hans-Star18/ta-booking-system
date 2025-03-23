@@ -4,6 +4,10 @@ import Footer from "@/components/footer";
 import { useState } from "react";
 import Stepper from "@/components/stepper";
 import CoffeeIcon from "@/components/icons/coffe-icon";
+import Label from "@/components/form/label";
+import Select from "@/components/form/select";
+import Radio from "@/components/form/radio";
+import Button from "@/components/form/button";
 
 export default function Checkout() {
     const [currentStep, setCurrentStep] = useState(2);
@@ -17,73 +21,199 @@ export default function Checkout() {
                 <div className="bg-gray-100 w-full mt-6 p-4">
                     <h2 className="text-2xl font-bold">Boking Details</h2>
                     <hr className="text-gray-300 w-full mb-4" />
-                    <table className="table-auto border-collapse border border-gray-300 w-full">
-                        <thead>
-                            <tr className="text-start align-text-top">
-                                <th className="border border-gray-300 px-4 py-2 text-start">
-                                    Rooms Details
-                                </th>
-                                <th className="border border-gray-300 px-4 py-2 text-start">
-                                    Capacity
-                                </th>
-                                <th className="border border-gray-300 px-4 py-2 text-start">
-                                    Policies
-                                </th>
-                                <th className="border border-gray-300 px-4 py-2 text-start">
-                                    Price Total
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="text-start align-text-top">
-                                <td className="border border-gray-300 px-4 py-2 text-start">
-                                    <p className="font-semibold text-base">
+
+                    <div>
+                        <div className="mb-3">
+                            <div className="grid grid-cols-6">
+                                <div className="col-span-2 border border-gray-300 px-4 py-2">
+                                    <p className="text-sm font-semibold">
+                                        Rooms Details
+                                    </p>
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2">
+                                    <p className="text-sm font-semibold">
+                                        Capacity
+                                    </p>
+                                </div>
+                                <div className="col-span-2 border border-gray-300 px-4 py-2">
+                                    <p className="text-sm font-semibold">
+                                        Policies
+                                    </p>
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2">
+                                    <p className="text-sm font-semibold">
+                                        Price
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-6">
+                                <div className="col-span-2 border border-gray-300 px-4 py-2">
+                                    <p className="font-semibold text-sm">
                                         Deluxe Room with 2 Beds
                                     </p>
-                                    <p className="text-base">
+                                    <p className="text-sm">
                                         Check In: {new Date().toLocaleString()}
                                     </p>
-                                    <p className="text-base">
+                                    <p className="text-sm">
                                         Check Out: {new Date().toLocaleString()}
                                     </p>
-                                    <p className="text-base">
+                                    <p className="text-sm">
                                         Total Nights: 1 Night
                                     </p>
-                                </td>
-                                <td className="border border-gray-300 px-4 py-2 text-start">
-                                    <p className="text-base">Max: 3</p>
-                                    <p className="text-base">Include: 2</p>
-                                </td>
-                                <td className="border border-gray-300 px-4 py-2 text-start">
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2">
+                                    <p className="text-sm">Max: 3</p>
+                                    <p className="text-sm">Include: 2</p>
+                                </div>
+                                <div className="col-span-2 border border-gray-300 px-4 py-2">
                                     <div className="mb-3 flex gap-3 items-center">
-                                        <CoffeeIcon className="size-6 text-amber-500" />{" "}
-                                        <span className="font-extrabold text-amber-500">
+                                        <CoffeeIcon className="size-5 text-amber-500" />{" "}
+                                        <span className="font-extrabold text-amber-500 text-sm">
                                             Breakfast Included
                                         </span>
                                     </div>
-                                </td>
-                                <td className="border border-gray-300 px-4 py-2 text-start">
-                                    <p className="text-base">USD 100</p>
-                                </td>
-                            </tr>
-                            <tr className="text-start align-text-top">
-                                <td
-                                    colSpan={3}
-                                    className="border border-gray-300 px-4 py-2 text-start"
-                                >
-                                    <p className="font-semibold text-base">
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2">
+                                    <p className="text-sm">USD 100</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-6">
+                                <div className="col-span-5 border border-gray-300 px-4 py-2">
+                                    <p className="font-semibold text-sm">
                                         Rates Details
                                     </p>
-                                    <p className="text-base">
+                                    <p className="text-sm">
                                         {new Date().toLocaleString()} : USD 150
                                     </p>
-                                </td>
-                                <td className="border border-gray-300 px-4 py-2 text-start">
-                                    <p className="text-base">USD 100</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2">
+                                    <p className="text-sm">USD 100</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-6">
+                                <div className="col-span-2 border border-gray-300 px-4 py-2">
+                                    <p className="font-semibold text-sm">
+                                        Deluxe Room with 2 Beds
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <Select
+                                            id={"adult-guest"}
+                                            name={"adult-guest"}
+                                            className={
+                                                "!h-8 !px-2 !py-1 !rounded-sm"
+                                            }
+                                            options={[
+                                                {
+                                                    value: "1",
+                                                    label: "1 Adult",
+                                                },
+                                                {
+                                                    value: "2",
+                                                    label: "2 Adult",
+                                                },
+                                                {
+                                                    value: "3",
+                                                    label: "3 Adult",
+                                                },
+                                            ]}
+                                        />
+
+                                        <Select
+                                            id={"child-guest"}
+                                            name={"child-guest"}
+                                            className={
+                                                "!h-8 !px-2 !py-1 !rounded-sm"
+                                            }
+                                            options={[
+                                                {
+                                                    value: "1",
+                                                    label: "1 Child",
+                                                },
+                                                {
+                                                    value: "2",
+                                                    label: "2 Child",
+                                                },
+                                                {
+                                                    value: "3",
+                                                    label: "3 Child",
+                                                },
+                                            ]}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-span-3 border border-gray-300 px-4 py-2">
+                                    <p className="font-semibold text-sm">
+                                        Bed Config
+                                    </p>
+                                    <div>
+                                        <div class="flex items-center">
+                                            <Radio
+                                                id={"bed-config-1"}
+                                                name={"bed-config"}
+                                            />
+                                            <Label
+                                                htmlFor={"bed-config-1"}
+                                                className="ms-2 mb-0 text-sm text-gray-900"
+                                            >
+                                                King Bed
+                                            </Label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <Radio
+                                                id={"bed-config-2"}
+                                                name={"bed-config"}
+                                            />
+                                            <Label
+                                                htmlFor={"bed-config-2"}
+                                                className="ms-2 mb-0 text-sm text-gray-900"
+                                            >
+                                                Twin Bed
+                                            </Label>
+                                        </div>
+                                        <p className="text-sm">
+                                            Extra Bed Confirmed
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2">
+                                    <p className="text-sm">+ USD 100</p>
+                                    <p className="text-sm text-amber-500">
+                                        Const for 1 night
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-6">
+                                <div className="col-span-5 border border-gray-300 px-4 py-2">
+                                    <p className="font-semibold text-sm">
+                                        Price Total
+                                    </p>
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2">
+                                    <p className="text-sm">USD 100</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2 justify-end">
+                            <Button
+                                className={"py-2 rounded-sm"}
+                                variant="primary"
+                            >
+                                Add More Room
+                            </Button>
+
+                            <Button
+                                className={"py-2 rounded-sm"}
+                                variant="success"
+                            >
+                                Book Now
+                            </Button>
+                        </div>
+                    </div>
                 </div>
                 <Footer />
             </CustomerLayout>

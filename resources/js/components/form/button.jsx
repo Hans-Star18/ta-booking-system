@@ -9,6 +9,7 @@ export default function Button({
     const buttonClasses = {
         primary: "bg-blue-500 hover:bg-blue-600 text-white",
         secondary: "bg-gray-500 hover:bg-gray-600 text-white",
+        success: "bg-green-500 hover:bg-green-600 text-white",
     };
 
     let baseClasses =
