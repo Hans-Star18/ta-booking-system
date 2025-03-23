@@ -24,80 +24,97 @@ export default function Checkout() {
 
                     <div>
                         <div className="mb-3">
-                            <div className="grid grid-cols-6">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2">
-                                    <p className="text-sm font-semibold">
+                            <div className="grid grid-cols-1 md:grid-cols-6">
+                                <div className="border border-gray-300 px-4 md:px-0 py-2 md:col-span-2">
+                                    <p className="text-sm font-semibold md:px-4">
                                         Rooms Details
                                     </p>
-                                </div>
-                                <div className="border border-gray-300 px-4 py-2">
-                                    <p className="text-sm font-semibold">
-                                        Capacity
-                                    </p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2">
-                                    <p className="text-sm font-semibold">
-                                        Policies
-                                    </p>
-                                </div>
-                                <div className="border border-gray-300 px-4 py-2">
-                                    <p className="text-sm font-semibold">
-                                        Price
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-6">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2">
-                                    <p className="font-semibold text-sm">
-                                        Deluxe Room with 2 Beds
-                                    </p>
-                                    <p className="text-sm">
-                                        Check In: {new Date().toLocaleString()}
-                                    </p>
-                                    <p className="text-sm">
-                                        Check Out: {new Date().toLocaleString()}
-                                    </p>
-                                    <p className="text-sm">
-                                        Total Nights: 1 Night
-                                    </p>
-                                </div>
-                                <div className="border border-gray-300 px-4 py-2">
-                                    <p className="text-sm">Max: 3</p>
-                                    <p className="text-sm">Include: 2</p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2">
-                                    <div className="mb-3 flex gap-3 items-center">
-                                        <CoffeeIcon className="size-5 text-amber-500" />{" "}
-                                        <span className="font-extrabold text-amber-500 text-sm">
-                                            Breakfast Included
-                                        </span>
+                                    <hr className="text-gray-300 mb-2 md:my-2" />
+                                    <div className="md:px-4">
+                                        <p className="font-semibold text-sm">
+                                            Deluxe Room with 2 Beds
+                                        </p>
+                                        <p className="text-sm">
+                                            Check In:{" "}
+                                            {new Date().toLocaleString()}
+                                        </p>
+                                        <p className="text-sm">
+                                            Check Out:{" "}
+                                            {new Date().toLocaleString()}
+                                        </p>
+                                        <p className="text-sm">
+                                            Total Nights: 1 Night
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="border border-gray-300 px-4 py-2">
-                                    <p className="text-sm">USD 100</p>
+                                <div className="border border-gray-300 px-4 py-2 md:px-0">
+                                    <p className="text-sm font-semibold md:px-4">
+                                        Capacity
+                                    </p>
+                                    <hr className="text-gray-300 mb-2 md:my-2" />
+
+                                    <div className="md:px-4">
+                                        <p className="text-sm">Max: 3</p>
+                                        <p className="text-sm">Include: 2</p>
+                                    </div>
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2 md:px-0 md:col-span-2">
+                                    <p className="text-sm font-semibold md:px-4">
+                                        Policies
+                                    </p>
+                                    <hr className="text-gray-300 mb-2 md:my-2" />
+
+                                    <div className="md:px-4">
+                                        <div className="mb-3 flex gap-3 items-center">
+                                            <CoffeeIcon className="size-5 text-amber-500" />{" "}
+                                            <span className="font-extrabold text-amber-500 text-sm">
+                                                Breakfast Included
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="border border-gray-300 px-4 py-2 md:px-0">
+                                    <p className="text-sm font-semibold md:px-4">
+                                        Price{" "}
+                                        <span className="hidden md:inline">
+                                            Details
+                                        </span>{" "}
+                                        <span className="md:hidden">Room</span>
+                                    </p>
+                                    <hr className="text-gray-300 mb-2 md:my-2" />
+
+                                    <div className="md:px-4">
+                                        <p className="text-sm">USD 100</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-6">
-                                <div className="col-span-5 border border-gray-300 px-4 py-2">
+                            <div className="grid grid-cols-1 md:grid-cols-6">
+                                <div className="md:col-span-5 border border-b-0 md:border border-gray-300 px-4 py-2">
                                     <p className="font-semibold text-sm">
                                         Rates Details
                                     </p>
+                                    <hr className="text-gray-300 mb-2 md:hidden" />
                                     <p className="text-sm">
                                         {new Date().toLocaleString()} : USD 150
                                     </p>
                                 </div>
-                                <div className="border border-gray-300 px-4 py-2">
-                                    <p className="text-sm">USD 100</p>
+                                <div className="border border-t-0 md:border border-gray-300 px-4 py-2 ">
+                                    <p className="font-semibold text-sm md:hidden">
+                                        Price Details
+                                    </p>
+                                    <hr className="text-gray-300 mb-2 md:hidden" />
+
+                                    <p className="text-sm">USD 150</p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-6">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2">
+                            <div className="grid grid-cols-1 md:grid-cols-6">
+                                <div className="md:col-span-2 border border-gray-300 px-4 py-2">
                                     <p className="font-semibold text-sm">
                                         Deluxe Room with 2 Beds
                                     </p>
+                                    <hr className="text-gray-300 mb-2 md:hidden" />
                                     <div className="flex gap-2">
                                         <Select
                                             id={"adult-guest"}
@@ -144,10 +161,11 @@ export default function Checkout() {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-span-3 border border-gray-300 px-4 py-2">
+                                <div className="md:col-span-3 border border-b-0 md:border border-gray-300 px-4 py-2">
                                     <p className="font-semibold text-sm">
                                         Bed Config
                                     </p>
+                                    <hr className="text-gray-300 mb-2 md:hidden" />
                                     <div>
                                         <div class="flex items-center">
                                             <Radio
@@ -178,21 +196,28 @@ export default function Checkout() {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="border border-gray-300 px-4 py-2">
-                                    <p className="text-sm">+ USD 100</p>
+                                <div className="border border-gray-300 border-t-0 md:border px-4 py-2">
+                                    <p className="font-semibold text-sm md:hidden">
+                                        Price
+                                    </p>
+                                    <hr className="text-gray-300 mb-2 md:hidden" />
+                                    <div className="text-sm flex gap-2 items-center">
+                                        <span className="mb-[2px]">+ </span>
+                                        <span>USD 100</span>
+                                    </div>
                                     <p className="text-sm text-amber-500">
                                         Const for 1 night
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-6">
-                                <div className="col-span-5 border border-gray-300 px-4 py-2">
+                            <div className="grid grid-cols-6 bg-blue-200">
+                                <div className="col-span-3 md:col-span-5 border border-gray-300 px-4 py-2">
                                     <p className="font-semibold text-sm">
                                         Price Total
                                     </p>
                                 </div>
-                                <div className="border border-gray-300 px-4 py-2">
+                                <div className="col-span-3 md:col-span-1 border border-gray-300 px-4 py-2">
                                     <p className="text-sm">USD 100</p>
                                 </div>
                             </div>
