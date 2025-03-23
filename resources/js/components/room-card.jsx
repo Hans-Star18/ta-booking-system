@@ -24,8 +24,8 @@ export default function RoomCard({
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-4 md:gap-3 bg-gray-100 md:h-52 overflow-hidden rounded-md">
-                <div className="w-full mb-3">
+            <div className="grid grid-cols-1 md:grid-cols-4 md:gap-3 bg-gray-100 md:h-52 overflow-hidden rounded-md mb-6">
+                <div className="w-full mb-3 md:mb-0">
                     <img
                         src={roomImage}
                         alt="room-image"

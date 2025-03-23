@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(["as" => "customer."], function () {
     Route::get("/", [HomeController::class, "index"])->name("home");
+    Route::get("/checkout", [HomeController::class, "checkout"])->name("checkout");
 });
 
 Route::group(["as" => "auth."], function () {
