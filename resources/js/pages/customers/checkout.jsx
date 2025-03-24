@@ -1,8 +1,6 @@
 import CustomerLayout from "@/layouts/customer-layout";
 import { Head } from "@inertiajs/react";
 import Footer from "@/components/footer";
-import { useState } from "react";
-import Stepper from "@/components/stepper";
 import CoffeeIcon from "@/components/icons/coffe-icon";
 import Label from "@/components/form/label";
 import Select from "@/components/form/select";
@@ -10,14 +8,11 @@ import Radio from "@/components/form/radio";
 import Button from "@/components/form/button";
 
 export default function Checkout() {
-    const [currentStep, setCurrentStep] = useState(2);
-
     return (
         <>
             <Head title="Checkout" />
 
-            <CustomerLayout>
-                <Stepper step={currentStep} />
+            <CustomerLayout currenStep={2}>
                 <div className="bg-gray-100 w-full mt-6 p-4">
                     <h2 className="text-2xl font-bold">Boking Details</h2>
                     <hr className="text-gray-300 w-full mb-4" />
@@ -240,6 +235,7 @@ export default function Checkout() {
                         </div>
                     </div>
                 </div>
+
                 <Footer />
             </CustomerLayout>
         </>

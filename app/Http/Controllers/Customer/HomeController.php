@@ -16,4 +16,9 @@ class HomeController extends Controller
     {
         return inertia("customers/checkout");
     }
+
+    public function confirmCheckout(): \Inertia\ResponseFactory|\Inertia\Response
+    {
+        return inertia("customers/confirm-checkout");
+    }
 }
