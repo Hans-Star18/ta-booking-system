@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(["as" => "customer."], function () {
     Route::get("/", [HomeController::class, "index"])->name("home");
-    Route::get("/checkout", [HomeController::class, "checkout"])->name("checkout");
-    Route::get("/checkout/confirm", [HomeController::class, "confirmCheckout"])->name("confirm-checkout");
+    Route::get("/reservation", [HomeController::class, "reservation"])->name("reservation");
+    Route::get("/reservation/confirm", [HomeController::class, "confirmReservation"])->name("reservation.confirm");
+    Route::get("/reservation/finish", [HomeController::class, "finishReservation"])->name("reservation.finish");
 });
 
 Route::group(["as" => "auth."], function () {

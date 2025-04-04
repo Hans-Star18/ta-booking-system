@@ -7,10 +7,10 @@ import { Textarea } from "@/components/form/textarea";
 import CustomerLayout from "@/layouts/customer-layout";
 import { Head } from "@inertiajs/react";
 
-export default function ConfirmCheckout() {
+export default function ReservationConfirm() {
     return (
         <>
-            <Head title="Checkout Confirmation" />
+            <Head title="Reservation Confirmation" />
 
             <CustomerLayout currenStep={3}>
                 <div className="bg-gray-100 w-full mt-6 p-4">

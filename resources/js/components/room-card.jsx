@@ -3,6 +3,7 @@ import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import CoffeeIcon from "@/components/icons/coffe-icon";
 import Button from "@/components/form/button";
+import ImageSlider from "@/components/image-slider";
 
 export default function RoomCard({
     roomImage,
@@ -21,6 +22,25 @@ export default function RoomCard({
 
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
+
+    const slides = [
+        {
+            url: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2620&q=80",
+        },
+        {
+            url: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80",
+        },
+        {
+            url: "https://images.unsplash.com/photo-1661961112951-f2bfd1f253ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2672&q=80",
+        },
+
+        {
+            url: "https://images.unsplash.com/photo-1512756290469-ec264b7fbf87?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2253&q=80",
+        },
+        {
+            url: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2671&q=80",
+        },
+    ];
 
     return (
         <>
@@ -85,13 +105,14 @@ export default function RoomCard({
             <Modal open={open} onClose={onCloseModal} center>
                 <h2 className="text-2xl font-bold mb-3">{roomName}</h2>
                 <div>
-                    <div className="w-full mb-3">
-                        <img
+                    <div className="w-full mb-8">
+                        {/* <img
                             src={roomImage}
                             alt="room-image"
                             loading="lazy"
                             className="w-full"
-                        />
+                        /> */}
+                        <ImageSlider slides={slides} />
                     </div>
                     <div>
                         <h4 className="font-bold text-xl">Room Description</h4>

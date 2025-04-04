@@ -7,10 +7,10 @@ import Select from "@/components/form/select";
 import Radio from "@/components/form/radio";
 import Button from "@/components/form/button";
 
-export default function Checkout() {
+export default function Reservation() {
     return (
         <>
-            <Head title="Checkout" />
+            <Head title="Reservation" />
 
             <CustomerLayout currenStep={2}>
                 <div className="bg-gray-100 w-full mt-6 p-4">
