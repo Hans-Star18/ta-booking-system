@@ -1,8 +1,8 @@
 import "./bootstrap";
 import "../css/app.css";
 import { createInertiaApp } from "@inertiajs/react";
-import { createRoot } from "react-dom/client";
 import { route as routeFn } from "ziggy-js";
+import { createRoot } from "react-dom/client";
 
 globalThis.route = routeFn;
 

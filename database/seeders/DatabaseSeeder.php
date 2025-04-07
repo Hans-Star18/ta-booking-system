@@ -5,6 +5,11 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\stub\BedSeeder;
+use Database\Seeders\stub\RoleSeeder;
+use Database\Seeders\stub\RoomSeeder;
+use Database\Seeders\stub\UserSeeder;
+use Database\Seeders\stub\HotelSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,9 +20,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
+            BedSeeder::class,
+            HotelSeeder::class,
+            RoomSeeder::class,
         ]);
     }
 }

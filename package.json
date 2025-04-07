@@ -18,9 +18,9 @@
         "@heroicons/react": "^2.2.0",
         "@inertiajs/react": "^2.0.3",
         "flatpickr": "^4.6.13",
-        "react": "^19.0.0",
+        "react": "^19.1.0",
         "react-com": "^1.0.6",
-        "react-dom": "^19.0.0",
+        "react-dom": "^19.1.0",
         "react-flatpickr": "^3.10.13",
         "react-responsive-modal": "^6.4.2",
         "tailwind-merge": "^3.0.2"

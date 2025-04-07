@@ -10,10 +10,15 @@ class Room extends Model
         'hotel_id',
         'name',
         'description',
-        'capacity',
+        'max_occupancy',
         'price',
-        'photo',
-        'extra_bed',
+        'cover_image',
+        'amenities',
+        // 'extra_bed',
+    ];
+
+    protected $casts = [
+        'amenities' => 'array',
     ];
 
     public function hotel()

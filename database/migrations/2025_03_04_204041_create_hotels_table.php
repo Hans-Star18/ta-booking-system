@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('hotels', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->uuid('uuid')->unique();
             $table->string('name', 100);
             $table->string('address');
             $table->string('phone', 20);

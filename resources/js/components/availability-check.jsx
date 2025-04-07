@@ -1,13 +1,14 @@
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import "flatpickr/dist/themes/material_blue.css";
 import Flatpickr from "react-flatpickr";
-import { useState } from "react";
 import Button from "@/components/form/button";
 
-export default function AvaibilityCheck() {
-    const [checkInDate, setCheckInDate] = useState(null);
-    const [checkOutDate, setCheckOutDate] = useState(null);
-
+export default function AvailabilityCheck({
+    checkInDate,
+    checkOutDate,
+    setCheckInDate,
+    setCheckOutDate,
+}) {
     // Fungsi untuk menambahkan 1 hari
     const getNextDay = (date) => {
         if (!date) return "today"; // Jika check-in belum dipilih, gunakan "today"

@@ -15,6 +15,7 @@ class Hotel extends Model
         'email',
         'website',
         'term_and_condition',
+        'uuid',
     ];
 
     public function user()

@@ -16,10 +16,11 @@ return new class extends Migration
             $table->foreignId('hotel_id')->constrained()->cascadeOnDelete();
             $table->string('name', 100);
             $table->text('description');
-            $table->integer('capacity');
+            $table->integer('max_occupancy');
             $table->float('price');
-            $table->string('photo');
-            $table->boolean('extra_bed')->default(false);
+            $table->string('cover_image');
+            $table->json('amenities')->nullable();
+            // $table->boolean('extra_bed')->default(false);
             $table->timestamps();
         });
     }

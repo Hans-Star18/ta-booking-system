@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50);
             $table->string('slug', 50)->unique();
-            $table->string('icon');
+            $table->text('icon')->nullable();
+            $table->integer('capacity')->default(1);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
