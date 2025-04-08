@@ -40,7 +40,7 @@ export default function Home() {
                         maxOccupancy={2}
                         bedConfig={"King"}
                         price={100}
-                        onBookNow={handleBooking()}
+                        onBookNow={handleBooking}
                     />
                     <RoomCard
                         roomImage={"/image/room.png"}

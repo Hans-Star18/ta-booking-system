@@ -5,6 +5,8 @@ export default function Button({
     variant = "primary",
     className,
     onClick,
+    type = "button",
+    disabled = false,
 }) {
     const buttonClasses = {
         primary: "bg-blue-500 hover:bg-blue-600 text-white",
@@ -20,6 +22,8 @@ export default function Button({
         <button
             onClick={onClick}
             className={twMerge(baseClasses, buttonClasses[variant], className)}
+            type={type}
+            disabled={disabled}
         >
             {children}
         </button>
