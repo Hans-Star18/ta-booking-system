@@ -7,15 +7,6 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-    /*************  ✨ Codeium Command ⭐  *************/
-    /**
-     * Customer home page.
-     *
-     * @return \Inertia\ResponseFactory|\Inertia\Response
-     */
-
-
-    /******  d77efcaf-dedd-47e3-b323-9cfb3280b6a1  *******/
     public function index(): \Inertia\ResponseFactory|\Inertia\Response
     {
         return inertia("customers/home");

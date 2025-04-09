@@ -19,7 +19,8 @@ class LoginController extends Controller
         $credentials = $request->safe()->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            return to_route('customer.home');
+            // TODO: cek apakah organizer atau admin
+            return to_route('organizer.dashboard');
         }
 
         return back()->withErrors([

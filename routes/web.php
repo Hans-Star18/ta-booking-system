@@ -1,15 +1,20 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\HomeController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Organizer\OrganizerController;
+
+Route::group(["as" => "customer."], function () {
+    Route::get("/", [HomeController::class, "index"])->name("home");
+    Route::get("/reservation", [HomeController::class, "reservation"])->name("reservation");
+    Route::get("/reservation/confirm", [HomeController::class, "confirmReservation"])->name("reservation.confirm");
+    Route::get("/reservation/finish", [HomeController::class, "finishReservation"])->name("reservation.finish");
+});
 
 Route::group(["middleware" => "auth"], function () {
-    Route::group(["as" => "customer."], function () {
-        Route::get("/", [HomeController::class, "index"])->name("home");
-        Route::get("/reservation", [HomeController::class, "reservation"])->name("reservation");
-        Route::get("/reservation/confirm", [HomeController::class, "confirmReservation"])->name("reservation.confirm");
-        Route::get("/reservation/finish", [HomeController::class, "finishReservation"])->name("reservation.finish");
+    Route::group(['as' => 'organizer.', 'prefix' => 'manage'], function () {
+        Route::get("/", [OrganizerController::class, "index"])->name("dashboard");
     });
 
     Route::get("/logout", function () {
