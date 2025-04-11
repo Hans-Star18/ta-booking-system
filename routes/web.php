@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Organizer\OrganizerController;
 
@@ -17,10 +18,7 @@ Route::group(["middleware" => "auth"], function () {
         Route::get("/", [OrganizerController::class, "index"])->name("dashboard");
     });
 
-    Route::get("/logout", function () {
-        auth()->guard("web")->logout();
-        return to_route("auth.show-login-form");
-    })->name("logout");
+    Route::get("/logout", [LogoutController::class, "logout"])->name("logout");
 });
 
 Route::group(["as" => "auth."], function () {

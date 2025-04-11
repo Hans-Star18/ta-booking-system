@@ -1,10 +1,9 @@
-import CustomerHeader from '@/components/header/customer-header'
-import Stepper from '@/components/stepper'
+import OrganizerHeader from '@/components/header/organizer-header'
 
-export default function CustomerLayout({ children }) {
+export default function OrganizerLayout({ children }) {
     return (
         <>
-            <CustomerHeader />
+            <OrganizerHeader />
 
             <div className="px-6 lg:px-10">
                 <div className="container m-auto pt-10"></div>
