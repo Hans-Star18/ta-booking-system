@@ -40,6 +40,9 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
                 'isLoggedIn' => $request->user() !== null,
             ],
+            'route' => [
+                'currentUrl' => $request->url(),
+            ],
             // 'flash' => [
             //     'success' => fn() => $request->session()->get('success'),
             //     'error' => fn() => $request->session()->get('error'),

@@ -6,9 +6,11 @@ import {
     EllipsisHorizontalIcon,
     XMarkIcon,
 } from '@heroicons/react/24/outline'
+import { useSidebar } from '@/components/context/siderbar-context'
 
-export default function OrganizerHeader({ onClick, onToggle }) {
+export default function OrganizerHeader() {
     const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false)
+    const { toggleSidebar, toggleMobileSidebar } = useSidebar()
 
     const toggleApplicationMenu = () => {
         setApplicationMenuOpen(!isApplicationMenuOpen)
@@ -20,31 +22,29 @@ export default function OrganizerHeader({ onClick, onToggle }) {
                 <div className="flex w-full items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
                     <button
                         className="block h-10 w-10 text-gray-500 lg:hidden"
-                        onClick={onToggle}
+                        onClick={toggleMobileSidebar}
                     >
                         <Bars3CenterLeftIcon className="block h-6 w-8" />
                         <XMarkIcon className="hidden size-6" />
                         {/* Cross Icon */}
                     </button>
                     <button
-                        onClick={onClick}
+                        onClick={toggleSidebar}
                         className="z-99999 hidden h-10 w-10 items-center justify-center rounded-lg border-gray-200 p-2 text-gray-500 lg:flex lg:h-11 lg:w-11 lg:border"
                     >
                         <Bars3CenterLeftIcon className="hidden fill-current lg:block" />
                     </button>
-
                     <Link
                         href={route('organizer.dashboard')}
                         className="lg:hidden"
                     >
                         Brand
                     </Link>
-
                     <button
                         onClick={toggleApplicationMenu}
                         className="z-99999 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden"
                     >
-                        <EllipsisHorizontalIcon className={'size-6'} />
+                        <EllipsisHorizontalIcon className="size-6" />
                     </button>
                 </div>
                 <div
