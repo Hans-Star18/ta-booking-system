@@ -27,9 +27,8 @@ function OrganizerLayoutContent({ children }) {
                 } ${isMobileOpen ? 'ml-0' : ''}`}
             >
                 <OrganizerHeader />
-                <div className="px-6 lg:px-10">
-                    <div className="container m-auto pt-10">{children}</div>
-                </div>
+
+                <div className="container m-auto p-4 lg:p-10">{children}</div>
             </div>
         </div>
     )

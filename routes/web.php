@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Organizer\OrganizerController;
+use App\Http\Controllers\Organizer\RoomController;
 
 Route::group(["as" => "customer."], function () {
     Route::get("/", [HomeController::class, "index"])->name("home");
@@ -16,6 +17,8 @@ Route::group(["as" => "customer."], function () {
 Route::group(["middleware" => "auth"], function () {
     Route::group(['as' => 'organizer.', 'prefix' => 'manage'], function () {
         Route::get("/", [OrganizerController::class, "index"])->name("dashboard");
+
+        Route::get("/rooms", [RoomController::class, "index"])->name("rooms.index");
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");

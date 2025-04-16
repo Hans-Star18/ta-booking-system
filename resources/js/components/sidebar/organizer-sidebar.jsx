@@ -22,7 +22,7 @@ export default function OrganizerSidebar() {
         {
             icon: <BuildingLibraryIcon className="size-6" />,
             name: 'Unit Type & Allotment',
-            href: '/rooms',
+            href: route('organizer.rooms.index'),
         },
         {
             icon: <PercentBadgeIcon className="size-6" />,
