@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Organizer;
 
-use App\Http\Controllers\Controller;
+use App\Models\Room;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class RoomController extends Controller
 {
     public function index()
     {
-        return inertia('organizers/rooms/index');
+        $rooms = Room::all();
+
+        return inertia('organizers/rooms/index', [
+            'rooms' => $rooms,
+        ]);
     }
 }

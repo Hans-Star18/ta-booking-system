@@ -5,11 +5,13 @@ namespace Database\Seeders\stub;
 use App\Models\Bed;
 use App\Models\Room;
 use App\Models\BedConfig;
+use Database\Seeders\Traits\CreateImage;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RoomSeeder extends Seeder
 {
+    use CreateImage;
+
     /**
      * Run the database seeds.
      */
@@ -25,7 +27,7 @@ class RoomSeeder extends Seeder
                 'max_occupancy' => 2,
                 'price' => 150.00,
                 'amenities' => json_encode(['Wi-Fi', 'TV', 'Mini Bar']),
-                'cover_image' => 'images/rooms/deluxe_room.jpg',
+                'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
@@ -34,7 +36,7 @@ class RoomSeeder extends Seeder
                 'max_occupancy' => 2,
                 'price' => 100.00,
                 'amenities' => json_encode(['Wi-Fi', 'TV']),
-                'cover_image' => 'images/rooms/standard_room.jpg',
+                'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
@@ -43,7 +45,7 @@ class RoomSeeder extends Seeder
                 'max_occupancy' => 4,
                 'price' => 250.00,
                 'amenities' => json_encode(['Wi-Fi', 'TV', 'Mini Bar', 'Balcony']),
-                'cover_image' => 'images/rooms/suite.jpg',
+                'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
@@ -52,7 +54,7 @@ class RoomSeeder extends Seeder
                 'max_occupancy' => 4,
                 'price' => 200.00,
                 'amenities' => json_encode(['Wi-Fi', 'TV', 'Mini Bar']),
-                'cover_image' => 'images/rooms/family_room.jpg',
+                'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
@@ -61,7 +63,7 @@ class RoomSeeder extends Seeder
                 'max_occupancy' => 1,
                 'price' => 80.00,
                 'amenities' => json_encode(['Wi-Fi', 'TV']),
-                'cover_image' => 'images/rooms/single_room.jpg',
+                'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
         ];
 
