@@ -1,12 +1,12 @@
+import { Link } from '@inertiajs/react'
 import { twMerge } from 'tailwind-merge'
 
-export default function Button({
+export default function Anchor({
     children,
     variant = 'primary',
     className,
-    onClick,
-    type = 'button',
     disabled = false,
+    href,
 }) {
     const buttonClasses = {
         primary: 'bg-blue-500 hover:bg-blue-600 text-white',
@@ -19,13 +19,12 @@ export default function Button({
         'shadow-xs rounded-lg transition px-4 py-3 text-sm cursor-pointer'
 
     return (
-        <button
-            onClick={onClick}
+        <Link
+            href={href}
             className={twMerge(baseClasses, buttonClasses[variant], className)}
-            type={type}
             disabled={disabled}
         >
             {children}
-        </button>
+        </Link>
     )
 }

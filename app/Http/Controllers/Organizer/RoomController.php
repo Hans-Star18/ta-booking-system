@@ -16,4 +16,11 @@ class RoomController extends Controller
             'rooms' => $rooms,
         ]);
     }
+
+    public function show(Room $room)
+    {
+        return inertia('organizers/rooms/show', [
+            'room' => $room,
+        ]);
+    }
 }

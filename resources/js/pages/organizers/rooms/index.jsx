@@ -1,7 +1,8 @@
+import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { Head } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 
 export default function Index({ rooms }) {
     return (
@@ -30,13 +31,17 @@ export default function Index({ rooms }) {
                                 </div>
 
                                 <div className="flex justify-between">
-                                    <Button
+                                    <Anchor
                                         variant="primary"
                                         className="flex items-center gap-1 rounded-sm px-2 py-1"
+                                        href={route(
+                                            'organizer.rooms.show',
+                                            room.id
+                                        )}
                                     >
                                         <PencilSquareIcon className="size-4" />
                                         Manage
-                                    </Button>
+                                    </Anchor>
                                     <Button
                                         variant="danger"
                                         className="flex items-center gap-1 rounded-sm px-2 py-1"
