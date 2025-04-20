@@ -18,11 +18,13 @@ export default function OrganizerSidebar() {
             icon: <Squares2X2Icon className="size-6" />,
             name: 'Dashboard',
             href: route('organizer.dashboard'),
+            routeActive: 'organizer.dashboard',
         },
         {
             icon: <BuildingLibraryIcon className="size-6" />,
             name: 'Unit Type & Allotment',
             href: route('organizer.rooms.index'),
+            routeActive: 'organizer.rooms',
         },
         {
             icon: <PercentBadgeIcon className="size-6" />,
@@ -42,8 +44,8 @@ export default function OrganizerSidebar() {
     ]
 
     const isActive = useCallback(
-        (path) => _route.currentUrl === path,
-        [_route.currentUrl]
+        (path) => route().current().includes(path),
+        [route().current()]
     )
 
     return (
@@ -76,7 +78,7 @@ export default function OrganizerSidebar() {
                     <Link
                         key={index}
                         href={item.href}
-                        className={`${isActive(item.href) ? 'bg-blue-50 text-blue-700' : ''} flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-gray-100 ${!isExpanded && !isHovered ? 'md:justify-center' : 'justify-start'}`}
+                        className={`${isActive(item.routeActive) ? 'bg-blue-50 text-blue-700' : ''} flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-gray-100 ${!isExpanded && !isHovered ? 'md:justify-center' : 'justify-start'}`}
                     >
                         <span>{item.icon}</span>
                         {(isExpanded || isHovered || isMobileOpen) && (
