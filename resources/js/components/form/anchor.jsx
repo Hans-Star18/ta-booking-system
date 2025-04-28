@@ -16,7 +16,7 @@ export default function Anchor({
     }
 
     let baseClasses =
-        'shadow-xs rounded-lg transition px-4 py-3 text-sm cursor-pointer'
+        'shadow-xs rounded-md transition px-4 py-2 text-sm cursor-pointer'
 
     return (
         <Link

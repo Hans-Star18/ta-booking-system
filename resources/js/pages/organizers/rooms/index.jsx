@@ -10,7 +10,17 @@ export default function Index({ rooms }) {
             <Head title="Organizer Unit Type & Allotment Management" />
 
             <OrganizerLayout>
-                <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-4 md:p-8">
+                <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
+                    <div className="mb-4 flex items-center justify-between">
+                        <h1 className="text-2xl font-bold">Room List</h1>
+                        <Anchor
+                            variant="primary"
+                            href={route('organizer.rooms.add')}
+                        >
+                            Add New Room
+                        </Anchor>
+                    </div>
+
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                         {rooms.map((room, index) => (
                             <div
