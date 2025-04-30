@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('max_occupancy');
             $table->float('price');
             $table->string('cover_image');
-            $table->json('amenities')->nullable();
             // $table->boolean('extra_bed')->default(false);
             $table->timestamps();
         });

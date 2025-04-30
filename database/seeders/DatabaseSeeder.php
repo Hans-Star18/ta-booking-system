@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Database\Seeders\stub\AmenitySeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\stub\BedSeeder;
@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             BedSeeder::class,
+            AmenitySeeder::class,
             HotelSeeder::class,
             RoomSeeder::class,
         ]);

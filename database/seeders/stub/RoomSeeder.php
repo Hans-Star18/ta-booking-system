@@ -4,9 +4,11 @@ namespace Database\Seeders\stub;
 
 use App\Models\Bed;
 use App\Models\Room;
+use App\Models\Amenity;
+use App\Models\AmenityConfig;
 use App\Models\BedConfig;
-use Database\Seeders\Traits\CreateImage;
 use Illuminate\Database\Seeder;
+use Database\Seeders\Traits\CreateImage;
 
 class RoomSeeder extends Seeder
 {
@@ -18,6 +20,7 @@ class RoomSeeder extends Seeder
     public function run(): void
     {
         $beds = Bed::all();
+        $amenities = Amenity::all();
 
         $rooms = [
             [
@@ -26,7 +29,6 @@ class RoomSeeder extends Seeder
                 'description' => "A spacious room with a king-size bed and a beautiful view.",
                 'max_occupancy' => 2,
                 'price' => 150.00,
-                'amenities' => json_encode(['Wi-Fi', 'TV', 'Mini Bar']),
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
@@ -35,7 +37,6 @@ class RoomSeeder extends Seeder
                 'description' => "A comfortable room with all the basic amenities.",
                 'max_occupancy' => 2,
                 'price' => 100.00,
-                'amenities' => json_encode(['Wi-Fi', 'TV']),
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
@@ -44,7 +45,6 @@ class RoomSeeder extends Seeder
                 'description' => "A luxurious suite with a separate living area and a balcony.",
                 'max_occupancy' => 4,
                 'price' => 250.00,
-                'amenities' => json_encode(['Wi-Fi', 'TV', 'Mini Bar', 'Balcony']),
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
@@ -53,7 +53,6 @@ class RoomSeeder extends Seeder
                 'description' => "A spacious room suitable for families with children.",
                 'max_occupancy' => 4,
                 'price' => 200.00,
-                'amenities' => json_encode(['Wi-Fi', 'TV', 'Mini Bar']),
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
@@ -62,7 +61,6 @@ class RoomSeeder extends Seeder
                 'description' => "A cozy room perfect for solo travelers.",
                 'max_occupancy' => 1,
                 'price' => 80.00,
-                'amenities' => json_encode(['Wi-Fi', 'TV']),
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
         ];
@@ -74,6 +72,13 @@ class RoomSeeder extends Seeder
                 BedConfig::create([
                     'room_id' => $rm->id,
                     'bed_id' => $bed->id,
+                ]);
+            }
+
+            foreach ($amenities as $amenity) {
+                AmenityConfig::create([
+                    'room_id' => $rm->id,
+                    'amenity_id' => $amenity->id,
                 ]);
             }
         }
