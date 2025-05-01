@@ -30,4 +30,19 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function isOrganizer()
+    {
+        return $this->role_id === 2;
+    }
+
+    public function isAdmin()
+    {
+        return $this->role_id === 1;
+    }
+
+    public function hotel()
+    {
+        return $this->hasOne(Hotel::class);
+    }
 }

@@ -8,6 +8,9 @@ export default function Input({
     value = '',
     className = '',
     onChange,
+    min,
+    max,
+    step,
 }) {
     return (
         <input
@@ -15,8 +18,28 @@ export default function Input({
             type={type}
             name={name}
             placeholder={placeholder}
-            defaultValue={value}
+            value={value}
             onChange={onChange}
+            min={min}
+            max={max}
+            step={step}
+            onKeyDown={(e) => {
+                if (type === 'number') {
+                    // Prevent non-numeric input
+                    if (
+                        !/[0-9]/.test(e.key) &&
+                        e.key !== 'Backspace' &&
+                        e.key !== 'Delete' &&
+                        e.key !== 'ArrowLeft' &&
+                        e.key !== 'ArrowRight' &&
+                        e.key !== 'Tab' &&
+                        e.key !== '.' &&
+                        e.key !== '-'
+                    ) {
+                        e.preventDefault()
+                    }
+                }
+            }}
             className={twMerge(
                 'h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:border-blue-300 focus:ring-3 focus:ring-blue-500/20 focus:outline-none',
                 className

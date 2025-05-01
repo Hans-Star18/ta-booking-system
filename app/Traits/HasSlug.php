@@ -13,13 +13,13 @@ trait HasSlug
         static::creating(function ($model) {
             $sourceSlug = $model->getSlugSource();
 
-            $model->slug = Str::slug($sourceSlug);
+            $model->slug = Str::slug($sourceSlug) . '-' . Str::random(5);
         });
 
         static::updating(function ($model) {
             $sourceSlug = $model->getSlugSource();
 
-            $model->slug = Str::slug($sourceSlug);
+            $model->slug = Str::slug($sourceSlug) . '-' . Str::random(5);
         });
     }
 

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\WithUploadFile;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class Room extends Model
 {
+    use WithUploadFile;
+
     protected $fillable = [
         'hotel_id',
         'name',
@@ -15,15 +18,9 @@ class Room extends Model
         'max_occupancy',
         'price',
         'cover_image',
-        'amenities',
-        // 'extra_bed',
     ];
 
     const FILE_PATH = 'rooms';
-
-    protected $casts = [
-        'amenities' => 'array',
-    ];
 
     public function coverImage(): Attribute
     {
@@ -37,9 +34,14 @@ class Room extends Model
         return $this->belongsTo(Hotel::class);
     }
 
-    public function bedConfigs()
+    public function beds()
     {
-        return $this->hasMany(BedConfig::class);
+        return $this->belongsToMany(Bed::class);
+    }
+
+    public function amenities()
+    {
+        return $this->belongsToMany(Amenity::class);
     }
 
     public function allotments()

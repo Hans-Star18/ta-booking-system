@@ -11,7 +11,6 @@ import { useCallback } from 'react'
 
 export default function OrganizerSidebar() {
     const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar()
-    const _route = usePage().props.route
 
     const navItems = [
         {

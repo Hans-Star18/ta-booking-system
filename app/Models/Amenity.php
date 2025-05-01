@@ -17,8 +17,8 @@ class Amenity extends Model
         'icon',
     ];
 
-    public function amenitiesConfigs()
+    public function rooms()
     {
-        return $this->hasMany(AmenityConfig::class);
+        return $this->belongsToMany(Room::class);
     }
 }

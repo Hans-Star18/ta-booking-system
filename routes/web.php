@@ -20,6 +20,7 @@ Route::group(["middleware" => "auth"], function () {
 
         Route::get("/rooms", [RoomController::class, "index"])->name("rooms.index");
         Route::get("/rooms/add", [RoomController::class, "add"])->name("rooms.add");
+        Route::post("/rooms/add", [RoomController::class, "store"])->name("rooms.store");
         Route::get("/rooms/{room}", [RoomController::class, "show"])->name("rooms.show");
     });
 

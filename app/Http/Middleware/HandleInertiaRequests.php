@@ -43,10 +43,13 @@ class HandleInertiaRequests extends Middleware
             'route' => [
                 'currentUrl' => $request->url(),
             ],
-            // 'flash' => [
-            //     'success' => fn() => $request->session()->get('success'),
-            //     'error' => fn() => $request->session()->get('error'),
-            // ],
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+            ],
+            'alert' => $request->session()->has('alert')
+                ? array_merge($request->session()->get('alert'), ['_id' => uniqid()])
+                : null,
             'appName' => config('app.name'),
         ]);
     }

@@ -19,8 +19,8 @@ class Bed extends Model
         'capacity',
     ];
 
-    public function bedConfigs()
+    public function rooms()
     {
-        return $this->hasMany(BedConfig::class);
+        return $this->belongsToMany(Room::class);
     }
 }
