@@ -20,7 +20,18 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             // TODO: cek apakah organizer atau admin
-            return to_route('organizer.dashboard');
+            if ($request->user()->isOrganizer()) {
+                return to_route('organizer.dashboard')->with('alert', [
+                    'type' => 'success',
+                    'message' => 'You are logged in as an organizer.',
+                ]);
+            }
+
+            dd('login with admin');
+            return to_route('admin.dashboard')->with('alert', [
+                'type' => 'success',
+                'message' => 'You are logged in as an admin.',
+            ]);
         }
 
         return back()->withErrors([

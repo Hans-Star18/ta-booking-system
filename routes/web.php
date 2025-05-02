@@ -14,8 +14,8 @@ Route::group(["as" => "customer."], function () {
     Route::get("/reservation/finish", [HomeController::class, "finishReservation"])->name("reservation.finish");
 });
 
-Route::group(["middleware" => "auth"], function () {
-    Route::group(['as' => 'organizer.', 'prefix' => 'manage'], function () {
+Route::group(["middleware" => ["auth"]], function () {
+    Route::group(['as' => 'organizer.', 'prefix' => 'manage', 'middleware' => 'isOrganizerLogin'], function () {
         Route::get("/", [OrganizerController::class, "index"])->name("dashboard");
 
         Route::get("/rooms", [RoomController::class, "index"])->name("rooms.index");
