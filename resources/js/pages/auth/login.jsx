@@ -3,7 +3,11 @@ import AuthLayout from '@/layouts/auth-layout'
 import { Head, useForm } from '@inertiajs/react'
 import Label from '@/components/form/label'
 import Input from '@/components/form/input'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import {
+    ArrowPathIcon,
+    EyeIcon,
+    EyeSlashIcon,
+} from '@heroicons/react/24/outline'
 import Button from '@/components/form/button'
 import ValidationFeedback from '@/components/form/validation-feedback'
 
@@ -165,11 +169,14 @@ export default function Login() {
                                         </div>
                                         <div>
                                             <Button
-                                                className={'w-full'}
-                                                disabled={processing}
+                                                className="flex w-full items-center justify-center gap-2"
                                                 type="submit"
                                                 variant={'primary'}
+                                                disabled={processing}
                                             >
+                                                {processing && (
+                                                    <ArrowPathIcon className="size-5 animate-spin" />
+                                                )}
                                                 Login
                                             </Button>
                                         </div>

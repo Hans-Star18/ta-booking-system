@@ -248,7 +248,7 @@ export default function Add({ beds, amenities }) {
                             />
                         </div>
 
-                        <div className="col-span-2 flex justify-end">
+                        <div className="col-span-2 flex items-center justify-end">
                             <Button
                                 variant="primary"
                                 onClick={handleSubmit}
