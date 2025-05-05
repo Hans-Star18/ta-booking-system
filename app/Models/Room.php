@@ -36,12 +36,12 @@ class Room extends Model
 
     public function beds()
     {
-        return $this->belongsToMany(Bed::class);
+        return $this->belongsToMany(Bed::class, 'bed_configs');
     }
 
     public function amenities()
     {
-        return $this->belongsToMany(Amenity::class);
+        return $this->belongsToMany(Amenity::class, 'amenity_configs');
     }
 
     public function allotments()

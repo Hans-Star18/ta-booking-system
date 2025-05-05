@@ -25,7 +25,7 @@ class RoomController extends Controller
         ]);
     }
 
-    public function add()
+    public function create()
     {
         $beds = Bed::all();
         $amenities = Amenity::all();
@@ -78,6 +78,32 @@ class RoomController extends Controller
     {
         return inertia('organizers/rooms/show', [
             'room' => $room,
+        ]);
+    }
+
+    public function destroy(Room $room)
+    {
+        DB::beginTransaction();
+        try {
+            $room->amenities()->detach();
+            $room->beds()->detach();
+            $this->deleteFile($room->cover_image);
+            $room->delete();
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error deleting room: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to delete room',
+                'type' => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Room deleted successfully',
+            'type' => 'success',
         ]);
     }
 }

@@ -18,10 +18,7 @@ Route::group(["middleware" => ["auth"]], function () {
     Route::group(['as' => 'organizer.', 'prefix' => 'manage', 'middleware' => 'isOrganizerLogin'], function () {
         Route::get("/", [OrganizerController::class, "index"])->name("dashboard");
 
-        Route::get("/rooms", [RoomController::class, "index"])->name("rooms.index");
-        Route::get("/rooms/add", [RoomController::class, "add"])->name("rooms.add");
-        Route::post("/rooms/add", [RoomController::class, "store"])->name("rooms.store");
-        Route::get("/rooms/{room}", [RoomController::class, "show"])->name("rooms.show");
+        Route::resource("rooms", RoomController::class);
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");

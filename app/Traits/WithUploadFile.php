@@ -21,4 +21,17 @@ trait WithUploadFile
 
         return $path . '/' . $filename;
     }
+
+    public function deleteFile(String $path): Bool
+    {
+        try {
+            Storage::disk('public')->delete($path);
+
+            return true;
+        } catch (\Exception $e) {
+            logger()->error('Error deleting file: ' . $e->getMessage());
+
+            return false;
+        }
+    }
 }

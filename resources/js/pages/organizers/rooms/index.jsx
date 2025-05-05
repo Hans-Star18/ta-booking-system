@@ -2,9 +2,17 @@ import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { Head, Link } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 
 export default function Index({ rooms }) {
+    const { delete: destroy, processing, errors } = useForm({})
+
+    const handleDelete = (roomId) => {
+        destroy(route('organizer.rooms.destroy', roomId), {
+            preserveScroll: true,
+        })
+    }
+
     return (
         <>
             <Head title="Organizer Unit Type & Allotment Management" />
@@ -15,7 +23,7 @@ export default function Index({ rooms }) {
                         <h1 className="text-2xl font-bold">Room List</h1>
                         <Anchor
                             variant="primary"
-                            href={route('organizer.rooms.add')}
+                            href={route('organizer.rooms.create')}
                         >
                             Add New Room
                         </Anchor>
@@ -55,6 +63,8 @@ export default function Index({ rooms }) {
                                     <Button
                                         variant="danger"
                                         className="flex items-center gap-1 rounded-sm px-2 py-1"
+                                        onClick={() => handleDelete(room.id)}
+                                        disabled={processing}
                                     >
                                         <TrashIcon className="size-4" />
                                         Delete

@@ -1,24 +1,24 @@
-import CustomerLayout from "@/layouts/customer-layout";
-import RoomCard from "@/components/room-card";
-import Footer from "@/components/footer";
-import AvailabilityCheck from "@/components/availability-check";
-import { Head } from "@inertiajs/react";
-import { useState } from "react";
+import CustomerLayout from '@/layouts/customer-layout'
+import RoomCard from '@/components/room-card'
+import Footer from '@/components/footer'
+import AvailabilityCheck from '@/components/availability-check'
+import { Head } from '@inertiajs/react'
+import { useState } from 'react'
 
 export default function Home() {
-    const [checkInDate, setCheckInDate] = useState(null);
-    const [checkOutDate, setCheckOutDate] = useState(null);
+    const [checkInDate, setCheckInDate] = useState(null)
+    const [checkOutDate, setCheckOutDate] = useState(null)
 
     const handleBooking = (roomId) => {
         if (!checkInDate) {
-            alert("Silakan isi tanggal check-in terlebih dahulu.");
-            return;
+            alert('Silakan isi tanggal check-in terlebih dahulu.')
+            return
         }
 
-        console.log("Booking room", roomId, "on", checkInDate, checkOutDate);
+        console.log('Booking room', roomId, 'on', checkInDate, checkOutDate)
         // Misal pakai Inertia redirect
         // router.get(`/booking/${roomId}`, { checkin: checkInDate, checkout: checkOutDate });
-    };
+    }
 
     return (
         <>
@@ -34,28 +34,28 @@ export default function Home() {
 
                 <div>
                     <RoomCard
-                        roomImage={"/image/room.png"}
-                        roomName={"Deluxe Room 1"}
+                        roomImage={'/image/room.png'}
+                        roomName={'Deluxe Room 1'}
                         hasBreakfast={true}
                         maxOccupancy={2}
-                        bedConfig={"King"}
+                        bedConfig={'King'}
                         price={100}
                         onBookNow={handleBooking}
                     />
                     <RoomCard
-                        roomImage={"/image/room.png"}
-                        roomName={"Deluxe Room 1"}
+                        roomImage={'/image/room.png'}
+                        roomName={'Deluxe Room 1'}
                         hasBreakfast={true}
                         maxOccupancy={2}
-                        bedConfig={"King"}
+                        bedConfig={'King'}
                         price={100}
                     />
                     <RoomCard
-                        roomImage={"/image/room.png"}
-                        roomName={"Deluxe Room 1"}
+                        roomImage={'/image/room.png'}
+                        roomName={'Deluxe Room 1'}
                         hasBreakfast={true}
                         maxOccupancy={2}
-                        bedConfig={"King"}
+                        bedConfig={'King'}
                         price={100}
                     />
                 </div>
@@ -63,5 +63,5 @@ export default function Home() {
                 <Footer />
             </CustomerLayout>
         </>
-    );
+    )
 }
