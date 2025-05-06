@@ -1,3 +1,4 @@
+import Confirm from '@/components/alert/confirm'
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import OrganizerLayout from '@/layouts/organizer-layout'
@@ -8,8 +9,13 @@ export default function Index({ rooms }) {
     const { delete: destroy, processing, errors } = useForm({})
 
     const handleDelete = (roomId) => {
-        destroy(route('organizer.rooms.destroy', roomId), {
-            preserveScroll: true,
+        Confirm({
+            action: 'delete',
+            onConfirm: () => {
+                destroy(route('organizer.rooms.destroy', roomId), {
+                    preserveScroll: true,
+                })
+            },
         })
     }
 
