@@ -20,6 +20,8 @@ class Room extends Model
         'cover_image',
     ];
 
+    protected $with = ['amenities', 'beds'];
+
     const FILE_PATH = 'rooms';
 
     public function coverImage(): Attribute

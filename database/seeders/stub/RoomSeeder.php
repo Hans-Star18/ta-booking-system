@@ -26,41 +26,46 @@ class RoomSeeder extends Seeder
             [
                 'hotel_id' => 1,
                 'name' => "Deluxe Room",
-                'description' => "A spacious room with a king-size bed and a beautiful view.",
+                'description' => "<p>This spacious room features a luxurious king-size bed, perfect for a restful night's sleep. Large windows allow natural light to flood the space, offering a stunning view of the surrounding landscape. Whether you're relaxing indoors or admiring the scenery, the room combines comfort and beauty to create an unforgettable stay.</p>
+",
                 'max_occupancy' => 2,
-                'price' => 150.00,
+                'price' => 1000000,
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
                 'name' => "Standard Room",
-                'description' => "A comfortable room with all the basic amenities.",
+                'description' => "<p>This comfortable room offers all the basic amenities for a restful stay. With a spacious layout and modern decor, it provides a cozy space for travelers to unwind and recharge. Whether you're working or relaxing, the room ensures a comfortable and convenient experience.</p>
+",
                 'max_occupancy' => 2,
-                'price' => 100.00,
+                'price' => 1000000,
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
                 'name' => "Suite",
-                'description' => "A luxurious suite with a separate living area and a balcony.",
+                'description' => "<p>This luxurious suite offers a separate living area and a private balcony, providing a comfortable and stylish space for travelers to unwind and enjoy their stay. Whether you're working or relaxing, the room ensures a comfortable and convenient experience.</p>
+",
                 'max_occupancy' => 4,
-                'price' => 250.00,
+                'price' => 1000000,
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
                 'name' => "Family Room",
-                'description' => "A spacious room suitable for families with children.",
+                'description' => "<p>This spacious room is designed for families with children, offering a comfortable and cozy space for everyone to enjoy. The room features a comfortable king-size bed, a spacious living area, and a private balcony, providing a comfortable and convenient experience for families.</p>
+",
                 'max_occupancy' => 4,
-                'price' => 200.00,
+                'price' => 1000000,
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
             [
                 'hotel_id' => 1,
                 'name' => "Single Room",
-                'description' => "A cozy room perfect for solo travelers.",
+                'description' => "<p>This cozy room is perfect for solo travelers, offering a comfortable and convenient space for a restful stay. Whether you're working or relaxing, the room ensures a comfortable and convenient experience.</p>
+",
                 'max_occupancy' => 1,
-                'price' => 80.00,
+                'price' => 1000000,
                 'cover_image' => $this->createImage(Room::FILE_PATH),
             ],
         ];

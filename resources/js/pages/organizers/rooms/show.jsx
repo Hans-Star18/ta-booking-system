@@ -1,5 +1,8 @@
+import Currency from '@/components/format/currency'
 import OrganizerLayout from '@/layouts/organizer-layout'
+import { CheckIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 import { Head } from '@inertiajs/react'
+import parse from 'html-react-parser'
 
 export default function Show({ room }) {
     return (
@@ -13,6 +16,80 @@ export default function Show({ room }) {
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                         <div className="col-span-3">
                             <h1 className="text-2xl font-bold">{room.name}</h1>
+                        </div>
+
+                        <div className="overflow-hidden rounded-sm">
+                            <img
+                                src={room.cover_image}
+                                alt={`image-${room.name}`}
+                                loading="lazy"
+                                className="h-full w-full object-cover"
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <h2 className="mb-3 text-lg font-bold">
+                                Description
+                            </h2>
+                            <div className="text-gray-600">
+                                {parse(room.description || '')}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 className="mb-3 text-lg font-bold">
+                                Amenities
+                            </h2>
+                            <div className="grid grid-cols-2 gap-2 text-gray-600">
+                                {room.amenities.map((amenity) => (
+                                    <div
+                                        className="flex items-center gap-2"
+                                        key={amenity.id}
+                                    >
+                                        <CheckIcon className="size-4 font-bold" />{' '}
+                                        {amenity.name}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 className="mb-3 text-lg font-bold">Beds</h2>
+                            <div className="grid grid-cols-2 gap-2 text-gray-600">
+                                {room.beds.map((bed) => (
+                                    <div
+                                        className="flex items-center gap-2"
+                                        key={bed.id}
+                                    >
+                                        <CheckIcon className="size-4 font-bold" />{' '}
+                                        {bed.name}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="mb-3">
+                                <h2 className="text-lg font-bold">
+                                    Max Occupancy
+                                </h2>
+
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <ChevronDoubleRightIcon className="size-4" />
+                                    {room.max_occupancy}{' '}
+                                    <span className="text-sm">
+                                        (Max {room.max_occupancy} guests)
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <h2 className="text-lg font-bold">Price</h2>
+
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <ChevronDoubleRightIcon className="size-4" />
+                                    <Currency value={room.price} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
