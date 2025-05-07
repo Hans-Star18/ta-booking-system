@@ -1,10 +1,71 @@
+import { useEffect, useRef, useState } from 'react'
 import Currency from '@/components/format/currency'
 import OrganizerLayout from '@/layouts/organizer-layout'
-import { CheckIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
+import {
+    BuildingLibraryIcon,
+    CheckIcon,
+    ChevronDoubleRightIcon,
+} from '@heroicons/react/24/outline'
 import { Head } from '@inertiajs/react'
 import parse from 'html-react-parser'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+// import { EventInput, DateSelectArg, EventClickArg } from '@fullcalendar/core'
 
 export default function Show({ room }) {
+    const calendarRef = useRef(null)
+    const [events, setEvents] = useState([])
+
+    const calendarsEvents = {
+        Danger: 'danger',
+        Success: 'success',
+        Primary: 'primary',
+        Warning: 'warning',
+    }
+
+    useEffect(() => {
+        setEvents([
+            {
+                id: '1',
+                title: '5',
+                start: new Date().toISOString().split('T')[0],
+                extendedProps: { calendar: 'Success' },
+            },
+            {
+                id: '2',
+                title: '10',
+                start: new Date(Date.now() + 86400000)
+                    .toISOString()
+                    .split('T')[0],
+                extendedProps: { calendar: 'Success' },
+            },
+            {
+                id: '3',
+                title: '15',
+                start: new Date(Date.now() + 172800000)
+                    .toISOString()
+                    .split('T')[0],
+                extendedProps: { calendar: 'Success' },
+            },
+        ])
+    }, [])
+
+    const renderEventContent = (eventInfo) => {
+        const colorClass = `fc-bg-${eventInfo.event.extendedProps.calendar.toLowerCase()}`
+        return (
+            <div
+                className={`event-fc-color fc-event-main flex ${colorClass} items-center rounded-sm p-1`}
+            >
+                <div className="mr-2 flex items-center gap-2 font-bold text-slate-900">
+                    <BuildingLibraryIcon className="size-5" /> =
+                </div>
+                <div className="fc-event-title">{eventInfo.event.title}</div>
+            </div>
+        )
+    }
+
     return (
         <>
             <Head
@@ -89,6 +150,42 @@ export default function Show({ room }) {
                                     <ChevronDoubleRightIcon className="size-4" />
                                     <Currency value={room.price} />
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="col-span-3">
+                            <h2 className="mb-3 text-lg font-bold">
+                                Allotments
+                            </h2>
+
+                            <div className="custom-calendar">
+                                <FullCalendar
+                                    ref={calendarRef}
+                                    plugins={[
+                                        dayGridPlugin,
+                                        timeGridPlugin,
+                                        interactionPlugin,
+                                    ]}
+                                    initialView="dayGridMonth"
+                                    headerToolbar={{
+                                        left: 'prev,next',
+                                        center: 'title',
+                                        right: 'batchUpdateButton',
+                                    }}
+                                    events={events}
+                                    // selectable={true}
+                                    // select={handleDateSelect}
+                                    // eventClick={handleEventClick}
+                                    eventContent={renderEventContent}
+                                    customButtons={{
+                                        batchUpdateButton: {
+                                            text: 'Batch Update +',
+                                            click: () => {
+                                                console.log('batch update')
+                                            },
+                                        },
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
