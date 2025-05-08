@@ -183,4 +183,8 @@
     .fc .fc-timegrid-axis-cushion {
         @apply text-sm font-medium text-gray-500;
     }
+
+    .fc .fc-daygrid-day-events {
+        @apply me-2.5;
+    }
 }

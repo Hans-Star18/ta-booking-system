@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import Currency from '@/components/format/currency'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import {
+    BookmarkSquareIcon,
     BuildingLibraryIcon,
     CheckIcon,
     ChevronDoubleRightIcon,
+    PencilIcon,
+    PencilSquareIcon,
 } from '@heroicons/react/24/outline'
 import { Head } from '@inertiajs/react'
 import parse from 'html-react-parser'
@@ -13,11 +16,17 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import Modal from 'react-responsive-modal'
+import Button from '@/components/form/button'
+import Input from '@/components/form/input'
 // import { EventInput, DateSelectArg, EventClickArg } from '@fullcalendar/core'
 
 export default function Show({ room }) {
     const calendarRef = useRef(null)
     const [events, setEvents] = useState([])
+    const [allotment, setAllotment] = useState(0)
+    const [onRes, setOnRes] = useState(0)
+    const [available, setAvailable] = useState(0)
+    const [isEditing, setIsEditing] = useState(false)
     const [openManageAllotmentModal, setOpenManageAllotmentModal] =
         useState(false)
     const [openBatchUpdateAllotmentModal, setOpenBatchUpdateAllotmentModal] =
@@ -35,17 +44,43 @@ export default function Show({ room }) {
     const calendarsEvents = {
         Danger: 'danger',
         Success: 'success',
-        Primary: 'primary',
-        Warning: 'warning',
     }
 
     useEffect(() => {
-        setEvents([
+        const allEvents = []
+
+        const startDate = new Date(new Date().getFullYear() - 3, 0, 1)
+        const endDate = new Date(new Date().getFullYear() + 3, 11, 31)
+
+        let currentDate = new Date(startDate)
+
+        while (currentDate <= endDate) {
+            allEvents.push({
+                id: `default-${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()}`,
+                title: 'Close',
+                start: currentDate.toISOString().split('T')[0],
+                extendedProps: {
+                    calendar: 'Danger',
+                    allotment: 0,
+                    onRes: 0,
+                    available: 0,
+                },
+            })
+
+            currentDate.setDate(currentDate.getDate() + 1)
+        }
+
+        const specificEvents = [
             {
                 id: '1',
                 title: '5',
                 start: new Date().toISOString().split('T')[0],
-                extendedProps: { calendar: 'Success' },
+                extendedProps: {
+                    calendar: 'Success',
+                    allotment: 5,
+                    onRes: 5,
+                    available: 5,
+                },
             },
             {
                 id: '2',
@@ -53,7 +88,12 @@ export default function Show({ room }) {
                 start: new Date(Date.now() + 86400000)
                     .toISOString()
                     .split('T')[0],
-                extendedProps: { calendar: 'Success' },
+                extendedProps: {
+                    calendar: 'Success',
+                    allotment: 10,
+                    onRes: 10,
+                    available: 10,
+                },
             },
             {
                 id: '3',
@@ -61,16 +101,40 @@ export default function Show({ room }) {
                 start: new Date(Date.now() + 172800000)
                     .toISOString()
                     .split('T')[0],
-                extendedProps: { calendar: 'Success' },
+                extendedProps: {
+                    calendar: 'Success',
+                    allotment: 15,
+                    onRes: 15,
+                    available: 15,
+                },
             },
-        ])
+        ]
+
+        const mergedEvents = allEvents.map((defaultEvent) => {
+            const specificEvent = specificEvents.find(
+                (event) => event.start === defaultEvent.start
+            )
+            return specificEvent || defaultEvent
+        })
+
+        setEvents(mergedEvents)
     }, [])
 
-    const handleDateSelect = (selectInfo) => {
-        resetModalFields()
-        setEventStartDate(selectInfo.startStr)
-        setEventEndDate(selectInfo.endStr || selectInfo.startStr)
+    const handleEventClick = (clickInfo) => {
+        const event = clickInfo.event
+        setAllotment(event.extendedProps.allotment)
+        setOnRes(event.extendedProps.onRes)
+        setAvailable(event.extendedProps.available)
         onOpenManageAllotmentModal()
+    }
+
+    const handleUpdateClick = () => {
+        setIsEditing(true)
+    }
+
+    const handleSaveChanges = () => {
+        // Here you can add logic to save the changes
+        setIsEditing(false)
     }
 
     const resetModalFields = () => {
@@ -199,8 +263,7 @@ export default function Show({ room }) {
                                     }}
                                     events={events}
                                     selectable={true}
-                                    select={handleDateSelect}
-                                    // eventClick={handleEventClick}
+                                    eventClick={handleEventClick}
                                     eventContent={renderEventContent}
                                     customButtons={{
                                         batchUpdateButton: {
@@ -220,11 +283,76 @@ export default function Show({ room }) {
             <Modal
                 open={openManageAllotmentModal}
                 onClose={onCloseManageAllotmentModal}
-                modalId="add-allotment"
+                modalId="manage-allotment"
                 center
+                classNames={{
+                    modal: 'rounded-sm shadow-md',
+                }}
             >
                 <div className="pt-8">
-                    <div className="h-72 w-72 bg-blue-400"></div>
+                    <div className="h-fit w-72">
+                        <div className="w-full p-4">
+                            <form action="" method="POST">
+                                <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
+                                    <p className="w-24">Allotment</p>
+                                    {isEditing ? (
+                                        <div className="flex flex-1 items-center gap-2">
+                                            <span>:</span>
+                                            <Input
+                                                id="allotment"
+                                                type="number"
+                                                name="allotment"
+                                                value={allotment}
+                                                onChange={(e) => {
+                                                    if (e.target.value === '') {
+                                                        setAllotment(0)
+                                                    } else {
+                                                        setAllotment(
+                                                            parseInt(
+                                                                e.target.value
+                                                            )
+                                                        )
+                                                    }
+                                                }}
+                                                className="h-6 flex-1 px-4 py-1"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <p>: {allotment}</p>
+                                    )}
+                                </div>
+                                <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
+                                    <p className="w-24">On Res</p>
+                                    <p>: {onRes}</p>
+                                </div>
+                                <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
+                                    <p className="w-24">Available</p>
+                                    <p>: {available}</p>
+                                </div>
+                                <div className="flex justify-end">
+                                    {isEditing ? (
+                                        <Button
+                                            variant="primary"
+                                            className="flex items-center gap-1 rounded-sm px-2 py-1"
+                                            onClick={handleSaveChanges}
+                                        >
+                                            <BookmarkSquareIcon className="size-4" />
+                                            Save Changes
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="success"
+                                            className="flex items-center gap-1 rounded-sm px-2 py-1"
+                                            onClick={handleUpdateClick}
+                                        >
+                                            <PencilSquareIcon className="size-4" />
+                                            Update
+                                        </Button>
+                                    )}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </Modal>
         </>
