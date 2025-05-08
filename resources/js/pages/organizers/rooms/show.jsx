@@ -12,11 +12,25 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import Modal from 'react-responsive-modal'
 // import { EventInput, DateSelectArg, EventClickArg } from '@fullcalendar/core'
 
 export default function Show({ room }) {
     const calendarRef = useRef(null)
     const [events, setEvents] = useState([])
+    const [openManageAllotmentModal, setOpenManageAllotmentModal] =
+        useState(false)
+    const [openBatchUpdateAllotmentModal, setOpenBatchUpdateAllotmentModal] =
+        useState(false)
+    const [eventStartDate, setEventStartDate] = useState('')
+    const [eventEndDate, setEventEndDate] = useState('')
+
+    const onOpenManageAllotmentModal = () => setOpenManageAllotmentModal(true)
+    const onCloseManageAllotmentModal = () => setOpenManageAllotmentModal(false)
+    const onOpenBatchUpdateAllotmentModal = () =>
+        setOpenBatchUpdateAllotmentModal(true)
+    const onCloseBatchUpdateAllotmentModal = () =>
+        setOpenBatchUpdateAllotmentModal(false)
 
     const calendarsEvents = {
         Danger: 'danger',
@@ -51,6 +65,17 @@ export default function Show({ room }) {
             },
         ])
     }, [])
+
+    const handleDateSelect = (selectInfo) => {
+        resetModalFields()
+        setEventStartDate(selectInfo.startStr)
+        setEventEndDate(selectInfo.endStr || selectInfo.startStr)
+        onOpenManageAllotmentModal()
+    }
+
+    const resetModalFields = () => {
+        console.log('resetModalFields')
+    }
 
     const renderEventContent = (eventInfo) => {
         const colorClass = `fc-bg-${eventInfo.event.extendedProps.calendar.toLowerCase()}`
@@ -173,8 +198,8 @@ export default function Show({ room }) {
                                         right: 'batchUpdateButton',
                                     }}
                                     events={events}
-                                    // selectable={true}
-                                    // select={handleDateSelect}
+                                    selectable={true}
+                                    select={handleDateSelect}
                                     // eventClick={handleEventClick}
                                     eventContent={renderEventContent}
                                     customButtons={{
@@ -191,6 +216,17 @@ export default function Show({ room }) {
                     </div>
                 </div>
             </OrganizerLayout>
+
+            <Modal
+                open={openManageAllotmentModal}
+                onClose={onCloseManageAllotmentModal}
+                modalId="add-allotment"
+                center
+            >
+                <div className="pt-8">
+                    <div className="h-72 w-72 bg-blue-400"></div>
+                </div>
+            </Modal>
         </>
     )
 }
