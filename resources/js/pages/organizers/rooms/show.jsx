@@ -6,7 +6,6 @@ import {
     BuildingLibraryIcon,
     CheckIcon,
     ChevronDoubleRightIcon,
-    PencilIcon,
     PencilSquareIcon,
 } from '@heroicons/react/24/outline'
 import { Head, useForm } from '@inertiajs/react'
@@ -18,13 +17,10 @@ import interactionPlugin from '@fullcalendar/interaction'
 import Modal from 'react-responsive-modal'
 import Button from '@/components/form/button'
 import Input from '@/components/form/input'
-// import { EventInput, DateSelectArg, EventClickArg } from '@fullcalendar/core'
 
 export default function Show({ room, allotments }) {
     const calendarRef = useRef(null)
     const [events, setEvents] = useState([])
-    const [selectedDate, setSelectedDate] = useState()
-    const [allotment, setAllotment] = useState(0)
     const [onRes, setOnRes] = useState(0)
     const [available, setAvailable] = useState(0)
     const [isEditing, setIsEditing] = useState(false)
@@ -45,59 +41,31 @@ export default function Show({ room, allotments }) {
         setOpenBatchUpdateAllotmentModal(false)
 
     useEffect(() => {
-        const allEvents = []
-
         const startDate = new Date(new Date().getFullYear() - 3, 0, 1)
         const endDate = new Date(new Date().getFullYear() + 3, 11, 31)
 
-        let currentDate = new Date(startDate)
+        const defaultEvents = generateDefaultEvents(startDate, endDate)
+        const specificEvents = (allotments || []).map((a) => ({
+            id: `allotment-${a.id}`,
+            title: a.allotment,
+            start: a.date,
+            extendedProps: {
+                calendar: 'Success',
+                allotment: a.allotment,
+                onRes: 0,
+                available: 0,
+            },
+        }))
 
-        while (currentDate <= endDate) {
-            allEvents.push({
-                id: `default-${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()}`,
-                title: 'Close',
-                start: currentDate.toISOString().split('T')[0],
-                extendedProps: {
-                    calendar: 'Danger',
-                    allotment: 0,
-                    onRes: 0,
-                    available: 0,
-                },
-            })
-
-            currentDate.setDate(currentDate.getDate() + 1)
-        }
-
-        const specificEvents = allotments
-            ? allotments.map((allotment) => {
-                  return {
-                      id: `allotment-${allotment.id}`,
-                      title: allotment.allotment,
-                      start: allotment.date,
-                      extendedProps: {
-                          calendar: 'Success',
-                          allotment: allotment.allotment,
-                          onRes: 0,
-                          available: 0,
-                      },
-                  }
-              })
-            : []
-
-        const mergedEvents = allEvents.map((defaultEvent) => {
-            const specificEvent = specificEvents.find(
-                (event) => event.start === defaultEvent.start
-            )
-            return specificEvent || defaultEvent
-        })
-
-        setEvents(mergedEvents)
+        setEvents(mergeEvents(defaultEvents, specificEvents))
     }, [allotments])
 
     const handleEventClick = (clickInfo) => {
         const event = clickInfo.event
-        setData('date', event.start)
-        setAllotment(event.extendedProps.allotment)
+        setData({
+            date: event.start,
+            allotment: event.extendedProps.allotment,
+        })
         setOnRes(0)
         setAvailable(0)
         onOpenManageAllotmentModal()
@@ -108,18 +76,44 @@ export default function Show({ room, allotments }) {
     }
 
     const handleSaveChanges = () => {
-        setIsEditing(false)
         post(route('organizer.rooms.allotment', { room: room.id }), {
             preserveScroll: true,
             onSuccess: (response) => {
-                console.log(response)
-                // onCloseManageAllotmentModal()
+                setIsEditing(false)
+                if (response.props.alert?.type === 'error') {
+                    onCloseManageAllotmentModal()
+                }
             },
         })
     }
 
-    const resetModalFields = () => {
-        console.log('resetModalFields')
+    const generateDefaultEvents = (start, end) => {
+        const events = []
+        const currentDate = new Date(start)
+
+        while (currentDate <= end) {
+            events.push({
+                id: `default-${currentDate.toISOString().split('T')[0]}`,
+                title: 'Close',
+                start: currentDate.toISOString().split('T')[0],
+                extendedProps: {
+                    calendar: 'Danger',
+                    allotment: 0,
+                    onRes: 0,
+                    available: 0,
+                },
+            })
+            currentDate.setDate(currentDate.getDate() + 1)
+        }
+
+        return events
+    }
+
+    const mergeEvents = (defaults, specifics) => {
+        return defaults.map((event) => {
+            const found = specifics.find((e) => e.start === event.start)
+            return found || event
+        })
     }
 
     const renderEventContent = (eventInfo) => {
@@ -284,29 +278,18 @@ export default function Show({ room, allotments }) {
                                                 id="allotment"
                                                 type="number"
                                                 name="allotment"
-                                                value={data.allotment || 0}
-                                                onChange={(e) => {
+                                                value={data.allotment}
+                                                onChange={(e) =>
                                                     setData(
                                                         'allotment',
                                                         e.target.value
                                                     )
-                                                }}
+                                                }
                                                 className="h-6 flex-1 px-2 py-1"
                                             />
-
-                                            {/* <input
-                                                type="text"
-                                                name="allotment"
-                                                onChange={(e) => {
-                                                    setData(
-                                                        'allotment',
-                                                        e.target.value
-                                                    )
-                                                }}
-                                            /> */}
                                         </div>
                                     ) : (
-                                        <p>: {allotment}</p>
+                                        <p>: {data.allotment || 0}</p>
                                     )}
                                 </div>
                                 <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
@@ -323,6 +306,7 @@ export default function Show({ room, allotments }) {
                                             variant="primary"
                                             className="flex items-center gap-1 rounded-sm px-2 py-1"
                                             onClick={handleSaveChanges}
+                                            disabled={processing}
                                         >
                                             <BookmarkSquareIcon className="size-4" />
                                             Save Changes
@@ -332,6 +316,7 @@ export default function Show({ room, allotments }) {
                                             variant="success"
                                             className="flex items-center gap-1 rounded-sm px-2 py-1"
                                             onClick={handleUpdateClick}
+                                            disabled={processing}
                                         >
                                             <PencilSquareIcon className="size-4" />
                                             Update
