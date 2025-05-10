@@ -19,6 +19,7 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::get("/", [OrganizerController::class, "index"])->name("dashboard");
 
         Route::resource("rooms", RoomController::class);
+        Route::post("rooms/{room}/allotment", [RoomController::class, "allotment"])->name("rooms.allotment");
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");

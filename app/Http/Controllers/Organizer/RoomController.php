@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Organizer\StoreRoomRequest;
+use Carbon\Carbon;
 
 class RoomController extends Controller
 {
@@ -76,8 +77,11 @@ class RoomController extends Controller
 
     public function show(Room $room)
     {
+        $allotments = $room->allotments->sortBy('date')->values()->toArray();
+
         return inertia('organizers/rooms/show', [
             'room' => $room,
+            'allotments' => $allotments,
         ]);
     }
 
@@ -103,6 +107,51 @@ class RoomController extends Controller
 
         return back()->with('alert', [
             'message' => 'Room deleted successfully',
+            'type' => 'success',
+        ]);
+    }
+
+    public function allotment(Room $room, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $date = Carbon::parse($request->date);
+            if ($date->isPast()) {
+                return back()->with('alert', [
+                    'message' => 'Cannot set allotment for past dates',
+                    'type' => 'error',
+                ]);
+            }
+
+            $existingAllotment = $room->allotments->where('date', $date->format('Y-m-d'))->first();
+            if ($existingAllotment && (blank($request->allotment) || $request->allotment == 0)) {
+                $existingAllotment->delete();
+            } else {
+                if (blank($request->allotment) || $request->allotment == 0) {
+                    return;
+                }
+
+                $room->allotments()->updateOrCreate([
+                    'date' => $date->format('Y-m-d'),
+                    'room_id' => $room->id,
+                ], [
+                    'allotment' => $request->allotment,
+                ]);
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error updating allotment: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to update allotment',
+                'type' => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Allotment updated successfully',
             'type' => 'success',
         ]);
     }

@@ -9,7 +9,7 @@ import {
     PencilIcon,
     PencilSquareIcon,
 } from '@heroicons/react/24/outline'
-import { Head } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import parse from 'html-react-parser'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -20,9 +20,10 @@ import Button from '@/components/form/button'
 import Input from '@/components/form/input'
 // import { EventInput, DateSelectArg, EventClickArg } from '@fullcalendar/core'
 
-export default function Show({ room }) {
+export default function Show({ room, allotments }) {
     const calendarRef = useRef(null)
     const [events, setEvents] = useState([])
+    const [selectedDate, setSelectedDate] = useState()
     const [allotment, setAllotment] = useState(0)
     const [onRes, setOnRes] = useState(0)
     const [available, setAvailable] = useState(0)
@@ -31,8 +32,10 @@ export default function Show({ room }) {
         useState(false)
     const [openBatchUpdateAllotmentModal, setOpenBatchUpdateAllotmentModal] =
         useState(false)
-    const [eventStartDate, setEventStartDate] = useState('')
-    const [eventEndDate, setEventEndDate] = useState('')
+    const { data, setData, post, processing, errors } = useForm({
+        date: '',
+        allotment: '',
+    })
 
     const onOpenManageAllotmentModal = () => setOpenManageAllotmentModal(true)
     const onCloseManageAllotmentModal = () => setOpenManageAllotmentModal(false)
@@ -40,11 +43,6 @@ export default function Show({ room }) {
         setOpenBatchUpdateAllotmentModal(true)
     const onCloseBatchUpdateAllotmentModal = () =>
         setOpenBatchUpdateAllotmentModal(false)
-
-    const calendarsEvents = {
-        Danger: 'danger',
-        Success: 'success',
-    }
 
     useEffect(() => {
         const allEvents = []
@@ -70,45 +68,21 @@ export default function Show({ room }) {
             currentDate.setDate(currentDate.getDate() + 1)
         }
 
-        const specificEvents = [
-            {
-                id: '1',
-                title: '5',
-                start: new Date().toISOString().split('T')[0],
-                extendedProps: {
-                    calendar: 'Success',
-                    allotment: 5,
-                    onRes: 5,
-                    available: 5,
-                },
-            },
-            {
-                id: '2',
-                title: '10',
-                start: new Date(Date.now() + 86400000)
-                    .toISOString()
-                    .split('T')[0],
-                extendedProps: {
-                    calendar: 'Success',
-                    allotment: 10,
-                    onRes: 10,
-                    available: 10,
-                },
-            },
-            {
-                id: '3',
-                title: '15',
-                start: new Date(Date.now() + 172800000)
-                    .toISOString()
-                    .split('T')[0],
-                extendedProps: {
-                    calendar: 'Success',
-                    allotment: 15,
-                    onRes: 15,
-                    available: 15,
-                },
-            },
-        ]
+        const specificEvents = allotments
+            ? allotments.map((allotment) => {
+                  return {
+                      id: `allotment-${allotment.id}`,
+                      title: allotment.allotment,
+                      start: allotment.date,
+                      extendedProps: {
+                          calendar: 'Success',
+                          allotment: allotment.allotment,
+                          onRes: 0,
+                          available: 0,
+                      },
+                  }
+              })
+            : []
 
         const mergedEvents = allEvents.map((defaultEvent) => {
             const specificEvent = specificEvents.find(
@@ -118,13 +92,14 @@ export default function Show({ room }) {
         })
 
         setEvents(mergedEvents)
-    }, [])
+    }, [allotments])
 
     const handleEventClick = (clickInfo) => {
         const event = clickInfo.event
+        setData('date', event.start)
         setAllotment(event.extendedProps.allotment)
-        setOnRes(event.extendedProps.onRes)
-        setAvailable(event.extendedProps.available)
+        setOnRes(0)
+        setAvailable(0)
         onOpenManageAllotmentModal()
     }
 
@@ -133,8 +108,14 @@ export default function Show({ room }) {
     }
 
     const handleSaveChanges = () => {
-        // Here you can add logic to save the changes
         setIsEditing(false)
+        post(route('organizer.rooms.allotment', { room: room.id }), {
+            preserveScroll: true,
+            onSuccess: (response) => {
+                console.log(response)
+                // onCloseManageAllotmentModal()
+            },
+        })
     }
 
     const resetModalFields = () => {
@@ -256,6 +237,7 @@ export default function Show({ room }) {
                                         interactionPlugin,
                                     ]}
                                     initialView="dayGridMonth"
+                                    timeZone="Asia/Makassar"
                                     headerToolbar={{
                                         left: 'prev,next',
                                         center: 'title',
@@ -302,20 +284,26 @@ export default function Show({ room }) {
                                                 id="allotment"
                                                 type="number"
                                                 name="allotment"
-                                                value={allotment}
+                                                value={data.allotment || 0}
                                                 onChange={(e) => {
-                                                    if (e.target.value === '') {
-                                                        setAllotment(0)
-                                                    } else {
-                                                        setAllotment(
-                                                            parseInt(
-                                                                e.target.value
-                                                            )
-                                                        )
-                                                    }
+                                                    setData(
+                                                        'allotment',
+                                                        e.target.value
+                                                    )
                                                 }}
-                                                className="h-6 flex-1 px-4 py-1"
+                                                className="h-6 flex-1 px-2 py-1"
                                             />
+
+                                            {/* <input
+                                                type="text"
+                                                name="allotment"
+                                                onChange={(e) => {
+                                                    setData(
+                                                        'allotment',
+                                                        e.target.value
+                                                    )
+                                                }}
+                                            /> */}
                                         </div>
                                     ) : (
                                         <p>: {allotment}</p>
