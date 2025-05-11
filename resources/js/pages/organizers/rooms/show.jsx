@@ -245,7 +245,7 @@ export default function Show({ room, allotments }) {
                                         batchUpdateButton: {
                                             text: 'Batch Update +',
                                             click: () => {
-                                                console.log('batch update')
+                                                onOpenBatchUpdateAllotmentModal()
                                             },
                                         },
                                     }}
@@ -325,6 +325,22 @@ export default function Show({ room, allotments }) {
                                 </div>
                             </form>
                         </div>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal
+                open={openBatchUpdateAllotmentModal}
+                onClose={onCloseBatchUpdateAllotmentModal}
+                modalId="batch-update-allotment"
+                center
+                classNames={{
+                    modal: 'rounded-sm shadow-md',
+                }}
+            >
+                <div className="pt-8">
+                    <div className="h-fit w-72">
+                        <div className="w-full p-4"></div>
                     </div>
                 </div>
             </Modal>
