@@ -20,6 +20,7 @@ Route::group(["middleware" => ["auth"]], function () {
 
         Route::resource("rooms", RoomController::class);
         Route::post("rooms/{room}/allotment", [RoomController::class, "allotment"])->name("rooms.allotment");
+        Route::post("rooms/{room}/allotment/batch", [RoomController::class, "batchAllotment"])->name("rooms.allotment.batch");
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");

@@ -17,6 +17,8 @@ import interactionPlugin from '@fullcalendar/interaction'
 import Modal from 'react-responsive-modal'
 import Button from '@/components/form/button'
 import Input from '@/components/form/input'
+import Flatpickr from 'react-flatpickr'
+import ValidationFeedback from '@/components/form/validation-feedback'
 
 export default function Show({ room, allotments }) {
     const calendarRef = useRef(null)
@@ -28,8 +30,25 @@ export default function Show({ room, allotments }) {
         useState(false)
     const [openBatchUpdateAllotmentModal, setOpenBatchUpdateAllotmentModal] =
         useState(false)
-    const { data, setData, post, processing, errors } = useForm({
+    const {
+        data: singleData,
+        setData: setSingleData,
+        post: postSingle,
+        processing: processingSingle,
+        errors: errorsSingle,
+    } = useForm({
         date: '',
+        allotment: '',
+    })
+    const {
+        data: batchData,
+        setData: setBatchData,
+        post: postBatch,
+        processing: processingBatch,
+        errors: errorsBatch,
+    } = useForm({
+        start_date: '',
+        end_date: '',
         allotment: '',
     })
 
@@ -62,7 +81,7 @@ export default function Show({ room, allotments }) {
 
     const handleEventClick = (clickInfo) => {
         const event = clickInfo.event
-        setData({
+        setSingleData({
             date: event.start,
             allotment: event.extendedProps.allotment,
         })
@@ -76,13 +95,34 @@ export default function Show({ room, allotments }) {
     }
 
     const handleSaveChanges = () => {
-        post(route('organizer.rooms.allotment', { room: room.id }), {
+        postSingle(route('organizer.rooms.allotment', { room: room.id }), {
             preserveScroll: true,
             onSuccess: (response) => {
                 setIsEditing(false)
                 if (response.props.alert?.type === 'error') {
                     onCloseManageAllotmentModal()
                 }
+            },
+        })
+    }
+
+    const handleBatchModalOpen = () => {
+        setBatchData({
+            start_date: '',
+            end_date: '',
+            allotment: '',
+        })
+        errorsBatch.start_date = null
+        errorsBatch.end_date = null
+        errorsBatch.allotment = null
+        setOpenBatchUpdateAllotmentModal(true)
+    }
+
+    const handleBatchUpdate = () => {
+        postBatch(route('organizer.rooms.allotment.batch', { room: room.id }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                onCloseBatchUpdateAllotmentModal()
             },
         })
     }
@@ -244,9 +284,7 @@ export default function Show({ room, allotments }) {
                                     customButtons={{
                                         batchUpdateButton: {
                                             text: 'Batch Update +',
-                                            click: () => {
-                                                onOpenBatchUpdateAllotmentModal()
-                                            },
+                                            click: handleBatchModalOpen,
                                         },
                                     }}
                                 />
@@ -268,7 +306,7 @@ export default function Show({ room, allotments }) {
                 <div className="pt-8">
                     <div className="h-fit w-72">
                         <div className="w-full p-4">
-                            <form action="" method="POST">
+                            <form>
                                 <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
                                     <p className="w-24">Allotment</p>
                                     {isEditing ? (
@@ -278,9 +316,9 @@ export default function Show({ room, allotments }) {
                                                 id="allotment"
                                                 type="number"
                                                 name="allotment"
-                                                value={data.allotment}
+                                                value={singleData.allotment}
                                                 onChange={(e) =>
-                                                    setData(
+                                                    setSingleData(
                                                         'allotment',
                                                         e.target.value
                                                     )
@@ -289,7 +327,7 @@ export default function Show({ room, allotments }) {
                                             />
                                         </div>
                                     ) : (
-                                        <p>: {data.allotment || 0}</p>
+                                        <p>: {singleData.allotment || 0}</p>
                                     )}
                                 </div>
                                 <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
@@ -306,7 +344,7 @@ export default function Show({ room, allotments }) {
                                             variant="primary"
                                             className="flex items-center gap-1 rounded-sm px-2 py-1"
                                             onClick={handleSaveChanges}
-                                            disabled={processing}
+                                            disabled={processingSingle}
                                         >
                                             <BookmarkSquareIcon className="size-4" />
                                             Save Changes
@@ -316,7 +354,7 @@ export default function Show({ room, allotments }) {
                                             variant="success"
                                             className="flex items-center gap-1 rounded-sm px-2 py-1"
                                             onClick={handleUpdateClick}
-                                            disabled={processing}
+                                            disabled={processingSingle}
                                         >
                                             <PencilSquareIcon className="size-4" />
                                             Update
@@ -339,8 +377,102 @@ export default function Show({ room, allotments }) {
                 }}
             >
                 <div className="pt-8">
-                    <div className="h-fit w-72">
-                        <div className="w-full p-4"></div>
+                    <div className="h-fit w-full">
+                        <div className="w-full p-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div
+                                        className={`h-11 w-full appearance-none rounded-lg border border-gray-300 bg-white px-2 py-2.5 focus:border-blue-300 focus:ring-3 focus:ring-blue-500/20 focus:outline-none md:px-4 ${
+                                            errorsBatch.start_date
+                                                ? 'ring ring-red-500'
+                                                : ''
+                                        }`}
+                                    >
+                                        <Flatpickr
+                                            value={batchData.start_date}
+                                            onChange={(selectedDates) => {
+                                                setBatchData(
+                                                    'start_date',
+                                                    selectedDates[0]
+                                                )
+                                            }}
+                                            options={{
+                                                disableMobile: 'true',
+                                                minDate: 'today',
+                                                dateFormat: 'd F Y',
+                                            }}
+                                            className="h-full w-full focus:outline-none"
+                                            placeholder="Start Date"
+                                        />
+                                    </div>
+                                    <ValidationFeedback
+                                        message={errorsBatch.start_date}
+                                    />
+                                </div>
+
+                                <div>
+                                    <div
+                                        className={`h-11 w-full appearance-none rounded-lg border border-gray-300 bg-white px-2 py-2.5 focus:border-blue-300 focus:ring-3 focus:ring-blue-500/20 focus:outline-none md:px-4 ${
+                                            errorsBatch.end_date
+                                                ? 'ring ring-red-500'
+                                                : ''
+                                        }`}
+                                    >
+                                        <Flatpickr
+                                            value={batchData.end_date}
+                                            onChange={(selectedDates) => {
+                                                setBatchData(
+                                                    'end_date',
+                                                    selectedDates[0]
+                                                )
+                                            }}
+                                            options={{
+                                                disableMobile: 'true',
+                                                minDate: 'today',
+                                                dateFormat: 'd F Y',
+                                            }}
+                                            className="h-full w-full focus:outline-none"
+                                            placeholder="End Date"
+                                        />
+                                    </div>
+                                    <ValidationFeedback
+                                        message={errorsBatch.end_date}
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <Input
+                                        id="allotment-batch"
+                                        type="number"
+                                        name="allotment-batch"
+                                        placeholder="Allotment"
+                                        value={batchData.allotment}
+                                        onChange={(e) =>
+                                            setBatchData(
+                                                'allotment',
+                                                e.target.value
+                                            )
+                                        }
+                                        className={
+                                            errorsBatch.allotment
+                                                ? 'ring ring-red-500'
+                                                : ''
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={errorsBatch.allotment}
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleBatchUpdate}
+                                        disabled={processingBatch}
+                                    >
+                                        Update Batch
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </Modal>

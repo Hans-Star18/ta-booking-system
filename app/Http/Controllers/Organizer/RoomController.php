@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer;
 
+use Carbon\Carbon;
 use App\Models\Bed;
 use App\Models\Room;
 use App\Models\Amenity;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Organizer\StoreRoomRequest;
-use Carbon\Carbon;
+use App\Http\Requests\Organizer\UpdateBatchAllotmentRequest;
 
 class RoomController extends Controller
 {
@@ -115,7 +116,7 @@ class RoomController extends Controller
     {
         DB::beginTransaction();
         try {
-            $date = Carbon::parse($request->date);
+            $date = Carbon::parse($request->date)->timezone('Asia/Makassar');
             if ($date->isPast()) {
                 return back()->with('alert', [
                     'message' => 'Cannot set allotment for past dates',
@@ -152,6 +153,57 @@ class RoomController extends Controller
 
         return back()->with('alert', [
             'message' => 'Allotment updated successfully',
+            'type' => 'success',
+        ]);
+    }
+
+    public function batchAllotment(Room $room, UpdateBatchAllotmentRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $startDate = Carbon::parse($request->start_date)->timezone('Asia/Makassar');
+            $endDate = Carbon::parse($request->end_date)->timezone('Asia/Makassar');
+            $allotment = $request->allotment;
+
+            if ($startDate->gt($endDate)) {
+                return back()->with('alert', [
+                    'message' => 'Start date must not be after end date',
+                    'type' => 'error',
+                ]);
+            }
+
+            for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+                if ($date->isPast()) {
+                    continue;
+                }
+
+                $dateString = $date->format('Y-m-d');
+
+                $existing = $room->allotments()->where('date', $dateString)->first();
+
+                if ($existing && (blank($allotment) || $allotment == 0)) {
+                    $existing->delete();
+                } elseif (!blank($allotment) && $allotment > 0) {
+                    $room->allotments()->updateOrCreate(
+                        ['date' => $dateString, 'room_id' => $room->id],
+                        ['allotment' => $allotment]
+                    );
+                }
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error updating batch allotment: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to update batch allotment',
+                'type' => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Batch allotment updated successfully',
             'type' => 'success',
         ]);
     }
