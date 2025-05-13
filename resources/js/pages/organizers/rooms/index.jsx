@@ -50,7 +50,7 @@ export default function Index({ rooms }) {
                                         src={room.cover_image}
                                         alt={`image-${room.name}`}
                                         loading="lazy"
-                                        className="h-full w-full object-cover"
+                                        className="h-56 w-full object-cover"
                                     />
                                 </div>
 

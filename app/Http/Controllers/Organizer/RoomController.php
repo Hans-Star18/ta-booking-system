@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Organizer\StoreRoomRequest;
+use App\Http\Requests\Organizer\UpdateRoomRequest;
 use App\Http\Requests\Organizer\UpdateBatchAllotmentRequest;
 
 class RoomController extends Controller
@@ -83,6 +84,61 @@ class RoomController extends Controller
         return inertia('organizers/rooms/show', [
             'room' => $room,
             'allotments' => $allotments,
+        ]);
+    }
+
+    public function edit(Room $room)
+    {
+        $beds = Bed::all();
+        $amenities = Amenity::all();
+
+        return inertia('organizers/rooms/edit', [
+            'room' => $room,
+            'beds' => $beds,
+            'amenities' => $amenities,
+        ]);
+    }
+
+    public function update(Room $room, UpdateRoomRequest $request)
+    {
+        $validated = $request->safe()->only(['name', 'max_occupancy', 'description', 'price']);
+        $validated['hotel_id'] = $request->user()->hotel->id;
+
+        DB::beginTransaction();
+        try {
+            if ($request->hasFile('cover_image')) {
+                if ($room->cover_image) {
+                    $this->deleteFile($room->cover_image);
+                }
+
+                $storedFileName = $this->storeFile($request->file('cover_image'), Room::FILE_PATH);
+                if (!$storedFileName) {
+                    return back()->with('alert', [
+                        'message' => 'Failed to store image',
+                        'type' => 'error',
+                    ]);
+                }
+                $validated['cover_image'] = $storedFileName;
+            }
+
+            $room->update($validated);
+            $room->amenities()->sync($request->amenity_config);
+            $room->beds()->sync($request->bed_config);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error updating room: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to update room',
+                'type' => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Room updated successfully',
+            'type' => 'success',
         ]);
     }
 
