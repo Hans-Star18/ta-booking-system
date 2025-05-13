@@ -2,7 +2,7 @@ import Confirm from '@/components/alert/confirm'
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import OrganizerLayout from '@/layouts/organizer-layout'
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { CalendarDaysIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { Head, useForm } from '@inertiajs/react'
 
 export default function Index({ rooms }) {
@@ -63,7 +63,7 @@ export default function Index({ rooms }) {
                                             room.id
                                         )}
                                     >
-                                        <PencilSquareIcon className="size-4" />
+                                        <CalendarDaysIcon className="size-4" />
                                         Manage
                                     </Anchor>
                                     <Button

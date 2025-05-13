@@ -1,9 +1,14 @@
 import Currency from '@/components/format/currency'
 import OrganizerLayout from '@/layouts/organizer-layout'
-import { CheckIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
+import {
+    CheckIcon,
+    ChevronDoubleRightIcon,
+    PencilSquareIcon,
+} from '@heroicons/react/24/outline'
 import { Head } from '@inertiajs/react'
 import parse from 'html-react-parser'
 import AllotmentManagementCalendar from '@/components/calendar/allotment-management-calendar'
+import Anchor from '@/components/form/anchor'
 
 export default function Show({ room, allotments }) {
     return (
@@ -15,8 +20,17 @@ export default function Show({ room, allotments }) {
             <OrganizerLayout>
                 <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-4 md:p-8">
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                        <div className="col-span-3">
+                        <div className="col-span-3 flex items-center justify-between">
                             <h1 className="text-2xl font-bold">{room.name}</h1>
+
+                            <Anchor
+                                variant="success"
+                                href={route('organizer.rooms.edit', room)}
+                                className="flex items-center gap-1"
+                            >
+                                <PencilSquareIcon className="size-4" />
+                                Edit
+                            </Anchor>
                         </div>
 
                         <div className="overflow-hidden rounded-sm">
