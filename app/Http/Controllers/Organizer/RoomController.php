@@ -90,8 +90,6 @@ class RoomController extends Controller
     {
         DB::beginTransaction();
         try {
-            $room->amenities()->detach();
-            $room->beds()->detach();
             $this->deleteFile($room->cover_image);
             $room->delete();
 
@@ -117,7 +115,7 @@ class RoomController extends Controller
         DB::beginTransaction();
         try {
             $date = Carbon::parse($request->date)->timezone('Asia/Makassar');
-            if ($date->isPast()) {
+            if ($date->isPast() && !$date->isToday()) {
                 return back()->with('alert', [
                     'message' => 'Cannot set allotment for past dates',
                     'type' => 'error',
@@ -173,7 +171,7 @@ class RoomController extends Controller
             }
 
             for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-                if ($date->isPast()) {
+                if ($date->isPast() && !$date->isToday()) {
                     continue;
                 }
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\WithUploadFile;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Room extends Model
@@ -23,6 +24,22 @@ class Room extends Model
     protected $with = ['amenities', 'beds'];
 
     const FILE_PATH = 'rooms';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($room) {
+            $room->amenities()->detach();
+            $room->beds()->detach();
+            $room->allotments()->delete();
+
+            // You could add validation here
+            // if ($room->hasActiveBookings()) {
+            //     throw new \Exception('Cannot delete room with active bookings');
+            // }
+        });
+    }
 
     public function coverImage(): Attribute
     {
