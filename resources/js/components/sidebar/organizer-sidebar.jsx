@@ -28,7 +28,8 @@ export default function OrganizerSidebar() {
         {
             icon: <PercentBadgeIcon className="size-6" />,
             name: 'Promotion Code',
-            href: '/promotion-code',
+            href: route('organizer.promotion-codes.index'),
+            routeActive: 'organizer.promotion-codes',
         },
         {
             icon: <Cog8ToothIcon className="size-6" />,

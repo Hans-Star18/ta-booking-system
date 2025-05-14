@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
-use Database\Seeders\stub\AmenitySeeder;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\stub\BedSeeder;
 use Database\Seeders\stub\RoleSeeder;
 use Database\Seeders\stub\RoomSeeder;
 use Database\Seeders\stub\UserSeeder;
 use Database\Seeders\stub\HotelSeeder;
+use Database\Seeders\stub\AmenitySeeder;
+use Database\Seeders\stub\PromotionCodeSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
             AmenitySeeder::class,
             HotelSeeder::class,
             RoomSeeder::class,
+            PromotionCodeSeeder::class,
         ]);
     }
 }

@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Customer\HomeController;
-use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\RoomController;
+use App\Http\Controllers\Organizer\OrganizerController;
+use App\Http\Controllers\Organizer\PromotionCodeController;
 
 Route::group(["as" => "customer."], function () {
     Route::get("/", [HomeController::class, "index"])->name("home");
@@ -24,6 +25,8 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::get("rooms/{room}/photos/create", [RoomController::class, "createPhoto"])->name("rooms.photos.create");
         Route::post("rooms/{room}/photos", [RoomController::class, "storePhoto"])->name("rooms.photos.store");
         Route::delete("rooms/photos/{photo}", [RoomController::class, "destroyPhoto"])->name("rooms.photos.destroy");
+
+        Route::resource("promotion-codes", PromotionCodeController::class);
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");
