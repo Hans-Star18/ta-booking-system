@@ -134,4 +134,8 @@
     .dropzone .dz-message {
         @apply !hidden;
     }
+
+    .rdt_TableHeadRow {
+        @apply text-base font-bold;
+    }
 }
