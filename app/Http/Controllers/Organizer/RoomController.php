@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Organizer\StoreRoomRequest;
 use App\Http\Requests\Organizer\UpdateRoomRequest;
 use App\Http\Requests\Organizer\UpdateBatchAllotmentRequest;
+use App\Models\PhotoRoom;
 
 class RoomController extends Controller
 {
@@ -258,6 +259,74 @@ class RoomController extends Controller
 
         return back()->with('alert', [
             'message' => 'Batch allotment updated successfully',
+            'type' => 'success',
+        ]);
+    }
+
+    public function createPhoto(Room $room)
+    {
+        return inertia('organizers/rooms/stub/photo-management', [
+            'room' => $room,
+        ]);
+    }
+
+    public function storePhoto(Room $room, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $validated = $request->validate([
+                'file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            $validated['room_id'] = $room->id;
+
+            $storedFileName = $this->storeFile($request->file('file'), PhotoRoom::FILE_PATH);
+            if (!$storedFileName) {
+                return response()->json([
+                    'message' => 'Failed to store image',
+                    'error' => 'Failed to store image',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+            $validated['photo'] = $storedFileName;
+
+            $room->photos()->create($validated);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error storing photo: ' . $th->getMessage());
+
+            return response()->json([
+                'message' => 'Failed to store photo',
+                'error' => $th->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return response()->json([
+            'message' => 'Photo stored successfully',
+            'data' => $room->photos,
+        ], Response::HTTP_OK);
+    }
+
+    public function destroyPhoto(PhotoRoom $photo)
+    {
+        DB::beginTransaction();
+        try {
+            $this->deleteFile($photo->photo);
+            $photo->delete();
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error deleting photo: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to delete photo',
+                'type' => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Photo deleted successfully',
             'type' => 'success',
         ]);
     }

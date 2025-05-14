@@ -21,6 +21,9 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::resource("rooms", RoomController::class);
         Route::post("rooms/{room}/allotment", [RoomController::class, "allotment"])->name("rooms.allotment");
         Route::post("rooms/{room}/allotment/batch", [RoomController::class, "batchAllotment"])->name("rooms.allotment.batch");
+        Route::get("rooms/{room}/photos/create", [RoomController::class, "createPhoto"])->name("rooms.photos.create");
+        Route::post("rooms/{room}/photos", [RoomController::class, "storePhoto"])->name("rooms.photos.store");
+        Route::delete("rooms/photos/{photo}", [RoomController::class, "destroyPhoto"])->name("rooms.photos.destroy");
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");

@@ -4,6 +4,7 @@ import {
     CheckIcon,
     ChevronDoubleRightIcon,
     PencilSquareIcon,
+    PhotoIcon,
 } from '@heroicons/react/24/outline'
 import { Head } from '@inertiajs/react'
 import parse from 'html-react-parser'
@@ -19,20 +20,20 @@ export default function Show({ room, allotments }) {
 
             <OrganizerLayout>
                 <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-4 md:p-8">
+                    <div className="mb-4 flex w-full items-center justify-between">
+                        <h1 className="text-2xl font-bold">{room.name}</h1>
+
+                        <Anchor
+                            variant="success"
+                            href={route('organizer.rooms.edit', room)}
+                            className="flex items-center gap-1"
+                        >
+                            <PencilSquareIcon className="size-4" />
+                            Edit
+                        </Anchor>
+                    </div>
+
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                        <div className="col-span-3 flex items-center justify-between">
-                            <h1 className="text-2xl font-bold">{room.name}</h1>
-
-                            <Anchor
-                                variant="success"
-                                href={route('organizer.rooms.edit', room)}
-                                className="flex items-center gap-1"
-                            >
-                                <PencilSquareIcon className="size-4" />
-                                Edit
-                            </Anchor>
-                        </div>
-
                         <div className="overflow-hidden rounded-sm">
                             <img
                                 src={room.cover_image}
@@ -46,9 +47,20 @@ export default function Show({ room, allotments }) {
                             <h2 className="mb-3 text-lg font-bold">
                                 Description
                             </h2>
-                            <div className="text-gray-600">
+                            <div className="mb-3 text-gray-600">
                                 {parse(room.description || '')}
                             </div>
+                            <Anchor
+                                variant="primary"
+                                href={route(
+                                    'organizer.rooms.photos.create',
+                                    room
+                                )}
+                                className="flex w-fit items-center gap-2"
+                            >
+                                <PhotoIcon className="size-4" />
+                                Add Photo
+                            </Anchor>
                         </div>
 
                         <div>
