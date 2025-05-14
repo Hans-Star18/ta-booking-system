@@ -26,63 +26,6 @@
         @apply min-w-[718px];
     }
 
-    /* .fc .fc-scrollgrid-section > * {
-        border-right-width: 0;
-        border-bottom-width: 0;
-    }
-
-    .fc .fc-scrollgrid {
-        border-left-width: 0;
-    }
-
-    .fc .fc-toolbar.fc-header-toolbar {
-        @apply flex-col gap-4 px-6 pt-6 sm:flex-row;
-    } */
-
-    /* .fc-button-group {
-        @apply gap-2;
-    }
-
-    .fc-button-group .fc-button {
-        @apply flex h-10 w-10 items-center justify-center rounded-lg! border border-gray-200 bg-transparent hover:border-gray-200 hover:bg-gray-50 focus:shadow-none active:border-gray-200! active:bg-transparent! active:shadow-none!;
-    } */
-
-    /* .fc-button-group .fc-button.fc-prev-button:before {
-        @apply mt-1 inline-block;
-        content: url("data:image/svg+xml,%3Csvg width='25' height='24' viewBox='0 0 25 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.0068 6L9.75684 12.25L16.0068 18.5' stroke='%23344054' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
-    }
-
-    .fc-button-group .fc-button.fc-next-button:before {
-        @apply mt-1 inline-block;
-        content: url("data:image/svg+xml,%3Csvg width='25' height='24' viewBox='0 0 25 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.50684 19L15.7568 12.75L9.50684 6.5' stroke='%23344054' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
-    } */
-
-    /* .fc-button-group .fc-button .fc-icon {
-        @apply hidden;
-    }
-
-    .fc-addEventButton-button {
-        @apply rounded-lg! border-0! bg-blue-500! px-4! py-2.5! text-sm! font-medium! hover:bg-blue-600! focus:shadow-none!;
-    } */
-
-    /* .fc-toolbar-title {
-        @apply text-lg! font-medium! text-gray-800;
-    }
-
-    .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child {
-        @apply rounded-lg bg-gray-100 p-0.5;
-    }
-
-    .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child .fc-button {
-        @apply h-auto! w-auto! rounded-md border-0! bg-transparent px-5! py-2! text-sm font-medium text-gray-500 hover:text-gray-700 focus:shadow-none!;
-    }
-
-    .fc-header-toolbar.fc-toolbar
-        .fc-toolbar-chunk:last-child
-        .fc-button.fc-button-active {
-        @apply bg-white text-gray-900;
-    } */
-
     .fc-theme-standard th {
         @apply border-x-0! border-t border-gray-200! bg-gray-50 text-left!;
     }
@@ -186,5 +129,9 @@
 
     .fc .fc-daygrid-day-events {
         @apply me-2.5;
+    }
+
+    .dropzone .dz-message {
+        @apply !hidden;
     }
 }

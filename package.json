@@ -22,6 +22,7 @@
         "@fullcalendar/react": "^6.1.17",
         "@heroicons/react": "^2.2.0",
         "@inertiajs/react": "^2.0.3",
+        "dropzone": "^6.0.0-beta.2",
         "flatpickr": "^4.6.13",
         "fullcalendar": "^6.1.17",
         "html-react-parser": "^5.2.3",
