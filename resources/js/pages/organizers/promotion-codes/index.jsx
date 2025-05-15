@@ -1,13 +1,16 @@
+import Confirm from '@/components/alert/confirm'
 import CompactGrid from '@/components/datatable/theme/compact-grid'
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import OrganizerLayout from '@/layouts/organizer-layout'
-import { Head } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import DataTable, { defaultThemes } from 'react-data-table-component'
 
 export default function Index({ promotionCodes }) {
+    const { delete: destroy, processing, errors } = useForm({})
+
     const columns = [
         {
             name: 'No',
@@ -53,8 +56,9 @@ export default function Index({ promotionCodes }) {
 
                     <Button
                         variant="danger"
-                        // onClick={() => handleDelete(row.id)}
+                        onClick={() => handleDelete(row.id)}
                         className={'px-4 py-2'}
+                        disabled={processing}
                     >
                         Delete
                     </Button>
@@ -89,6 +93,20 @@ export default function Index({ promotionCodes }) {
                 Inactive
             </span>
         )
+    }
+
+    const handleDelete = (promotionCodeId) => {
+        Confirm({
+            action: 'delete',
+            onConfirm: () => {
+                destroy(
+                    route('organizer.promotion-codes.destroy', promotionCodeId),
+                    {
+                        preserveScroll: true,
+                    }
+                )
+            },
+        })
     }
 
     return (

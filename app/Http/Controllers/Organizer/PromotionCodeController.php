@@ -63,8 +63,13 @@ class PromotionCodeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(PromotionCode $promotionCode)
     {
-        //
+        $promotionCode->delete();
+
+        return back()->with('alert', [
+            'message' => 'Promotion code deleted successfully',
+            'type' => 'success',
+        ]);
     }
 }
