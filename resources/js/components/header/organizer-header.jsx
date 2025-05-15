@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import UserDropdown from '@/components/header/user-dropdown'
 import {
     Bars3CenterLeftIcon,
@@ -7,15 +7,16 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { useSidebar } from '@/components/context/siderbar-context'
-import Toast from '@/components/alert/toast'
 
 export default function OrganizerHeader() {
+    const { toggleSidebar, toggleMobileSidebar, isMobileOpen } = useSidebar()
     const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false)
-    const { toggleSidebar, toggleMobileSidebar } = useSidebar()
 
     const toggleApplicationMenu = () => {
         setApplicationMenuOpen(!isApplicationMenuOpen)
     }
+
+    const hotelName = usePage().props.auth.hotel.name
 
     return (
         <header className="sticky top-0 z-40 flex w-full border-gray-200 bg-white lg:border-b">
@@ -25,9 +26,11 @@ export default function OrganizerHeader() {
                         className="block h-10 w-10 text-gray-500 lg:hidden"
                         onClick={toggleMobileSidebar}
                     >
-                        <Bars3CenterLeftIcon className="block h-6 w-8" />
-                        <XMarkIcon className="hidden size-6" />
-                        {/* Cross Icon */}
+                        {isMobileOpen ? (
+                            <XMarkIcon className="block h-6 w-8" />
+                        ) : (
+                            <Bars3CenterLeftIcon className="block h-6 w-8" />
+                        )}
                     </button>
                     <button
                         onClick={toggleSidebar}
@@ -37,9 +40,9 @@ export default function OrganizerHeader() {
                     </button>
                     <Link
                         href={route('organizer.dashboard')}
-                        className="lg:hidden"
+                        className="font-bold lg:hidden"
                     >
-                        Brand
+                        {hotelName}
                     </Link>
                     <button
                         onClick={toggleApplicationMenu}

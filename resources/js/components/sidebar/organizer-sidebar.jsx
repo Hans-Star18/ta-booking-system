@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react'
 import {
     ArrowLeftStartOnRectangleIcon,
     BuildingLibraryIcon,
+    BuildingOfficeIcon,
     Cog8ToothIcon,
     PercentBadgeIcon,
     Squares2X2Icon,
@@ -32,8 +33,13 @@ export default function OrganizerSidebar() {
             routeActive: 'organizer.promotion-codes',
         },
         {
+            icon: <BuildingOfficeIcon className="size-6" />,
+            name: 'Hotel Setting',
+            href: '/hotels',
+        },
+        {
             icon: <Cog8ToothIcon className="size-6" />,
-            name: 'Setting',
+            name: 'General Setting',
             href: '/settings',
         },
         {
@@ -48,14 +54,16 @@ export default function OrganizerSidebar() {
         [route().current()]
     )
 
+    const hotelName = usePage().props.auth.hotel.name
+
     return (
         <aside
-            className={`fixed top-0 left-0 z-50 h-screen border-r border-gray-200 bg-white px-5 py-3 transition-all duration-300 ${isExpanded || isMobileOpen || isHovered ? 'w-[250px]' : 'w-[80px]'} ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+            className={`fixed top-0 left-0 z-50 mt-16 h-screen border-r border-gray-200 bg-white px-5 py-3 transition-all duration-300 md:mt-0 ${isExpanded || isMobileOpen || isHovered ? 'w-[250px]' : 'w-[80px]'} ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
             onMouseEnter={() => !isExpanded && setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
             <div
-                className={`flex py-6 ${
+                className={`flex py-4 md:py-6 ${
                     !isExpanded && !isHovered
                         ? 'lg:justify-center'
                         : 'justify-start'
@@ -66,9 +74,9 @@ export default function OrganizerSidebar() {
                     className="flex items-center gap-2"
                 >
                     {isExpanded || isHovered || isMobileOpen ? (
-                        <h2 className="font-bold">Brand</h2>
+                        <h2 className="font-bold">{hotelName}</h2>
                     ) : (
-                        <h1 className="font-bold">B</h1>
+                        <h1 className="font-bold">Hotel</h1>
                     )}
                 </Link>
             </div>
