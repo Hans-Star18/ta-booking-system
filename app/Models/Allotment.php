@@ -12,6 +12,10 @@ class Allotment extends Model
         'allotment'
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function room()
     {
         return $this->belongsTo(Room::class);

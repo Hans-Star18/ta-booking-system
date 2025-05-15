@@ -14,6 +14,11 @@ class PromotionCode extends Model
         "is_active",
     ];
 
+    protected $casts = [
+        'valid_until' => 'date',
+        'is_active' => 'boolean',
+    ];
+
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);

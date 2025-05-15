@@ -244,7 +244,7 @@ export default function Edit({ room, beds, amenities }) {
 
                         <div className="col-span-2 flex items-center justify-end">
                             <Button
-                                variant="primary"
+                                variant="success"
                                 onClick={handleSubmit}
                                 className={'flex items-center gap-2'}
                                 disabled={processing}

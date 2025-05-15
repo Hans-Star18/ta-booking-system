@@ -26,7 +26,7 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::post("rooms/{room}/photos", [RoomController::class, "storePhoto"])->name("rooms.photos.store");
         Route::delete("rooms/photos/{photo}", [RoomController::class, "destroyPhoto"])->name("rooms.photos.destroy");
 
-        Route::resource("promotion-codes", PromotionCodeController::class);
+        Route::resource("promotion-codes", PromotionCodeController::class)->except("show");
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");

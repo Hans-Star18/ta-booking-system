@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Organizer;
 
-use App\Http\Controllers\Controller;
-use App\Models\PromotionCode;
 use Illuminate\Http\Request;
+use App\Models\PromotionCode;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Organizer\StorePromotionCodeRequest;
+use App\Http\Requests\Organizer\UpdatePromotionCodeRequest;
+use Illuminate\Support\Facades\DB;
 
 class PromotionCodeController extends Controller
 {
@@ -25,39 +28,69 @@ class PromotionCodeController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("organizers/promotion-codes/add");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePromotionCodeRequest $request)
     {
-        //
-    }
+        DB::beginTransaction();
+        try {
+            PromotionCode::create($request->all());
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger()->error('Error creating promotion code: ' . $e->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to create promotion code',
+                'type' => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Promotion code created successfully',
+            'type' => 'success',
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(PromotionCode $promotionCode)
     {
-        //
+        return inertia("organizers/promotion-codes/edit", [
+            "promotionCode" => $promotionCode,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePromotionCodeRequest $request, PromotionCode $promotionCode)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $promotionCode->update($request->all());
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger()->error('Error updating promotion code: ' . $e->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to update promotion code',
+                'type' => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Promotion code updated successfully',
+            'type' => 'success',
+        ]);
     }
 
     /**
