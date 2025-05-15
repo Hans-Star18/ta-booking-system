@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Organizer\RoomController;
+use App\Http\Controllers\Organizer\HotelController;
 use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\PromotionCodeController;
 
@@ -27,6 +28,7 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::delete("rooms/photos/{photo}", [RoomController::class, "destroyPhoto"])->name("rooms.photos.destroy");
 
         Route::resource("promotion-codes", PromotionCodeController::class)->except("show");
+        Route::resource("hotels", HotelController::class)->except(['create', 'store', 'destroy', 'show']);
     });
 
     Route::get("/logout", [LogoutController::class, "logout"])->name("logout");

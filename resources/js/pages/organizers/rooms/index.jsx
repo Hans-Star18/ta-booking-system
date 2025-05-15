@@ -6,7 +6,7 @@ import { CalendarDaysIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { Head, useForm } from '@inertiajs/react'
 
 export default function Index({ rooms }) {
-    const { delete: destroy, processing, errors } = useForm({})
+    const { delete: destroy, processing } = useForm({})
 
     const handleDelete = (roomId) => {
         Confirm({

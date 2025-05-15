@@ -35,7 +35,8 @@ export default function OrganizerSidebar() {
         {
             icon: <BuildingOfficeIcon className="size-6" />,
             name: 'Hotel Setting',
-            href: '/hotels',
+            href: route('organizer.hotels.index'),
+            routeActive: 'organizer.hotels',
         },
         {
             icon: <Cog8ToothIcon className="size-6" />,
