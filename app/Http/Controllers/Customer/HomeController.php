@@ -7,22 +7,23 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-    public function index(): \Inertia\ResponseFactory|\Inertia\Response
+    public function index()
     {
-        return inertia("customers/home");
+        // return inertia("customers/home");
+        dd("test");
     }
 
-    public function reservation(): \Inertia\ResponseFactory|\Inertia\Response
+    public function reservation()
     {
         return inertia("customers/reservation");
     }
 
-    public function confirmReservation(): \Inertia\ResponseFactory|\Inertia\Response
+    public function confirmReservation()
     {
         return inertia("customers/reservation-confirm");
     }
 
-    public function finishReservation(): \Inertia\ResponseFactory|\Inertia\Response
+    public function finishReservation()
     {
         return inertia("customers/reservation-finish");
     }

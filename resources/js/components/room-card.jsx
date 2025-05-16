@@ -1,50 +1,49 @@
-import React, { useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Modal } from 'react-responsive-modal'
 import 'react-responsive-modal/styles.css'
 import CoffeeIcon from '@/components/icons/coffe-icon'
 import Button from '@/components/form/button'
 import ImageSlider from '@/components/image-slider'
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import Currency from '@/components/format/currency'
 
 export default function RoomCard({
     roomImage,
     roomName,
-    hasBreakfast = false,
     maxOccupancy,
-    bedConfig,
+    beds,
     price = 0,
-    currency = 'USD',
     nights = 1,
     roomCount = 1,
     description,
     onBookNow,
+    slidesRaw = [],
+    amenities,
 }) {
     const [open, setOpen] = useState(false)
+    const [includedBreakfast, setIncludedBreakfast] = useState(false)
 
     const onOpenModal = () => setOpen(true)
     const onCloseModal = () => setOpen(false)
 
-    const slides = [
-        {
-            url: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2620&q=80',
-        },
-        {
-            url: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80',
-        },
-        {
-            url: 'https://images.unsplash.com/photo-1661961112951-f2bfd1f253ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2672&q=80',
-        },
+    const slideResult = useMemo(() => {
+        const slides = slidesRaw.length > 0 ? slidesRaw : [{ photo: roomImage }]
+        return slides.map((slide) => ({
+            url: slide?.photo || roomImage,
+        }))
+    }, [slidesRaw, roomImage])
 
-        {
-            url: 'https://images.unsplash.com/photo-1512756290469-ec264b7fbf87?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2253&q=80',
-        },
-        {
-            url: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2671&q=80',
-        },
-    ]
+    useEffect(() => {
+        setIncludedBreakfast(
+            amenities.some((amenity) =>
+                amenity.name.toLowerCase().includes('breakfast')
+            )
+        )
+    }, [amenities])
 
     return (
         <>
-            <div className="mb-6 grid grid-cols-1 overflow-hidden rounded-md bg-gray-100 md:h-52 md:grid-cols-4 md:gap-3">
+            <div className="mb-6 grid grid-cols-1 overflow-hidden rounded-md bg-gray-100 md:h-52 md:grid-cols-4 md:gap-6">
                 <div className="mb-3 w-full md:mb-0">
                     <img
                         src={roomImage}
@@ -55,11 +54,18 @@ export default function RoomCard({
                 </div>
                 <div className="col-span-2 mb-3 w-full px-3 md:mb-0 md:px-0 md:py-6">
                     <h1 className="mb-3 text-2xl font-bold">{roomName}</h1>
-                    {hasBreakfast && (
+                    {includedBreakfast ? (
                         <div className="mb-3 flex items-center gap-3">
                             <CoffeeIcon className="size-6 text-amber-500" />{' '}
                             <span className="font-extrabold text-amber-500">
                                 Breakfast Included
+                            </span>
+                        </div>
+                    ) : (
+                        <div className="mb-3 flex items-center gap-3">
+                            <XMarkIcon className="size-6 text-red-500" />{' '}
+                            <span className="font-extrabold text-red-500">
+                                Breakfast Not Included
                             </span>
                         </div>
                     )}
@@ -67,7 +73,9 @@ export default function RoomCard({
                         <p className="text-base">
                             Max Occupancy: {maxOccupancy}
                         </p>
-                        <p className="text-base">Bed Config: {bedConfig}</p>
+                        <div className="text-base">
+                            Bed Config: {beds.map((bed) => bed.name).join(', ')}
+                        </div>
                     </div>
                     <Button
                         className="hidden !rounded-sm !px-2 !py-1 md:block"
@@ -78,7 +86,7 @@ export default function RoomCard({
                 </div>
                 <div className="mb-3 flex w-full flex-col justify-center px-3 md:mb-0 md:items-center md:px-0">
                     <h1 className="mb-3 text-2xl font-bold text-amber-500">
-                        {currency} {price}
+                        <Currency value={price} />
                     </h1>
                     <p className="mb-3 text-base text-amber-500 md:text-center">
                         Cost for {nights} night{nights > 1 ? 's' : ''} and{' '}
@@ -102,21 +110,56 @@ export default function RoomCard({
                 </div>
             </div>
 
-            <Modal open={open} onClose={onCloseModal} center>
+            <Modal
+                open={open}
+                onClose={onCloseModal}
+                center
+                classNames={{
+                    modal: 'md:w-full rounded-lg',
+                }}
+            >
                 <h2 className="mb-3 text-2xl font-bold">{roomName}</h2>
                 <div>
-                    <div className="mb-8 w-full">
-                        {/* <img
-                            src={roomImage}
-                            alt="room-image"
-                            loading="lazy"
-                            className="w-full"
-                        /> */}
-                        <ImageSlider slides={slides} />
+                    <div className="mb-8 flex w-full justify-center">
+                        <ImageSlider slides={slideResult} />
                     </div>
-                    <div>
-                        <h4 className="text-xl font-bold">Room Description</h4>
-                        <p>{description}</p>
+                    <div className="w-full">
+                        <div className="mb-3">
+                            <h4 className="text-lg font-bold">
+                                Room Description
+                            </h4>
+                            <div className="text-sm">{description}</div>
+                        </div>
+                        <div className="mb-3">
+                            <h4 className="text-lg font-bold">
+                                Available Beds
+                            </h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4">
+                                {beds.map((bed) => (
+                                    <div
+                                        className="flex items-center gap-2 text-sm"
+                                        key={bed.id}
+                                    >
+                                        <CheckIcon className="size-3 font-bold" />{' '}
+                                        {bed.name}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="mb-3">
+                            <h4 className="text-lg font-bold">Amenities</h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4">
+                                {amenities.map((amenity) => (
+                                    <div
+                                        className="flex items-center gap-2 text-sm"
+                                        key={amenity.id}
+                                    >
+                                        <CheckIcon className="size-3 font-bold" />{' '}
+                                        {amenity.name}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </Modal>
