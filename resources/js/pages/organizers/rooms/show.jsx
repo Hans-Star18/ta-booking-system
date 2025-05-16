@@ -1,4 +1,3 @@
-import Currency from '@/components/format/currency'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import {
     CheckIcon,
@@ -10,6 +9,7 @@ import { Head } from '@inertiajs/react'
 import parse from 'html-react-parser'
 import AllotmentManagementCalendar from '@/components/calendar/allotment-management-calendar'
 import Anchor from '@/components/form/anchor'
+import Currency from '@/components/format/currency'
 
 export default function Show({ room, allotments }) {
     return (

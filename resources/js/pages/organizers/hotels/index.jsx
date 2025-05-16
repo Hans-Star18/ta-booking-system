@@ -2,6 +2,7 @@ import Anchor from '@/components/form/anchor'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { Head, Link } from '@inertiajs/react'
 import parse from 'html-react-parser'
+import { formatWebsiteUrl, formatEmailUrl } from '@/utils/format'
 
 export default function Index({ hotel }) {
     return (
@@ -49,24 +50,24 @@ export default function Index({ hotel }) {
                             <h2 className="text-base text-gray-500 italic">
                                 Hotel Email
                             </h2>
-                            <Link
-                                href={`mailto:${hotel.email}`}
+                            <a
+                                href={formatEmailUrl(hotel.email)}
                                 className="text-lg font-bold underline"
                             >
                                 {hotel.email}
-                            </Link>
+                            </a>
                         </div>
                         <div className="col-span-3 mb-4 md:col-span-1">
                             <h2 className="text-base text-gray-500 italic">
                                 Hotel Website
                             </h2>
-                            <Link
-                                href={hotel.website}
+                            <a
+                                href={formatWebsiteUrl(hotel.website)}
                                 target="_blank"
                                 className="text-lg font-bold underline"
                             >
                                 {hotel.website}
-                            </Link>
+                            </a>
                         </div>
                         <div className="col-span-3 mb-4">
                             <h2 className="text-base text-gray-500 italic">

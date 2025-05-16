@@ -39,7 +39,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'isLoggedIn' => $request->user() !== null,
-                'hotel' => $request->user()->hotel,
+                'hotel' => $request->user()?->hotel,
             ],
             'route' => [
                 'currentUrl' => $request->url(),

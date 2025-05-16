@@ -31,7 +31,7 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::resource("hotels", HotelController::class)->except(['create', 'store', 'destroy', 'show']);
     });
 
-    Route::get("/logout", [LogoutController::class, "logout"])->name("logout");
+    Route::post("/logout", [LogoutController::class, "logout"])->name("logout");
 });
 
 Route::group(["as" => "auth."], function () {

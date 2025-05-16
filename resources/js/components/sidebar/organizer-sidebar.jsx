@@ -1,4 +1,4 @@
-import { Link, usePage } from '@inertiajs/react'
+import { Link, usePage, useForm } from '@inertiajs/react'
 import {
     ArrowLeftStartOnRectangleIcon,
     BuildingLibraryIcon,
@@ -12,6 +12,7 @@ import { useCallback } from 'react'
 
 export default function OrganizerSidebar() {
     const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar()
+    const { post } = useForm()
 
     const navItems = [
         {
@@ -47,6 +48,8 @@ export default function OrganizerSidebar() {
             icon: <ArrowLeftStartOnRectangleIcon className="size-6" />,
             name: 'Logout',
             href: route('logout'),
+            routeActive: 'logout',
+            isLogout: true,
         },
     ]
 
@@ -83,18 +86,43 @@ export default function OrganizerSidebar() {
             </div>
 
             <nav className="flex flex-col gap-2 md:gap-4">
-                {navItems.map((item, index) => (
-                    <Link
-                        key={index}
-                        href={item.href}
-                        className={`${isActive(item.routeActive) ? 'bg-blue-50 text-blue-700' : ''} flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-gray-100 ${!isExpanded && !isHovered ? 'md:justify-center' : 'justify-start'}`}
-                    >
-                        <span>{item.icon}</span>
-                        {(isExpanded || isHovered || isMobileOpen) && (
-                            <span>{item.name}</span>
-                        )}
-                    </Link>
-                ))}
+                {navItems.map((item, index) =>
+                    item.isLogout ? (
+                        <form
+                            key={index}
+                            onSubmit={(e) => {
+                                e.preventDefault()
+                                post(route('logout'), {
+                                    onSuccess: () => {
+                                        window.location.reload()
+                                    },
+                                })
+                            }}
+                            className="w-full"
+                        >
+                            <button
+                                type="submit"
+                                className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-gray-100 ${!isExpanded && !isHovered ? 'md:justify-center' : 'justify-start'}`}
+                            >
+                                <span>{item.icon}</span>
+                                {(isExpanded || isHovered || isMobileOpen) && (
+                                    <span>{item.name}</span>
+                                )}
+                            </button>
+                        </form>
+                    ) : (
+                        <Link
+                            key={index}
+                            href={item.href}
+                            className={`${isActive(item.routeActive) ? 'bg-blue-50 text-blue-700' : ''} flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-gray-100 ${!isExpanded && !isHovered ? 'md:justify-center' : 'justify-start'}`}
+                        >
+                            <span>{item.icon}</span>
+                            {(isExpanded || isHovered || isMobileOpen) && (
+                                <span>{item.name}</span>
+                            )}
+                        </Link>
+                    )
+                )}
             </nav>
         </aside>
     )

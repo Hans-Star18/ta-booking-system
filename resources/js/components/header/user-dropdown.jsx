@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Dropdown from '@/components/form/dropdown'
-import { Link, usePage } from '@inertiajs/react'
+import { usePage, useForm } from '@inertiajs/react'
 import {
     ArrowLeftStartOnRectangleIcon,
     ChevronDownIcon,
@@ -9,6 +9,7 @@ import {
 export default function UserDropdown() {
     const [isOpen, setIsOpen] = useState(false)
     const { auth } = usePage().props
+    const { post } = useForm()
 
     function toggleDropdown() {
         setIsOpen(!isOpen)
@@ -52,13 +53,26 @@ export default function UserDropdown() {
                     </span>
                 </div>
 
-                <Link
-                    href={route('logout')}
-                    className="group text-theme-sm mt-3 flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                <form
+                    action={route('logout')}
+                    method="POST"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        post(route('logout'), {
+                            onSuccess: () => {
+                                window.location.reload()
+                            },
+                        })
+                    }}
                 >
-                    <ArrowLeftStartOnRectangleIcon className="size-6" />
-                    Sign out
-                </Link>
+                    <button
+                        type="submit"
+                        className="group text-theme-sm mt-3 flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                    >
+                        <ArrowLeftStartOnRectangleIcon className="size-6" />
+                        Sign out
+                    </button>
+                </form>
             </Dropdown>
         </div>
     )
