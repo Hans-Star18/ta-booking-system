@@ -40,4 +40,5 @@ Route::group(["as" => "customer."], function () {
     Route::get("/reservation/finish", [HomeController::class, "finishReservation"])->name("reservation.finish");
 
     Route::get("/{hotel:uuid}", [ReservationController::class, "index"])->name("reservation.index");
+    Route::post("/{hotel:uuid}/check-availability", [ReservationController::class, "checkAvailability"])->name("reservation.check-availability");
 });

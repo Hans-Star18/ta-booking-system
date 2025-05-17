@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\CheckAvaibilityRequest;
 
 class ReservationController extends Controller
 {
@@ -15,5 +16,10 @@ class ReservationController extends Controller
         return inertia("customers/reservation", [
             "hotel" => $hotel,
         ]);
+    }
+
+    public function checkAvailability(CheckAvaibilityRequest $request, Hotel $hotel)
+    {
+        dd($request->all());
     }
 }
