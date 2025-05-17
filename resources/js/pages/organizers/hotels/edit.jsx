@@ -1,4 +1,3 @@
-import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
@@ -8,7 +7,6 @@ import ValidationFeedback from '@/components/form/validation-feedback'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Head, useForm } from '@inertiajs/react'
-import parse from 'html-react-parser'
 
 export default function Edit({ hotel }) {
     const { data, setData, put, processing, errors } = useForm({

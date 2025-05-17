@@ -6,10 +6,10 @@ import {
     PhotoIcon,
 } from '@heroicons/react/24/outline'
 import { Head } from '@inertiajs/react'
-import parse from 'html-react-parser'
 import AllotmentManagementCalendar from '@/components/calendar/allotment-management-calendar'
 import Anchor from '@/components/form/anchor'
 import Currency from '@/components/format/currency'
+import HTMLReactParser from 'html-react-parser'
 
 export default function Show({ room, allotments }) {
     return (
@@ -48,7 +48,7 @@ export default function Show({ room, allotments }) {
                                 Description
                             </h2>
                             <div className="mb-3 text-gray-600">
-                                {parse(room.description || '')}
+                                {HTMLReactParser(room.description || '')}
                             </div>
                             <Anchor
                                 variant="primary"

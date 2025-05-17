@@ -1,8 +1,8 @@
 import Anchor from '@/components/form/anchor'
 import OrganizerLayout from '@/layouts/organizer-layout'
-import { Head, Link } from '@inertiajs/react'
-import parse from 'html-react-parser'
+import { Head } from '@inertiajs/react'
 import { formatWebsiteUrl, formatEmailUrl } from '@/utils/format'
+import HTMLReactParser from 'html-react-parser'
 
 export default function Index({ hotel }) {
     return (
@@ -74,7 +74,9 @@ export default function Index({ hotel }) {
                                 Terms and Conditions
                             </h2>
                             <div className="rounded-lg border border-gray-300 p-4 text-base">
-                                {parse(hotel.term_and_condition || '')}
+                                {HTMLReactParser(
+                                    hotel.term_and_condition || ''
+                                )}
                             </div>
                         </div>
                     </div>
