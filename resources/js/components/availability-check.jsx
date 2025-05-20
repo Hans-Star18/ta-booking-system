@@ -22,7 +22,9 @@ export default function AvailabilityCheck({
 
     useEffect(() => {
         if (checkInDate) {
-            setCheckOutDate(getNextDay(checkInDate))
+            if (!checkOutDate || checkOutDate < checkInDate) {
+                setCheckOutDate(getNextDay(checkInDate))
+            }
         }
     }, [checkInDate])
 
@@ -35,7 +37,7 @@ export default function AvailabilityCheck({
                             value={checkInDate}
                             onChange={(selectedDates) => {
                                 setCheckInDate(selectedDates[0])
-                                setCheckOutDate(null)
+                                // setCheckOutDate(null)
                             }}
                             options={{
                                 disableMobile: 'true',

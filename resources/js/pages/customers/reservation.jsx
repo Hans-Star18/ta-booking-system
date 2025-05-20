@@ -19,11 +19,11 @@ export default function Reservation({ hotel }) {
     })
 
     const handleBooking = (roomId) => {
-        // if (!checkInDate) {
-        //     alert('Silakan isi tanggal check-in terlebih dahulu.')
-        //     return
-        // }
-        // console.log('Booking room', roomId, 'on', checkInDate, checkOutDate)
+        if (!data.check_in) {
+            alert('Silakan isi tanggal check-in terlebih dahulu.')
+            return
+        }
+        console.log('Booking room', roomId, 'on', data.check_in, data.check_out)
     }
 
     const handleCheckAvailability = () => {
@@ -57,20 +57,28 @@ export default function Reservation({ hotel }) {
                 />
 
                 <div>
-                    {hotel.rooms.map((room, index) => (
-                        <RoomCard
-                            key={room.id}
-                            roomImage={room.cover_image}
-                            roomName={room.name}
-                            maxOccupancy={room.max_occupancy}
-                            beds={room.beds}
-                            price={room.price}
-                            slidesRaw={room.photos}
-                            onBookNow={handleBooking}
-                            description={HTMLReactParser(room.description)}
-                            amenities={room.amenities}
-                        />
-                    ))}
+                    {hotel.rooms && hotel.rooms.length > 0 ? (
+                        hotel.rooms.map((room, index) => (
+                            <RoomCard
+                                key={room.id}
+                                roomImage={room.cover_image}
+                                roomName={room.name}
+                                maxOccupancy={room.max_occupancy}
+                                beds={room.beds}
+                                price={room.price}
+                                slidesRaw={room.photos}
+                                onBookNow={() => handleBooking(room.id)}
+                                description={HTMLReactParser(room.description)}
+                                amenities={room.amenities}
+                            />
+                        ))
+                    ) : (
+                        <div className="py-8 text-center">
+                            <p className="text-gray-600">
+                                Tidak ada kamar yang tersedia saat ini.
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 <Footer />
