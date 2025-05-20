@@ -145,13 +145,29 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
 
     const mergeEvents = (defaults, specifics) => {
         return defaults.map((event) => {
-            const found = specifics.find((e) => e.start === event.start)
-            return found || event
+            const defaultDate = event.start.split('T')[0]
+            const found = specifics.find((e) => {
+                const specificDate = e.start.split('T')[0]
+                return specificDate === defaultDate
+            })
+            if (found) {
+                return {
+                    ...event,
+                    title: found.title,
+                    extendedProps: {
+                        ...event.extendedProps,
+                        ...found.extendedProps,
+                    },
+                }
+            }
+            return event
         })
     }
 
     const renderEventContent = (eventInfo) => {
-        const colorClass = `fc-bg-${eventInfo.event.extendedProps.calendar.toLowerCase()}`
+        const colorClass = eventInfo.event.extendedProps.calendar
+            ? `fc-bg-${eventInfo.event.extendedProps.calendar.toLowerCase()}`
+            : 'fc-bg-danger'
         return (
             <div
                 className={`event-fc-color fc-event-main flex ${colorClass} items-center rounded-sm p-1`}
@@ -290,6 +306,8 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
                                                 setBatchData(
                                                     'start_date',
                                                     selectedDates[0]
+                                                        .toISOString()
+                                                        .split('T')[0]
                                                 )
                                             }}
                                             options={{
@@ -320,6 +338,8 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
                                                 setBatchData(
                                                     'end_date',
                                                     selectedDates[0]
+                                                        .toISOString()
+                                                        .split('T')[0]
                                                 )
                                             }}
                                             options={{

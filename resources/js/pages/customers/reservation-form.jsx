@@ -31,11 +31,19 @@ export default function Reservation() {
                                         </p>
                                         <p className="text-sm">
                                             Check In:{' '}
-                                            {new Date().toLocaleString()}
+                                            {
+                                                new Date()
+                                                    .toISOString()
+                                                    .split('T')[0]
+                                            }
                                         </p>
                                         <p className="text-sm">
                                             Check Out:{' '}
-                                            {new Date().toLocaleString()}
+                                            {
+                                                new Date()
+                                                    .toISOString()
+                                                    .split('T')[0]
+                                            }
                                         </p>
                                         <p className="text-sm">
                                             Total Nights: 1 Night

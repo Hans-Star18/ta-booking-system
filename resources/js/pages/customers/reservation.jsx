@@ -3,14 +3,19 @@ import RoomCard from '@/components/room-card'
 import Footer from '@/components/footer'
 import AvailabilityCheck from '@/components/availability-check'
 import { Head, useForm } from '@inertiajs/react'
-import { useState } from 'react'
 import HTMLReactParser from 'html-react-parser'
 import BasicAlert from '@/components/alert/basic-alert'
 
 export default function Reservation({ hotel }) {
-    const { data, setData, post, processing } = useForm({
-        check_in: null,
-        check_out: null,
+    const searchParams = new URLSearchParams(window.location.search)
+
+    const { data, setData, get, processing } = useForm({
+        check_in: searchParams.get('check_in')
+            ? new Date(searchParams.get('check_in'))
+            : null,
+        check_out: searchParams.get('check_out')
+            ? new Date(searchParams.get('check_out'))
+            : null,
     })
 
     const handleBooking = (roomId) => {
@@ -22,7 +27,7 @@ export default function Reservation({ hotel }) {
     }
 
     const handleCheckAvailability = () => {
-        post(route('customer.reservation.check-availability', hotel.uuid), {
+        get(route('customer.reservation.check-availability', hotel.uuid), {
             preserveScroll: true,
             onSuccess: (response) => {
                 //
