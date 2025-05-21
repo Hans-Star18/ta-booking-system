@@ -6,7 +6,7 @@ import { Head, useForm } from '@inertiajs/react'
 import HTMLReactParser from 'html-react-parser'
 import BasicAlert from '@/components/alert/basic-alert'
 
-export default function Reservation({ hotel }) {
+export default function Reservation({ hotel, hasCheckAvailability = false }) {
     const searchParams = new URLSearchParams(window.location.search)
 
     const { data, setData, get, processing } = useForm({
@@ -19,10 +19,15 @@ export default function Reservation({ hotel }) {
     })
 
     const handleBooking = (roomId) => {
-        if (!data.check_in) {
-            alert('Silakan isi tanggal check-in terlebih dahulu.')
+        if (!hasCheckAvailability) {
+            BasicAlert({
+                title: 'Validation Error',
+                text: 'Please check your check-in and check-out date again.',
+                icon: 'warning',
+            })
             return
         }
+
         console.log('Booking room', roomId, 'on', data.check_in, data.check_out)
     }
 
