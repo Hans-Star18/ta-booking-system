@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Models\Room;
 use App\Models\Hotel;
+use App\Traits\ReservationHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CheckAvaibilityRequest;
-use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
+    use ReservationHelper;
+
     public function index(Hotel $hotel)
     {
         $hotel->load(['rooms', 'rooms.photos', 'rooms.allotments']);
@@ -22,34 +25,17 @@ class ReservationController extends Controller
     {
         $hasCheckAvailability = false;
         try {
-            $startDate = Carbon::parse($request->check_in)->timezone('Asia/Makassar')->startOfDay();
-            $endDate = Carbon::parse($request->check_out)->timezone('Asia/Makassar')->startOfDay();
-            $dates = collect();
+            if ($hotel = $this->availableRooms($hotel, $request->check_in, $request->check_out)) {
+                session()->put('reservation', [
+                    'hotel' => $hotel,
+                    'check_in' => $request->check_in,
+                    'check_out' => $request->check_out,
+                ]);
 
-            for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-                $dates->push($date->format('Y-m-d'));
+                $hasCheckAvailability = true;
+            } else {
+                $hasCheckAvailability = false;
             }
-
-            $hotel->load([
-                'rooms' => function ($query) use ($dates) {
-                    $query->whereHas('allotments', function ($q) use ($dates) {
-                        $q->whereIn('date', $dates)
-                            ->where('allotment', '>', 0);
-                    }, '=', $dates->count());
-                },
-                'rooms.photos',
-                'rooms.allotments' => function ($query) use ($dates) {
-                    $query->whereIn('date', $dates)
-                        ->where('allotment', '>', 0);
-                },
-            ]);
-
-            session()->put('reservation', [
-                'hotel' => $hotel,
-                'check_in' => $request->check_in,
-                'check_out' => $request->check_out,
-            ]);
-            $hasCheckAvailability = true;
         } catch (\Throwable $th) {
             $hasCheckAvailability = false;
             logger()->error('Error checking availability: ' . $th->getMessage());
@@ -59,5 +45,27 @@ class ReservationController extends Controller
             "hotel" => $hotel,
             "hasCheckAvailability" => $hasCheckAvailability,
         ]);
+    }
+
+    public function confirm(Hotel $hotel, Room $room)
+    {
+        $reservation = session()->get('reservation');
+
+        if (!$reservation) {
+            return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
+                'message' => 'Reservation not found',
+                'type' => 'error',
+            ]);
+        }
+
+        // if ($reservation) {
+        //     $reservation['room'] = $room;
+        // }
+
+        // return inertia("customers/reservation", [
+        //     "hotel" => $hotel,
+        //     "room" => $room,
+        //     "reservation" => $reservation,
+        // ]);
     }
 }

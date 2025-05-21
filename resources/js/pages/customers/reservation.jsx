@@ -9,7 +9,12 @@ import BasicAlert from '@/components/alert/basic-alert'
 export default function Reservation({ hotel, hasCheckAvailability = false }) {
     const searchParams = new URLSearchParams(window.location.search)
 
-    const { data, setData, get, processing } = useForm({
+    const {
+        data: availabilityData,
+        setData: availabilitySetData,
+        get: availabilityGet,
+        processing: availabilityProcessing,
+    } = useForm({
         check_in: searchParams.get('check_in')
             ? new Date(searchParams.get('check_in'))
             : null,
@@ -17,6 +22,14 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
             ? new Date(searchParams.get('check_out'))
             : null,
     })
+
+    const {
+        data: bookingData,
+        setData: bookingSetData,
+        get: bookingGet,
+        processing: bookingProcessing,
+        errors: bookingErrors,
+    } = useForm({})
 
     const handleBooking = (roomId) => {
         if (!hasCheckAvailability) {
@@ -28,23 +41,40 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
             return
         }
 
-        console.log('Booking room', roomId, 'on', data.check_in, data.check_out)
+        bookingGet(
+            route('customer.reservation.confirm', {
+                hotel: hotel.uuid,
+                room: roomId,
+            }),
+            {
+                preserveScroll: false,
+                onSuccess: (response) => {
+                    //
+                },
+                onError: (errors) => {
+                    //
+                },
+            }
+        )
     }
 
     const handleCheckAvailability = () => {
-        get(route('customer.reservation.check-availability', hotel.uuid), {
-            preserveScroll: true,
-            onSuccess: (response) => {
-                //
-            },
-            onError: (errors) => {
-                BasicAlert({
-                    title: 'Validation Error',
-                    text: errors?.check_in ?? errors?.check_out,
-                    icon: 'warning',
-                })
-            },
-        })
+        availabilityGet(
+            route('customer.reservation.check-availability', hotel.uuid),
+            {
+                preserveScroll: true,
+                onSuccess: (response) => {
+                    //
+                },
+                onError: (errors) => {
+                    BasicAlert({
+                        title: 'Validation Error',
+                        text: errors?.check_in ?? errors?.check_out,
+                        icon: 'warning',
+                    })
+                },
+            }
+        )
     }
 
     return (
@@ -53,12 +83,16 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
 
             <CustomerLayout currenStep={1} hotel={hotel}>
                 <AvailabilityCheck
-                    checkInDate={data.check_in}
-                    checkOutDate={data.check_out}
-                    setCheckInDate={(value) => setData('check_in', value)}
-                    setCheckOutDate={(value) => setData('check_out', value)}
+                    checkInDate={availabilityData.check_in}
+                    checkOutDate={availabilityData.check_out}
+                    setCheckInDate={(value) =>
+                        availabilitySetData('check_in', value)
+                    }
+                    setCheckOutDate={(value) =>
+                        availabilitySetData('check_out', value)
+                    }
                     handleCheckAvailability={handleCheckAvailability}
-                    processing={processing}
+                    processing={availabilityProcessing}
                 />
 
                 <div>
