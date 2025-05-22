@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('hotel_id')->constrained()->cascadeOnDelete();
-            $table->string('midtrans_client_key', 100);
-            $table->string('midtrans_server_key', 100);
-            $table->integer('dp_percentage');
-            $table->integer('tax_percentage');
-            $table->float('extra_bed_price');
+            $table->string('midtrans_client_key', 100)->nullable();
+            $table->string('midtrans_server_key', 100)->nullable();
+            $table->integer('dp_percentage')->default(0);
+            $table->integer('tax_percentage')->default(0);
+            $table->float('extra_bed_price')->default(0);
             $table->timestamps();
         });
     }

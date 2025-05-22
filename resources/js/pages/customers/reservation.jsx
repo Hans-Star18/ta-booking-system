@@ -42,7 +42,7 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
         }
 
         bookingGet(
-            route('customer.reservation.confirm', {
+            route('customer.reservation.detail', {
                 hotel: hotel.uuid,
                 room: roomId,
             }),

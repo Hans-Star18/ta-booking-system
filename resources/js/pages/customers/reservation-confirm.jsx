@@ -7,12 +7,14 @@ import { Textarea } from '@/components/form/textarea'
 import CustomerLayout from '@/layouts/customer-layout'
 import { Head } from '@inertiajs/react'
 
-export default function ReservationConfirm() {
+export default function ReservationConfirm({ hotel, room, reservation }) {
+    console.log(hotel, room, reservation)
+
     return (
         <>
             <Head title="Reservation Confirmation" />
 
-            <CustomerLayout currenStep={3}>
+            <CustomerLayout currenStep={3} hotel={hotel}>
                 <div className="mt-6 w-full bg-gray-100 p-4">
                     <h2 className="text-2xl font-bold">
                         Confirm Your Reservation

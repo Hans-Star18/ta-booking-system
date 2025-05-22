@@ -36,7 +36,7 @@ trait ReservationHelper
         return $hotel;
     }
 
-    protected function availableRoom(Room $room, $checkIn, $checkOut): Room|null
+    protected function availableRoom(Room $room, $checkIn, $checkOut): Collection|null
     {
         try {
             $dates = $this->collectDates($checkIn, $checkOut);
@@ -53,7 +53,7 @@ trait ReservationHelper
             return null;
         }
 
-        return $room;
+        return $room->allotments;
     }
 
     protected function dateParser(String $date): Carbon|null
@@ -84,5 +84,13 @@ trait ReservationHelper
         }
 
         return $dates;
+    }
+
+    protected function calculateTotalNights(String $checkIn, String $checkOut): Int
+    {
+        $startDate = $this->dateParser($checkIn);
+        $endDate = $this->dateParser($checkOut);
+
+        return $startDate->diffInDays($endDate);
     }
 }

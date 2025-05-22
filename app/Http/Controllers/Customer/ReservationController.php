@@ -24,12 +24,13 @@ class ReservationController extends Controller
     public function checkAvailability(CheckAvaibilityRequest $request, Hotel $hotel)
     {
         $hasCheckAvailability = false;
+
         try {
             if ($hotel = $this->availableRooms($hotel, $request->check_in, $request->check_out)) {
                 session()->put('reservation', [
                     'hotel' => $hotel,
-                    'check_in' => $request->check_in,
-                    'check_out' => $request->check_out,
+                    'check_in' => $this->dateParser($request->check_in),
+                    'check_out' => $this->dateParser($request->check_out),
                 ]);
 
                 $hasCheckAvailability = true;
@@ -47,25 +48,32 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function confirm(Hotel $hotel, Room $room)
+    public function detail(Hotel $hotel, Room $room)
     {
         $reservation = session()->get('reservation');
-
-        if (!$reservation) {
+        if (blank($this->availableRoom($room, $reservation['check_in'], $reservation['check_out']))) {
             return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
-                'message' => 'Reservation not found',
+                'message' => 'Room not available please try again',
                 'type' => 'error',
             ]);
         }
 
-        // if ($reservation) {
-        //     $reservation['room'] = $room;
-        // }
+        if (blank($reservation)) {
+            return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
+                'message' => 'Reservation not found please try again',
+                'type' => 'error',
+            ]);
+        }
 
-        // return inertia("customers/reservation", [
-        //     "hotel" => $hotel,
-        //     "room" => $room,
-        //     "reservation" => $reservation,
-        // ]);
+        if ($reservation) {
+            $reservation['room'] = $room;
+            $reservation['check_in'] = $reservation['check_in']->format('d F Y');
+            $reservation['check_out'] = $reservation['check_out']->format('d F Y');
+            $reservation['total_nights'] = $this->calculateTotalNights($reservation['check_in'], $reservation['check_out']);
+        }
+
+        return inertia("customers/reservation-detail", [
+            "reservation" => $reservation,
+        ]);
     }
 }

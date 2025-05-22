@@ -109,7 +109,7 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
         errorsBatch.start_date = null
         errorsBatch.end_date = null
         errorsBatch.allotment = null
-        setOpenBatchUpdateAllotmentModal(true)
+        onOpenBatchUpdateAllotmentModal()
     }
 
     const handleBatchUpdate = () => {
@@ -306,8 +306,6 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
                                                 setBatchData(
                                                     'start_date',
                                                     selectedDates[0]
-                                                        .toISOString()
-                                                        .split('T')[0]
                                                 )
                                             }}
                                             options={{
@@ -338,8 +336,6 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
                                                 setBatchData(
                                                     'end_date',
                                                     selectedDates[0]
-                                                        .toISOString()
-                                                        .split('T')[0]
                                                 )
                                             }}
                                             options={{

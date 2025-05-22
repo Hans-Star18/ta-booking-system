@@ -18,6 +18,10 @@ class Hotel extends Model
         'uuid',
     ];
 
+    protected $with = [
+        'setting',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

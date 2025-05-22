@@ -11,6 +11,7 @@ use Database\Seeders\stub\UserSeeder;
 use Database\Seeders\stub\HotelSeeder;
 use Database\Seeders\stub\AmenitySeeder;
 use Database\Seeders\stub\PromotionCodeSeeder;
+use Database\Seeders\stub\SettingSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,6 +35,7 @@ class DatabaseSeeder extends Seeder
             HotelSeeder::class,
             RoomSeeder::class,
             PromotionCodeSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }
