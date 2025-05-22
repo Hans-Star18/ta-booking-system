@@ -3,11 +3,11 @@ export default function Stepper({ step }) {
         <>
             <div className="grid grid-cols-4 gap-8">
                 <div
-                    className={`border border-blue-400 p-3 rounded-md ${
-                        step === 1 ? "bg-blue-200" : ""
+                    className={`rounded-md border border-blue-400 p-3 ${
+                        step === 1 ? 'bg-blue-200' : ''
                     }`}
                 >
-                    <div className="text-center text-lg font-normal flex gap-4 items-center justify-center">
+                    <div className="flex items-center justify-center gap-4 text-center text-lg font-normal">
                         <span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -27,11 +27,11 @@ export default function Stepper({ step }) {
                 </div>
 
                 <div
-                    className={`border border-blue-400 p-3 rounded-md ${
-                        step === 2 ? "bg-blue-200" : ""
+                    className={`rounded-md border border-blue-400 p-3 ${
+                        step === 2 ? 'bg-blue-200' : ''
                     }`}
                 >
-                    <div className="text-center text-lg font-normal flex gap-4 items-center justify-center">
+                    <div className="flex items-center justify-center gap-4 text-center text-lg font-normal">
                         <span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -49,11 +49,11 @@ export default function Stepper({ step }) {
                 </div>
 
                 <div
-                    className={`border border-blue-400 p-3 rounded-md ${
-                        step === 3 ? "bg-blue-200" : ""
+                    className={`rounded-md border border-blue-400 p-3 ${
+                        step === 3 ? 'bg-blue-200' : ''
                     }`}
                 >
-                    <div className="text-center text-lg font-normal flex gap-4 items-center justify-center">
+                    <div className="flex items-center justify-center gap-4 text-center text-lg font-normal">
                         <span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -73,11 +73,11 @@ export default function Stepper({ step }) {
                 </div>
 
                 <div
-                    className={`border border-blue-400 p-3 rounded-md ${
-                        step === 4 ? "bg-blue-200" : ""
+                    className={`rounded-md border border-blue-400 p-3 ${
+                        step === 4 ? 'bg-blue-200' : ''
                     }`}
                 >
-                    <div className="text-center text-lg font-normal flex gap-4 items-center justify-center">
+                    <div className="flex items-center justify-center gap-4 text-center text-lg font-normal">
                         <span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -95,5 +95,5 @@ export default function Stepper({ step }) {
                 </div>
             </div>
         </>
-    );
+    )
 }

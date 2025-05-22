@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import Currency from '@/components/format/currency'
 import BasicAlert from '@/components/alert/basic-alert'
+import Anchor from '@/components/form/anchor'
 
 export default function ReservationDetail({ reservation }) {
     const hotel = reservation.hotel
@@ -17,13 +18,11 @@ export default function ReservationDetail({ reservation }) {
 
     const [includedBreakfast, setIncludedBreakfast] = useState(false)
     const [roomRates, setRoomRates] = useState([])
-    const [selectedBed, setSelectedBed] = useState(null)
-    const [needExtraBed, setNeedExtraBed] = useState(false)
-    const [extraBedPrice, setExtraBedPrice] = useState(0)
-    const [guest, setGuest] = useState({
-        adult: 1,
-        child: 0,
-    })
+    const [roomCount, setRoomCount] = useState(1)
+    const [selectedBeds, setSelectedBeds] = useState([])
+    const [needExtraBeds, setNeedExtraBeds] = useState([])
+    const [extraBedPrices, setExtraBedPrices] = useState([])
+    const [guests, setGuests] = useState([])
     const [adultGuestOptions, setAdultGuestOptions] = useState([
         {
             value: 1,
@@ -38,6 +37,8 @@ export default function ReservationDetail({ reservation }) {
     ])
 
     useEffect(() => {
+        const allotmentCount = parseInt(reservation.allotment)
+
         setIncludedBreakfast(
             room.amenities.some((amenity) =>
                 amenity.name.toLowerCase().includes('breakfast')
@@ -69,36 +70,76 @@ export default function ReservationDetail({ reservation }) {
                 }
             })
         )
-        setSelectedBed(selectedBed ?? room.beds[0])
+        setRoomCount(allotmentCount)
+        const initialGuests = Array.from({ length: allotmentCount }, () => ({
+            adult: 1,
+            child: 0,
+        }))
+        setGuests(initialGuests)
+
+        setSelectedBeds(
+            Array.from({ length: allotmentCount }, () => room.beds[0])
+        )
+        setNeedExtraBeds(Array.from({ length: allotmentCount }, () => false))
+        setExtraBedPrices(Array.from({ length: allotmentCount }, () => 0))
     }, [room, reservation])
 
     useEffect(() => {
-        if (selectedBed) {
-            let countGuest = guest.adult + guest.child
-            if (countGuest > selectedBed.capacity) {
-                if (!needExtraBed) {
+        const newNeedExtraBeds = []
+        const newExtraBedPrices = []
+
+        guests.forEach((guest, i) => {
+            const bed = selectedBeds[i]
+            const totalGuest = guest.adult + guest.child
+
+            if (bed && totalGuest > bed.capacity) {
+                if (needExtraBeds[i] == false) {
                     BasicAlert({
                         title: 'Extra Bed',
-                        text: 'You need to add extra bed for this room',
-                        icon: 'info',
+                        text: 'You need extra bed for this room',
+                        icon: 'warning',
                     })
                 }
 
-                setNeedExtraBed(true)
-                setExtraBedPrice(
+                newNeedExtraBeds[i] = true
+                newExtraBedPrices[i] =
                     hotel.setting.extra_bed_price *
-                        (countGuest - selectedBed.capacity) *
-                        reservation.total_nights
-                )
+                    (totalGuest - bed.capacity) *
+                    reservation.total_nights
             } else {
-                setNeedExtraBed(false)
-                setExtraBedPrice(0)
+                newNeedExtraBeds[i] = false
+                newExtraBedPrices[i] = 0
             }
-        }
-    }, [guest, selectedBed])
+        })
 
-    const subTotal = roomRates.reduce((acc, rate) => acc + rate.price, 0)
-    const totalPrice = subTotal + extraBedPrice
+        setNeedExtraBeds(newNeedExtraBeds)
+        setExtraBedPrices(newExtraBedPrices)
+    }, [guests, selectedBeds])
+
+    const handleSelectedGuests = (index, type, value) => {
+        const updated = [...guests]
+        updated[index][type] = parseInt(value)
+
+        const totalGuest = updated[index].adult + updated[index].child
+
+        if (totalGuest > room.max_occupancy) {
+            BasicAlert({
+                title: 'Max Occupancy',
+                text: 'You have exceeded the maximum occupancy for this room',
+                icon: 'warning',
+            })
+            return
+        }
+
+        setGuests(updated)
+    }
+
+    const subTotal = roomRates.reduce(
+        (acc, rate) => acc + rate.price * roomCount,
+        0
+    )
+    const totalExtraBedPrice = extraBedPrices.reduce((sum, val) => sum + val, 0)
+    const totalPrice = subTotal + totalExtraBedPrice
 
     return (
         <>
@@ -181,6 +222,7 @@ export default function ReservationDetail({ reservation }) {
 
                                     <div className="md:px-4">
                                         <p className="text-sm">
+                                            {`${roomCount} Room(s) - `}
                                             <Currency value={subTotal} />
                                         </p>
                                     </div>
@@ -200,7 +242,11 @@ export default function ReservationDetail({ reservation }) {
                                                 key={rate.date}
                                             >
                                                 {rate.date} :{' '}
-                                                <Currency value={rate.price} />
+                                                <Currency
+                                                    value={
+                                                        rate.price * roomCount
+                                                    }
+                                                />
                                             </p>
                                         ))}
                                     </div>
@@ -217,106 +263,119 @@ export default function ReservationDetail({ reservation }) {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-6">
-                                <div className="border border-gray-300 px-4 py-2 md:col-span-2">
-                                    <p className="text-sm font-semibold">
-                                        {room.name}
-                                    </p>
-                                    <hr className="mb-2 text-gray-300 md:hidden" />
-                                    <div className="flex gap-2">
-                                        <Select
-                                            id={'adult-guest'}
-                                            name={'adult-guest'}
-                                            className={
-                                                'h-8 w-24 rounded-sm px-2 py-1'
-                                            }
-                                            options={adultGuestOptions}
-                                            onChange={(e) =>
-                                                setGuest((prev) => ({
-                                                    ...prev,
-                                                    adult: parseInt(
+                            {Array.from({ length: roomCount }, (_, index) => (
+                                <div
+                                    key={`room-${index}`}
+                                    className="grid grid-cols-1 md:grid-cols-6"
+                                >
+                                    <div className="border border-gray-300 px-4 py-2 md:col-span-2">
+                                        <p className="text-sm font-semibold">
+                                            Room {index + 1}
+                                        </p>
+                                        <div className="flex gap-2">
+                                            <Select
+                                                id={`adult-guest-${index}`}
+                                                name={`adult-guest-${index}`}
+                                                className="h-8 w-24 rounded-sm px-2 py-1"
+                                                options={adultGuestOptions}
+                                                value={guests[index]?.adult}
+                                                onChange={(e) => {
+                                                    handleSelectedGuests(
+                                                        index,
+                                                        'adult',
                                                         e.target.value
-                                                    ),
-                                                }))
-                                            }
-                                        />
-
-                                        <Select
-                                            id={'child-guest'}
-                                            name={'child-guest'}
-                                            className={
-                                                'h-8 w-24 rounded-sm px-2 py-1'
-                                            }
-                                            options={childGuestOptions}
-                                            onChange={(e) =>
-                                                setGuest((prev) => ({
-                                                    ...prev,
-                                                    child: parseInt(
-                                                        e.target.value
-                                                    ),
-                                                }))
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="border border-b-0 border-gray-300 px-4 py-2 md:col-span-3 md:border">
-                                    <p className="text-sm font-semibold">
-                                        Bed Config
-                                    </p>
-                                    <hr className="mb-2 text-gray-300 md:hidden" />
-                                    <div>
-                                        {room.beds.map((bed, index) => (
-                                            <div
-                                                className="flex items-center"
-                                                key={`bed-${bed.slug}-${index}`}
-                                            >
-                                                <Radio
-                                                    id={bed.slug}
-                                                    name={'bed-config'}
-                                                    checked={
-                                                        selectedBed?.slug ===
-                                                        bed.slug
-                                                    }
-                                                    onChange={() => {
-                                                        setSelectedBed(bed)
-                                                    }}
-                                                />
-                                                <Label
-                                                    htmlFor={bed.slug}
-                                                    className="ms-2 mb-0 text-sm text-gray-900"
-                                                >
-                                                    {bed.name} ({bed.capacity}
-                                                    {bed.capacity > 1
-                                                        ? ' Persons'
-                                                        : ' Person'}
                                                     )
-                                                </Label>
-                                            </div>
-                                        ))}
-
-                                        {needExtraBed && (
-                                            <p className="text-sm text-gray-500 italic">
-                                                * Extra bed confirmed
-                                            </p>
-                                        )}
+                                                }}
+                                            />
+                                            <Select
+                                                id={`child-guest-${index}`}
+                                                name={`child-guest-${index}`}
+                                                className="h-8 w-24 rounded-sm px-2 py-1"
+                                                options={childGuestOptions}
+                                                value={guests[index]?.child}
+                                                onChange={(e) => {
+                                                    handleSelectedGuests(
+                                                        index,
+                                                        'child',
+                                                        e.target.value
+                                                    )
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="border border-gray-300 px-4 py-2 md:col-span-3">
+                                        <p className="text-sm font-semibold">
+                                            Bed Config
+                                        </p>
+                                        <div>
+                                            {room.beds.map((bed, bedIdx) => (
+                                                <div
+                                                    className="flex items-center"
+                                                    key={`bed-${index}-${bedIdx}`}
+                                                >
+                                                    <Radio
+                                                        id={`${bed.slug}-${index}`}
+                                                        name={`bed-config-${index}`}
+                                                        checked={
+                                                            selectedBeds[index]
+                                                                ?.slug ===
+                                                            bed.slug
+                                                        }
+                                                        onChange={() => {
+                                                            const updated = [
+                                                                ...selectedBeds,
+                                                            ]
+                                                            updated[index] = bed
+                                                            setSelectedBeds(
+                                                                updated
+                                                            )
+                                                        }}
+                                                    />
+                                                    <Label
+                                                        htmlFor={`${bed.slug}-${index}`}
+                                                        className="ms-2 mb-0 text-sm text-gray-900"
+                                                    >
+                                                        {bed.name} (
+                                                        {bed.capacity}{' '}
+                                                        {bed.capacity > 1
+                                                            ? 'Persons'
+                                                            : 'Person'}
+                                                        )
+                                                    </Label>
+                                                </div>
+                                            ))}
+                                            {needExtraBeds[index] && (
+                                                <p className="text-sm text-gray-500 italic">
+                                                    * Extra bed confirmed
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="border border-t-0 border-gray-300 px-4 py-2 md:border">
+                                        <p className="text-sm font-semibold md:hidden">
+                                            Price
+                                        </p>
+                                        <hr className="mb-2 text-gray-300 md:hidden" />
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="mb-[2px]">+ </span>
+                                            <span>
+                                                <Currency
+                                                    value={
+                                                        extraBedPrices[index]
+                                                    }
+                                                />
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-amber-500">
+                                            {`Const for ${reservation.total_nights} night${
+                                                reservation.total_nights > 1
+                                                    ? 's'
+                                                    : ''
+                                            }`}
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="border border-t-0 border-gray-300 px-4 py-2 md:border">
-                                    <p className="text-sm font-semibold md:hidden">
-                                        Price
-                                    </p>
-                                    <hr className="mb-2 text-gray-300 md:hidden" />
-                                    <div className="flex items-center gap-2 text-sm">
-                                        <span className="mb-[2px]">+ </span>
-                                        <span>
-                                            <Currency value={extraBedPrice} />
-                                        </span>
-                                    </div>
-                                    <p className="text-sm text-amber-500">
-                                        Const for 1 night
-                                    </p>
-                                </div>
-                            </div>
+                            ))}
 
                             <div className="grid grid-cols-6 bg-blue-200">
                                 <div className="col-span-3 border border-gray-300 px-4 py-2 md:col-span-5">
@@ -333,12 +392,15 @@ export default function ReservationDetail({ reservation }) {
                         </div>
 
                         <div className="flex justify-end gap-2">
-                            <Button
+                            <Anchor
                                 className={'rounded-sm py-2'}
-                                variant="primary"
+                                variant="danger"
+                                href={route('customer.reservation.index', {
+                                    hotel: hotel.uuid,
+                                })}
                             >
-                                Add More Room
-                            </Button>
+                                Cancel Reservation
+                            </Anchor>
 
                             <Button
                                 className={'rounded-sm py-2'}

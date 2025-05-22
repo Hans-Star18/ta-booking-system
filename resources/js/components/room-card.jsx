@@ -14,11 +14,11 @@ export default function RoomCard({
     beds,
     price = 0,
     nights = 1,
-    roomCount = 1,
     description,
     onBookNow,
     slidesRaw = [],
     amenities,
+    allotment,
 }) {
     const [open, setOpen] = useState(false)
     const [includedBreakfast, setIncludedBreakfast] = useState(false)
@@ -40,6 +40,10 @@ export default function RoomCard({
             )
         )
     }, [amenities])
+
+    const totalPrice = useMemo(() => {
+        return price * allotment * nights
+    }, [price, allotment, nights])
 
     return (
         <>
@@ -86,11 +90,11 @@ export default function RoomCard({
                 </div>
                 <div className="mb-3 flex w-full flex-col justify-center px-3 md:mb-0 md:items-center md:px-0">
                     <h1 className="mb-3 text-2xl font-bold text-amber-500">
-                        <Currency value={price} />
+                        <Currency value={totalPrice} />
                     </h1>
                     <p className="mb-3 text-base text-amber-500 md:text-center">
                         Cost for {nights} night{nights > 1 ? 's' : ''} and{' '}
-                        {roomCount} room{roomCount > 1 ? 's' : ''}
+                        {allotment} room{allotment > 1 ? 's' : ''}
                     </p>
                     <div className="flex gap-3 md:block md:gap-0">
                         <Button

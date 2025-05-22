@@ -9,22 +9,22 @@ use Illuminate\Support\Collection;
 
 trait ReservationHelper
 {
-    protected function availableRooms(Hotel $hotel, $checkIn, $checkOut): Hotel|null
+    protected function availableRooms(Hotel $hotel, string $checkIn, string $checkOut, ?int $allotment = 1): Hotel|null
     {
         try {
             $dates = $this->collectDates($checkIn, $checkOut);
 
             $hotel->load([
-                'rooms' => function ($query) use ($dates) {
-                    $query->whereHas('allotments', function ($q) use ($dates) {
+                'rooms' => function ($query) use ($dates, $allotment) {
+                    $query->whereHas('allotments', function ($q) use ($dates, $allotment) {
                         $q->whereIn('date', $dates)
-                            ->where('allotment', '>', 0);
+                            ->where('allotment', '>=', $allotment);
                     }, '=', $dates->count());
                 },
                 'rooms.photos',
-                'rooms.allotments' => function ($query) use ($dates) {
+                'rooms.allotments' => function ($query) use ($dates, $allotment) {
                     $query->whereIn('date', $dates)
-                        ->where('allotment', '>', 0);
+                        ->where('allotment', '>=', $allotment);
                 },
             ]);
         } catch (\Throwable $th) {
@@ -36,15 +36,15 @@ trait ReservationHelper
         return $hotel;
     }
 
-    protected function availableRoom(Room $room, $checkIn, $checkOut): Collection|null
+    protected function availableRoom(Room $room, string $checkIn, string $checkOut, ?int $allotment = 1): Collection|null
     {
         try {
             $dates = $this->collectDates($checkIn, $checkOut);
 
             $room->load([
-                'allotments' => function ($query) use ($dates) {
+                'allotments' => function ($query) use ($dates, $allotment) {
                     $query->whereIn('date', $dates)
-                        ->where('allotment', '>', 0);
+                        ->where('allotment', '>=', $allotment);
                 },
             ]);
         } catch (\Throwable $th) {

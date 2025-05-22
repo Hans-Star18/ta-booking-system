@@ -26,11 +26,12 @@ class ReservationController extends Controller
         $hasCheckAvailability = false;
 
         try {
-            if ($hotel = $this->availableRooms($hotel, $request->check_in, $request->check_out)) {
+            if ($hotel = $this->availableRooms($hotel, $request->check_in, $request->check_out, $request->allotment)) {
                 session()->put('reservation', [
                     'hotel' => $hotel,
                     'check_in' => $this->dateParser($request->check_in),
                     'check_out' => $this->dateParser($request->check_out),
+                    'allotment' => $request->allotment,
                 ]);
 
                 $hasCheckAvailability = true;
@@ -45,6 +46,7 @@ class ReservationController extends Controller
         return inertia("customers/reservation", [
             "hotel" => $hotel,
             "hasCheckAvailability" => $hasCheckAvailability,
+            "totalNights" => $this->calculateTotalNights($request->check_in, $request->check_out),
         ]);
     }
 
@@ -69,6 +71,7 @@ class ReservationController extends Controller
             $reservation['room'] = $room;
             $reservation['check_in'] = $reservation['check_in']->format('d F Y');
             $reservation['check_out'] = $reservation['check_out']->format('d F Y');
+            $reservation['allotment'] = $reservation['allotment'];
             $reservation['total_nights'] = $this->calculateTotalNights($reservation['check_in'], $reservation['check_out']);
         }
 

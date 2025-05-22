@@ -6,7 +6,11 @@ import { Head, useForm } from '@inertiajs/react'
 import HTMLReactParser from 'html-react-parser'
 import BasicAlert from '@/components/alert/basic-alert'
 
-export default function Reservation({ hotel, hasCheckAvailability = false }) {
+export default function Reservation({
+    hotel,
+    hasCheckAvailability = false,
+    totalNights = 1,
+}) {
     const searchParams = new URLSearchParams(window.location.search)
 
     const {
@@ -21,15 +25,10 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
         check_out: searchParams.get('check_out')
             ? new Date(searchParams.get('check_out'))
             : null,
+        allotment: searchParams.get('allotment') ?? 1,
     })
 
-    const {
-        data: bookingData,
-        setData: bookingSetData,
-        get: bookingGet,
-        processing: bookingProcessing,
-        errors: bookingErrors,
-    } = useForm({})
+    const { get: bookingGet } = useForm({})
 
     const handleBooking = (roomId) => {
         if (!hasCheckAvailability) {
@@ -48,12 +47,6 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
             }),
             {
                 preserveScroll: false,
-                onSuccess: (response) => {
-                    //
-                },
-                onError: (errors) => {
-                    //
-                },
             }
         )
     }
@@ -63,9 +56,6 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
             route('customer.reservation.check-availability', hotel.uuid),
             {
                 preserveScroll: true,
-                onSuccess: (response) => {
-                    //
-                },
                 onError: (errors) => {
                     BasicAlert({
                         title: 'Validation Error',
@@ -85,11 +75,15 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
                 <AvailabilityCheck
                     checkInDate={availabilityData.check_in}
                     checkOutDate={availabilityData.check_out}
+                    allotment={availabilityData.allotment}
                     setCheckInDate={(value) =>
                         availabilitySetData('check_in', value)
                     }
                     setCheckOutDate={(value) =>
                         availabilitySetData('check_out', value)
+                    }
+                    setAllotment={(value) =>
+                        availabilitySetData('allotment', value)
                     }
                     handleCheckAvailability={handleCheckAvailability}
                     processing={availabilityProcessing}
@@ -97,7 +91,7 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
 
                 <div>
                     {hotel.rooms && hotel.rooms.length > 0 ? (
-                        hotel.rooms.map((room, index) => (
+                        hotel.rooms.map((room) => (
                             <RoomCard
                                 key={room.id}
                                 roomImage={room.cover_image}
@@ -109,12 +103,14 @@ export default function Reservation({ hotel, hasCheckAvailability = false }) {
                                 onBookNow={() => handleBooking(room.id)}
                                 description={HTMLReactParser(room.description)}
                                 amenities={room.amenities}
+                                allotment={availabilityData.allotment}
+                                nights={totalNights}
                             />
                         ))
                     ) : (
                         <div className="py-8 text-center">
                             <p className="text-gray-600">
-                                Tidak ada kamar yang tersedia saat ini.
+                                No room available at the moment.
                             </p>
                         </div>
                     )}

@@ -3,12 +3,15 @@ import 'flatpickr/dist/themes/material_blue.css'
 import Flatpickr from 'react-flatpickr'
 import Button from '@/components/form/button'
 import { useEffect } from 'react'
+import Select from '@/components/form/select'
 
 export default function AvailabilityCheck({
     checkInDate,
     checkOutDate,
+    allotment,
     setCheckInDate,
     setCheckOutDate,
+    setAllotment,
     handleCheckAvailability,
     processing = false,
 }) {
@@ -28,23 +31,65 @@ export default function AvailabilityCheck({
         }
     }, [checkInDate])
 
+    const allotmentOptions = [
+        {
+            value: 1,
+            label: '1 Room (s)',
+        },
+        {
+            value: 2,
+            label: '2 Room (s)',
+        },
+        {
+            value: 3,
+            label: '3 Room (s)',
+        },
+        {
+            value: 4,
+            label: '4 Room (s)',
+        },
+        {
+            value: 5,
+            label: '5 Room (s)',
+        },
+        {
+            value: 6,
+            label: '6 Room (s)',
+        },
+        {
+            value: 7,
+            label: '7 Room (s)',
+        },
+        {
+            value: 8,
+            label: '8 Room (s)',
+        },
+        {
+            value: 9,
+            label: '9 Room (s)',
+        },
+        {
+            value: 10,
+            label: '10 Room (s)',
+        },
+    ]
+
     return (
         <div className="my-6 w-full rounded-md bg-blue-300 p-2 md:p-6">
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-10">
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-8">
                 <div className="relative">
                     <div className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-white px-2 py-2.5 focus:border-blue-300 focus:ring-3 focus:ring-blue-500/20 focus:outline-none md:px-4">
                         <Flatpickr
                             value={checkInDate}
                             onChange={(selectedDates) => {
                                 setCheckInDate(selectedDates[0])
-                                // setCheckOutDate(null)
                             }}
                             options={{
                                 disableMobile: 'true',
                                 minDate: 'today',
                                 dateFormat: 'd F Y',
                             }}
-                            className="h-full w-full focus:outline-none"
+                            className="h-full w-full text-sm focus:outline-none"
                             placeholder="Check In"
                         />
                     </div>
@@ -65,7 +110,7 @@ export default function AvailabilityCheck({
                                 minDate: getNextDay(checkInDate),
                                 dateFormat: 'd F Y',
                             }}
-                            className="h-full w-full focus:outline-none"
+                            className="h-full w-full text-sm focus:outline-none"
                             placeholder="Check Out"
                         />
                     </div>
@@ -74,7 +119,16 @@ export default function AvailabilityCheck({
                     </span>
                 </div>
 
-                <div className="col-span-2 md:col-span-1">
+                <div>
+                    <Select
+                        defaultValue={allotment}
+                        options={allotmentOptions}
+                        onChange={(e) => setAllotment(e.target.value)}
+                        className={'w-full bg-white'}
+                    />
+                </div>
+
+                <div>
                     <Button
                         className={'w-full'}
                         onClick={handleCheckAvailability}
