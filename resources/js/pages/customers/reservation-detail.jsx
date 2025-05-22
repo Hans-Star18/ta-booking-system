@@ -9,6 +9,7 @@ import Button from '@/components/form/button'
 import { useEffect, useState } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import Currency from '@/components/format/currency'
+import BasicAlert from '@/components/alert/basic-alert'
 
 export default function ReservationDetail({ reservation }) {
     const hotel = reservation.hotel
@@ -17,15 +18,21 @@ export default function ReservationDetail({ reservation }) {
     const [includedBreakfast, setIncludedBreakfast] = useState(false)
     const [roomRates, setRoomRates] = useState([])
     const [selectedBed, setSelectedBed] = useState(null)
-    const [adultGuest, setAdultGuest] = useState([
+    const [needExtraBed, setNeedExtraBed] = useState(false)
+    const [extraBedPrice, setExtraBedPrice] = useState(0)
+    const [guest, setGuest] = useState({
+        adult: 1,
+        child: 0,
+    })
+    const [adultGuestOptions, setAdultGuestOptions] = useState([
         {
-            value: '1',
+            value: 1,
             label: '1 Adult',
         },
     ])
-    const [childGuest, setChildGuest] = useState([
+    const [childGuestOptions, setChildGuestOptions] = useState([
         {
-            value: '0',
+            value: 0,
             label: '0 Child',
         },
     ])
@@ -36,13 +43,13 @@ export default function ReservationDetail({ reservation }) {
                 amenity.name.toLowerCase().includes('breakfast')
             )
         )
-        setAdultGuest(
+        setAdultGuestOptions(
             Array.from({ length: room.max_occupancy }, (_, i) => ({
                 value: i + 1,
                 label: `${i + 1} Adult`,
             }))
         )
-        setChildGuest(
+        setChildGuestOptions(
             Array.from({ length: room.max_occupancy }, (_, i) => ({
                 value: i,
                 label: `${i} Child`,
@@ -62,10 +69,36 @@ export default function ReservationDetail({ reservation }) {
                 }
             })
         )
-        setSelectedBed(room.beds[0].slug)
-    }, [room.amenities, room.max_occupancy, reservation.total_nights])
+        setSelectedBed(selectedBed ?? room.beds[0])
+    }, [room, reservation])
 
-    const totalPrice = roomRates.reduce((acc, rate) => acc + rate.price, 0)
+    useEffect(() => {
+        if (selectedBed) {
+            let countGuest = guest.adult + guest.child
+            if (countGuest > selectedBed.capacity) {
+                if (!needExtraBed) {
+                    BasicAlert({
+                        title: 'Extra Bed',
+                        text: 'You need to add extra bed for this room',
+                        icon: 'info',
+                    })
+                }
+
+                setNeedExtraBed(true)
+                setExtraBedPrice(
+                    hotel.setting.extra_bed_price *
+                        (countGuest - selectedBed.capacity) *
+                        reservation.total_nights
+                )
+            } else {
+                setNeedExtraBed(false)
+                setExtraBedPrice(0)
+            }
+        }
+    }, [guest, selectedBed])
+
+    const subTotal = roomRates.reduce((acc, rate) => acc + rate.price, 0)
+    const totalPrice = subTotal + extraBedPrice
 
     return (
         <>
@@ -148,7 +181,7 @@ export default function ReservationDetail({ reservation }) {
 
                                     <div className="md:px-4">
                                         <p className="text-sm">
-                                            <Currency value={totalPrice} />
+                                            <Currency value={subTotal} />
                                         </p>
                                     </div>
                                 </div>
@@ -179,7 +212,7 @@ export default function ReservationDetail({ reservation }) {
                                     <hr className="mb-2 text-gray-300 md:hidden" />
 
                                     <p className="text-sm">
-                                        <Currency value={totalPrice} />
+                                        <Currency value={subTotal} />
                                     </p>
                                 </div>
                             </div>
@@ -197,7 +230,15 @@ export default function ReservationDetail({ reservation }) {
                                             className={
                                                 'h-8 w-24 rounded-sm px-2 py-1'
                                             }
-                                            options={adultGuest}
+                                            options={adultGuestOptions}
+                                            onChange={(e) =>
+                                                setGuest((prev) => ({
+                                                    ...prev,
+                                                    adult: parseInt(
+                                                        e.target.value
+                                                    ),
+                                                }))
+                                            }
                                         />
 
                                         <Select
@@ -206,7 +247,15 @@ export default function ReservationDetail({ reservation }) {
                                             className={
                                                 'h-8 w-24 rounded-sm px-2 py-1'
                                             }
-                                            options={childGuest}
+                                            options={childGuestOptions}
+                                            onChange={(e) =>
+                                                setGuest((prev) => ({
+                                                    ...prev,
+                                                    child: parseInt(
+                                                        e.target.value
+                                                    ),
+                                                }))
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -225,10 +274,11 @@ export default function ReservationDetail({ reservation }) {
                                                     id={bed.slug}
                                                     name={'bed-config'}
                                                     checked={
-                                                        selectedBed === bed.slug
+                                                        selectedBed?.slug ===
+                                                        bed.slug
                                                     }
                                                     onChange={() => {
-                                                        setSelectedBed(bed.slug)
+                                                        setSelectedBed(bed)
                                                     }}
                                                 />
                                                 <Label
@@ -244,9 +294,11 @@ export default function ReservationDetail({ reservation }) {
                                             </div>
                                         ))}
 
-                                        <p className="text-sm text-gray-500 italic">
-                                            * Extra bed confirmed
-                                        </p>
+                                        {needExtraBed && (
+                                            <p className="text-sm text-gray-500 italic">
+                                                * Extra bed confirmed
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="border border-t-0 border-gray-300 px-4 py-2 md:border">
@@ -257,12 +309,7 @@ export default function ReservationDetail({ reservation }) {
                                     <div className="flex items-center gap-2 text-sm">
                                         <span className="mb-[2px]">+ </span>
                                         <span>
-                                            <Currency
-                                                value={
-                                                    hotel.setting
-                                                        .extra_bed_price
-                                                }
-                                            />
+                                            <Currency value={extraBedPrice} />
                                         </span>
                                     </div>
                                     <p className="text-sm text-amber-500">
@@ -278,7 +325,9 @@ export default function ReservationDetail({ reservation }) {
                                     </p>
                                 </div>
                                 <div className="col-span-3 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <p className="text-sm">USD 100</p>
+                                    <p className="text-sm">
+                                        <Currency value={totalPrice} />
+                                    </p>
                                 </div>
                             </div>
                         </div>
