@@ -142,18 +142,6 @@ export default function ReservationDetail({ reservation }) {
     const handleSelectedGuests = (index, type, value) => {
         const updated = [...data.guests]
         updated[index][type] = parseInt(value)
-
-        const totalGuest = updated[index].adult + updated[index].child
-
-        if (totalGuest > room.max_occupancy) {
-            BasicAlert({
-                title: 'Max Occupancy',
-                text: 'You have exceeded the maximum occupancy for this room',
-                icon: 'warning',
-            })
-            return
-        }
-
         setData('guests', updated)
     }
 
