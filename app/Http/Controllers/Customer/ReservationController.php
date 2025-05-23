@@ -79,4 +79,11 @@ class ReservationController extends Controller
             "reservation" => $reservation,
         ]);
     }
+
+    public function confirm(Hotel $hotel)
+    {
+        return inertia("customers/reservation-confirm", [
+            "hotel" => $hotel,
+        ]);
+    }
 }

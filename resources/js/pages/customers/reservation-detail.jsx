@@ -1,5 +1,5 @@
 import CustomerLayout from '@/layouts/customer-layout'
-import { Head } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import Footer from '@/components/footer'
 import CoffeeIcon from '@/components/icons/coffe-icon'
 import Label from '@/components/form/label'
@@ -16,13 +16,16 @@ export default function ReservationDetail({ reservation }) {
     const hotel = reservation.hotel
     const room = reservation.room
 
+    const { data, setData, post, processing, errors } = useForm({
+        selectedBeds: [],
+        needExtraBeds: [],
+        extraBedPrices: [],
+        guests: [],
+    })
+
     const [includedBreakfast, setIncludedBreakfast] = useState(false)
     const [roomRates, setRoomRates] = useState([])
     const [roomCount, setRoomCount] = useState(1)
-    const [selectedBeds, setSelectedBeds] = useState([])
-    const [needExtraBeds, setNeedExtraBeds] = useState([])
-    const [extraBedPrices, setExtraBedPrices] = useState([])
-    const [guests, setGuests] = useState([])
     const [adultGuestOptions, setAdultGuestOptions] = useState([
         {
             value: 1,
@@ -35,6 +38,20 @@ export default function ReservationDetail({ reservation }) {
             label: '0 Child',
         },
     ])
+
+    const getValidAdultOptions = (index) => {
+        return adultGuestOptions.filter((option) => {
+            const childCount = data.guests[index]?.child || 0
+            return option.value + childCount <= room.max_occupancy
+        })
+    }
+
+    const getValidChildOptions = (index) => {
+        return childGuestOptions.filter((option) => {
+            const adultCount = data.guests[index]?.adult || 1
+            return adultCount + option.value <= room.max_occupancy
+        })
+    }
 
     useEffect(() => {
         const allotmentCount = parseInt(reservation.allotment)
@@ -75,25 +92,31 @@ export default function ReservationDetail({ reservation }) {
             adult: 1,
             child: 0,
         }))
-        setGuests(initialGuests)
-
-        setSelectedBeds(
+        setData('guests', initialGuests)
+        setData(
+            'selectedBeds',
             Array.from({ length: allotmentCount }, () => room.beds[0])
         )
-        setNeedExtraBeds(Array.from({ length: allotmentCount }, () => false))
-        setExtraBedPrices(Array.from({ length: allotmentCount }, () => 0))
+        setData(
+            'needExtraBeds',
+            Array.from({ length: allotmentCount }, () => false)
+        )
+        setData(
+            'extraBedPrices',
+            Array.from({ length: allotmentCount }, () => 0)
+        )
     }, [room, reservation])
 
     useEffect(() => {
         const newNeedExtraBeds = []
         const newExtraBedPrices = []
 
-        guests.forEach((guest, i) => {
-            const bed = selectedBeds[i]
+        data.guests.forEach((guest, i) => {
+            const bed = data.selectedBeds[i]
             const totalGuest = guest.adult + guest.child
 
             if (bed && totalGuest > bed.capacity) {
-                if (needExtraBeds[i] == false) {
+                if (data.needExtraBeds[i] == false) {
                     BasicAlert({
                         title: 'Extra Bed',
                         text: 'You need extra bed for this room',
@@ -112,12 +135,12 @@ export default function ReservationDetail({ reservation }) {
             }
         })
 
-        setNeedExtraBeds(newNeedExtraBeds)
-        setExtraBedPrices(newExtraBedPrices)
-    }, [guests, selectedBeds])
+        setData('needExtraBeds', newNeedExtraBeds)
+        setData('extraBedPrices', newExtraBedPrices)
+    }, [data.guests, data.selectedBeds])
 
     const handleSelectedGuests = (index, type, value) => {
-        const updated = [...guests]
+        const updated = [...data.guests]
         updated[index][type] = parseInt(value)
 
         const totalGuest = updated[index].adult + updated[index].child
@@ -131,14 +154,17 @@ export default function ReservationDetail({ reservation }) {
             return
         }
 
-        setGuests(updated)
+        setData('guests', updated)
     }
 
     const subTotal = roomRates.reduce(
         (acc, rate) => acc + rate.price * roomCount,
         0
     )
-    const totalExtraBedPrice = extraBedPrices.reduce((sum, val) => sum + val, 0)
+    const totalExtraBedPrice = data.extraBedPrices.reduce(
+        (sum, val) => sum + val,
+        0
+    )
     const totalPrice = subTotal + totalExtraBedPrice
 
     return (
@@ -277,8 +303,12 @@ export default function ReservationDetail({ reservation }) {
                                                 id={`adult-guest-${index}`}
                                                 name={`adult-guest-${index}`}
                                                 className="h-8 w-24 rounded-sm px-2 py-1"
-                                                options={adultGuestOptions}
-                                                value={guests[index]?.adult}
+                                                options={getValidAdultOptions(
+                                                    index
+                                                )}
+                                                value={
+                                                    data.guests[index]?.adult
+                                                }
                                                 onChange={(e) => {
                                                     handleSelectedGuests(
                                                         index,
@@ -291,8 +321,12 @@ export default function ReservationDetail({ reservation }) {
                                                 id={`child-guest-${index}`}
                                                 name={`child-guest-${index}`}
                                                 className="h-8 w-24 rounded-sm px-2 py-1"
-                                                options={childGuestOptions}
-                                                value={guests[index]?.child}
+                                                options={getValidChildOptions(
+                                                    index
+                                                )}
+                                                value={
+                                                    data.guests[index]?.child
+                                                }
                                                 onChange={(e) => {
                                                     handleSelectedGuests(
                                                         index,
@@ -317,16 +351,17 @@ export default function ReservationDetail({ reservation }) {
                                                         id={`${bed.slug}-${index}`}
                                                         name={`bed-config-${index}`}
                                                         checked={
-                                                            selectedBeds[index]
-                                                                ?.slug ===
-                                                            bed.slug
+                                                            data.selectedBeds[
+                                                                index
+                                                            ]?.slug === bed.slug
                                                         }
                                                         onChange={() => {
                                                             const updated = [
-                                                                ...selectedBeds,
+                                                                ...data.selectedBeds,
                                                             ]
                                                             updated[index] = bed
-                                                            setSelectedBeds(
+                                                            setData(
+                                                                'selectedBeds',
                                                                 updated
                                                             )
                                                         }}
@@ -344,7 +379,7 @@ export default function ReservationDetail({ reservation }) {
                                                     </Label>
                                                 </div>
                                             ))}
-                                            {needExtraBeds[index] && (
+                                            {data.needExtraBeds[index] && (
                                                 <p className="text-sm text-gray-500 italic">
                                                     * Extra bed confirmed
                                                 </p>
@@ -361,7 +396,9 @@ export default function ReservationDetail({ reservation }) {
                                             <span>
                                                 <Currency
                                                     value={
-                                                        extraBedPrices[index]
+                                                        data.extraBedPrices[
+                                                            index
+                                                        ]
                                                     }
                                                 />
                                             </span>
