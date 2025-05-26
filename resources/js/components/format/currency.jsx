@@ -4,9 +4,10 @@ export default function Currency({
     currency = 'IDR',
     minimumFractionDigits = 0,
     maximumFractionDigits = 0,
+    className = '',
 }) {
     return (
-        <span>
+        <span className={className}>
             {new Intl.NumberFormat(locale, {
                 style: 'currency',
                 currency: currency,

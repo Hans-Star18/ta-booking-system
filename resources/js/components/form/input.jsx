@@ -5,7 +5,7 @@ export default function Input({
     type = 'text',
     name,
     placeholder = '',
-    value = '',
+    defaultValue = '',
     className = '',
     onChange,
     min,
@@ -18,7 +18,7 @@ export default function Input({
             type={type}
             name={name}
             placeholder={placeholder}
-            value={value}
+            defaultValue={defaultValue}
             onChange={onChange}
             min={min}
             max={max}

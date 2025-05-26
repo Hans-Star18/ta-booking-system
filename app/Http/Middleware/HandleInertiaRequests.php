@@ -52,6 +52,7 @@ class HandleInertiaRequests extends Middleware
                 ? array_merge($request->session()->get('alert'), ['_id' => uniqid()])
                 : null,
             'appName' => config('app.name'),
+            'promotion_code' => $request->session()->get('promotion_code'),
         ]);
     }
 }

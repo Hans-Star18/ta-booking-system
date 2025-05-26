@@ -4,11 +4,81 @@ import { Checkbox } from '@/components/form/checkbox'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
 import { Textarea } from '@/components/form/textarea'
+import Currency from '@/components/format/currency'
 import CustomerLayout from '@/layouts/customer-layout'
-import { Head } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
+import { useEffect, useState } from 'react'
 
-export default function ReservationConfirm({ hotel, room, reservation }) {
-    console.log(hotel, room, reservation)
+export default function ReservationConfirm({ reservation }) {
+    const hotel = reservation.hotel
+    const room = reservation.room
+
+    const handleSubtotal = (roomPrice, extraBedPrice, totalNights) => {
+        return roomPrice * totalNights + extraBedPrice
+    }
+
+    const [itemDetails, setItemDetails] = useState(() => {
+        const initialItems = []
+        for (let i = 0; i < reservation.allotment; i++) {
+            initialItems.push({
+                room: room,
+                checkIn: reservation.check_in,
+                checkOut: reservation.check_out,
+                totalNights: reservation.total_nights,
+                totalPrice: reservation.totalPrice,
+                bed: reservation.selectedBeds[i],
+                guests: reservation.guests[i],
+                needExtraBeds: reservation.needExtraBeds[i],
+                totalExtraBed: reservation.totalExtraBed[i],
+                extraBedPrices: reservation.extraBedPrices[i],
+                subtotal: handleSubtotal(
+                    reservation.room.price,
+                    reservation.extraBedPrices[i],
+                    reservation.total_nights
+                ),
+            })
+        }
+        return initialItems
+    })
+
+    const countTaxTotal = () => {
+        const taxPercentage = hotel.setting.tax_percentage || 0
+        const totalPrice = reservation.totalPrice - discountTotal
+        return (totalPrice * taxPercentage) / 100
+    }
+
+    const {
+        data: promotionCodeData,
+        setData: setPromotionCodeData,
+        post: postPromotionCode,
+        errors: promotionCodeErrors,
+        processing: promotionCodeProcessing,
+    } = useForm({
+        promotion_code: '',
+    })
+
+    const [discountPercentage, setDiscountPercentage] = useState(0)
+    const [discountTotal, setDiscountTotal] = useState(0)
+
+    const handleCheckPromotion = () => {
+        postPromotionCode(
+            route('customer.reservation.check-promotion', {
+                hotel: hotel.uuid,
+            }),
+            {
+                preserveScroll: true,
+                onSuccess: (response) => {
+                    setDiscountPercentage(
+                        response.props.promotion_code.discount
+                    )
+                },
+            }
+        )
+    }
+
+    useEffect(() => {
+        setDiscountTotal((reservation.totalPrice * discountPercentage) / 100)
+    }, [discountPercentage])
 
     return (
         <>
@@ -23,85 +93,120 @@ export default function ReservationConfirm({ hotel, room, reservation }) {
 
                     <div>
                         <div className="mb-3">
-                            <div className="grid grid-cols-1 md:grid-cols-4">
+                            <div className="hidden md:grid md:grid-cols-4">
                                 <div className="border border-gray-300 px-4 py-2 md:col-span-2 md:px-0">
                                     <p className="text-sm font-semibold md:px-4">
                                         Item
                                     </p>
-                                    <hr className="mb-2 text-gray-300 md:my-2" />
-                                    <div className="md:px-4">
-                                        <p className="text-sm font-semibold">
-                                            Deluxe Room with 2 Beds
-                                        </p>
-                                        <p className="text-sm">
-                                            {
-                                                new Date()
-                                                    .toISOString()
-                                                    .split('T')[0]
-                                            }{' '}
-                                            -{' '}
-                                            {
-                                                new Date()
-                                                    .toISOString()
-                                                    .split('T')[0]
-                                            }{' '}
-                                            (4 Night)
-                                        </p>
-                                        <p className="text-sm">Bed: Double</p>
-                                        <p className="text-sm">
-                                            Policies: Non Refundable
-                                        </p>
-                                    </div>
                                 </div>
                                 <div className="border border-gray-300 px-4 py-2 md:px-0">
                                     <p className="text-sm font-semibold md:px-4">
                                         Requirements
                                     </p>
-                                    <hr className="mb-2 text-gray-300 md:my-2" />
-
-                                    <div className="md:px-4">
-                                        <p className="text-sm">
-                                            3 Adult & 1 Child
-                                        </p>
-                                        <p className="text-sm">
-                                            Extra bed confirmed
-                                        </p>
-                                    </div>
                                 </div>
                                 <div className="border border-gray-300 px-4 py-2 md:px-0">
                                     <p className="text-sm font-semibold md:px-4">
                                         Total
                                     </p>
-                                    <hr className="mb-2 text-gray-300 md:my-2" />
-
-                                    <div className="md:px-4">
-                                        <p className="text-sm">USD 1000</p>
-                                    </div>
                                 </div>
                             </div>
+                            {itemDetails.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="grid grid-cols-1 md:grid-cols-4"
+                                >
+                                    <div className="border border-b-0 border-gray-300 px-4 py-2 md:col-span-2 md:border-b md:px-0">
+                                        <div className="md:px-4">
+                                            <p className="text-sm font-semibold md:hidden">
+                                                Room {index + 1}
+                                            </p>
+                                            <hr className="mb-2 text-gray-300 md:hidden" />
+                                            <p className="text-sm font-semibold">
+                                                {item.room.name}
+                                            </p>
+                                            <p className="text-sm">
+                                                {item.checkIn} - {item.checkOut}{' '}
+                                                ({item.totalNights} Night)
+                                            </p>
+                                            <p className="text-sm">
+                                                Bed: {item.bed.name}
+                                            </p>
+                                            <p className="text-sm">
+                                                Policies: Non Refundable
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="border border-y-0 border-gray-300 px-4 py-2 md:border-y md:px-0">
+                                        <p className="text-sm font-semibold md:hidden">
+                                            Requirements
+                                        </p>
+                                        <hr className="mb-2 text-gray-300 md:hidden" />
+                                        <div className="md:px-4">
+                                            <p className="text-sm">
+                                                {item.guests.adult} Adult &{' '}
+                                                {item.guests.child} Child
+                                            </p>
+                                            <p className="text-sm">
+                                                {item.needExtraBeds
+                                                    ? 'Extra bed confirmed'
+                                                    : 'No extra bed'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="border border-t-0 border-gray-300 px-4 py-2 md:border-t md:px-0">
+                                        <p className="text-sm font-semibold md:hidden">
+                                            Subtotal
+                                        </p>
+                                        <hr className="mb-2 text-gray-300 md:hidden" />
+                                        <div className="md:px-4">
+                                            <Currency
+                                                value={item.subtotal}
+                                                className="text-sm"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
 
                             <div className="grid grid-cols-4">
                                 <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
                                     <p className="text-sm">Subtotal</p>
                                 </div>
                                 <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <p className="text-sm">USD 100</p>
+                                    <Currency
+                                        value={reservation.totalPrice}
+                                        className="text-sm"
+                                    />
                                 </div>
                             </div>
                             <div className="grid grid-cols-4">
                                 <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm">Tax 5%</p>
+                                    <p className="text-sm">
+                                        Discount (
+                                        {discountPercentage
+                                            ? `${discountPercentage}%`
+                                            : 'Promotion Code'}
+                                        )
+                                    </p>
                                 </div>
                                 <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <p className="text-sm">USD 5</p>
+                                    <Currency
+                                        value={discountTotal}
+                                        className="text-sm"
+                                    />
                                 </div>
                             </div>
                             <div className="grid grid-cols-4">
                                 <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm">Promotion</p>
+                                    <p className="text-sm">
+                                        Tax {hotel.setting.tax_percentage ?? 0}%
+                                    </p>
                                 </div>
                                 <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <p className="text-sm">USD -2</p>
+                                    <Currency
+                                        value={countTaxTotal()}
+                                        className="text-sm"
+                                    />
                                 </div>
                             </div>
                             <div className="grid grid-cols-4">
@@ -142,13 +247,20 @@ export default function ReservationConfirm({ hotel, room, reservation }) {
                                 id={'promotion-code'}
                                 name={'promotion-code'}
                                 placeholder="Promotion Code"
-                                value=""
+                                value={promotionCodeData.promotion_code}
+                                onChange={(e) =>
+                                    setPromotionCodeData({
+                                        promotion_code: e.target.value,
+                                    })
+                                }
                                 className="h-10 w-full rounded-sm py-2 md:w-fit"
                             />
 
                             <Button
                                 variant="primary"
                                 className={'rounded-sm py-2'}
+                                onClick={() => handleCheckPromotion()}
+                                disabled={promotionCodeProcessing}
                             >
                                 Check Promotion
                             </Button>

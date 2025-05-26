@@ -7,6 +7,7 @@ use App\Models\Hotel;
 use App\Traits\ReservationHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CheckAvaibilityRequest;
+use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
@@ -50,7 +51,7 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function detail(Hotel $hotel, Room $room)
+    public function detail(Hotel $hotel, Room $room, Request $request)
     {
         $reservation = session()->get('reservation');
         if (blank($this->availableRoom($room, $reservation['check_in'], $reservation['check_out']))) {
@@ -67,12 +68,14 @@ class ReservationController extends Controller
             ]);
         }
 
-        if ($reservation) {
+        if ($reservation && $request->method() == 'POST') {
             $reservation['room'] = $room;
             $reservation['check_in'] = $reservation['check_in']->format('d F Y');
             $reservation['check_out'] = $reservation['check_out']->format('d F Y');
             $reservation['allotment'] = $reservation['allotment'];
             $reservation['total_nights'] = $this->calculateTotalNights($reservation['check_in'], $reservation['check_out']);
+
+            session()->put('reservation', $reservation);
         }
 
         return inertia("customers/reservation-detail", [
@@ -80,10 +83,23 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function confirm(Hotel $hotel)
+    public function confirm(Hotel $hotel, Request $request)
     {
+        $reservation = session()->get('reservation');
+        if ($request->method() == 'POST') {
+            $reservation['hotel'] = $hotel;
+            $reservation['selectedBeds'] = $request->selectedBeds;
+            $reservation['needExtraBeds'] = $request->needExtraBeds;
+            $reservation['totalExtraBed'] = $request->totalExtraBed;
+            $reservation['extraBedPrices'] = $request->extraBedPrices;
+            $reservation['guests'] = $request->guests;
+            $reservation['totalPrice'] = $request->totalPrice;
+
+            session()->put('reservation', $reservation);
+        }
+
         return inertia("customers/reservation-confirm", [
-            "hotel" => $hotel,
+            "reservation" => $reservation,
         ]);
     }
 }

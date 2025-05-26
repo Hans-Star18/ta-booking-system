@@ -28,7 +28,7 @@ export default function Reservation({
         allotment: searchParams.get('allotment') ?? 1,
     })
 
-    const { get: bookingGet } = useForm({})
+    const { post: bookingPost } = useForm({})
 
     const handleBooking = (roomId) => {
         if (!hasCheckAvailability) {
@@ -40,7 +40,7 @@ export default function Reservation({
             return
         }
 
-        bookingGet(
+        bookingPost(
             route('customer.reservation.detail', {
                 hotel: hotel.uuid,
                 room: roomId,

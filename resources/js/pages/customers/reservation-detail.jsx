@@ -19,8 +19,10 @@ export default function ReservationDetail({ reservation }) {
     const { data, setData, post, processing, errors } = useForm({
         selectedBeds: [],
         needExtraBeds: [],
+        totalExtraBed: [],
         extraBedPrices: [],
         guests: [],
+        totalPrice: 0,
     })
 
     const [includedBreakfast, setIncludedBreakfast] = useState(false)
@@ -105,11 +107,16 @@ export default function ReservationDetail({ reservation }) {
             'extraBedPrices',
             Array.from({ length: allotmentCount }, () => 0)
         )
+        setData(
+            'totalExtraBed',
+            Array.from({ length: allotmentCount }, () => 0)
+        )
     }, [room, reservation])
 
     useEffect(() => {
         const newNeedExtraBeds = []
         const newExtraBedPrices = []
+        const newTotalExtraBed = []
 
         data.guests.forEach((guest, i) => {
             const bed = data.selectedBeds[i]
@@ -129,14 +136,17 @@ export default function ReservationDetail({ reservation }) {
                     hotel.setting.extra_bed_price *
                     (totalGuest - bed.capacity) *
                     reservation.total_nights
+                newTotalExtraBed[i] = totalGuest - bed.capacity
             } else {
                 newNeedExtraBeds[i] = false
                 newExtraBedPrices[i] = 0
+                newTotalExtraBed[i] = 0
             }
         })
 
         setData('needExtraBeds', newNeedExtraBeds)
         setData('extraBedPrices', newExtraBedPrices)
+        setData('totalExtraBed', newTotalExtraBed)
     }, [data.guests, data.selectedBeds])
 
     const handleSelectedGuests = (index, type, value) => {
@@ -153,7 +163,15 @@ export default function ReservationDetail({ reservation }) {
         (sum, val) => sum + val,
         0
     )
-    const totalPrice = subTotal + totalExtraBedPrice
+
+    useEffect(() => {
+        const totalPrice = subTotal + totalExtraBedPrice
+        setData('totalPrice', totalPrice)
+    }, [subTotal, totalExtraBedPrice, setData])
+
+    const handleBookNow = (hotelUuid) => {
+        post(route('customer.reservation.confirm', { hotel: hotelUuid }))
+    }
 
     return (
         <>
@@ -410,7 +428,7 @@ export default function ReservationDetail({ reservation }) {
                                 </div>
                                 <div className="col-span-3 border border-gray-300 px-4 py-2 md:col-span-1">
                                     <p className="text-sm">
-                                        <Currency value={totalPrice} />
+                                        <Currency value={data.totalPrice} />
                                     </p>
                                 </div>
                             </div>
@@ -430,6 +448,10 @@ export default function ReservationDetail({ reservation }) {
                             <Button
                                 className={'rounded-sm py-2'}
                                 variant="success"
+                                disabled={processing}
+                                onClick={() => {
+                                    handleBookNow(hotel.uuid)
+                                }}
                             >
                                 Book Now
                             </Button>
