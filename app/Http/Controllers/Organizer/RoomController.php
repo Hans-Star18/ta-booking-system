@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Organizer;
 use Carbon\Carbon;
 use App\Models\Bed;
 use App\Models\Room;
+use App\Models\Policy;
 use App\Models\Amenity;
+use App\Models\PhotoRoom;
 use Illuminate\Http\Request;
 use App\Traits\WithUploadFile;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Organizer\StoreRoomRequest;
 use App\Http\Requests\Organizer\UpdateRoomRequest;
 use App\Http\Requests\Organizer\UpdateBatchAllotmentRequest;
-use App\Models\PhotoRoom;
 
 class RoomController extends Controller
 {
@@ -33,10 +34,12 @@ class RoomController extends Controller
     {
         $beds = Bed::all();
         $amenities = Amenity::all();
+        $policies = Policy::all();
 
         return inertia('organizers/rooms/add', [
             'beds' => $beds,
             'amenities' => $amenities,
+            'policies' => $policies,
         ]);
     }
 
@@ -92,11 +95,13 @@ class RoomController extends Controller
     {
         $beds = Bed::all();
         $amenities = Amenity::all();
+        $policies = Policy::all();
 
         return inertia('organizers/rooms/edit', [
             'room' => $room,
             'beds' => $beds,
             'amenities' => $amenities,
+            'policies' => $policies,
         ]);
     }
 
@@ -125,7 +130,7 @@ class RoomController extends Controller
             $room->update($validated);
             $room->amenities()->sync($request->amenity_config);
             $room->beds()->sync($request->bed_config);
-
+            $room->policies()->sync($request->policy_config);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

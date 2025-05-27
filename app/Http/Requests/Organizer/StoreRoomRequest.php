@@ -31,6 +31,8 @@ class StoreRoomRequest extends FormRequest
             'bed_config.*'  => ['required', 'exists:beds,id'],
             'amenity_config' => ['nullable', 'array'],
             'amenity_config.*' => ['nullable', 'exists:amenities,id'],
+            'policy_config' => ['nullable', 'array'],
+            'policy_config.*' => ['nullable', 'exists:policies,id'],
         ];
     }
 }

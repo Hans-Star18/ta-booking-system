@@ -5,8 +5,10 @@ namespace Database\Seeders\stub;
 use App\Models\Bed;
 use App\Models\Room;
 use App\Models\Amenity;
-use App\Models\AmenityConfig;
 use App\Models\BedConfig;
+use App\Models\AmenityConfig;
+use App\Models\Policy;
+use App\Models\PolicyConfig;
 use Illuminate\Database\Seeder;
 use Database\Seeders\Traits\CreateImage;
 
@@ -21,6 +23,7 @@ class RoomSeeder extends Seeder
     {
         $beds = Bed::all();
         $amenities = Amenity::all();
+        $policies = Policy::all();
 
         $rooms = [
             [
@@ -84,6 +87,13 @@ class RoomSeeder extends Seeder
                 AmenityConfig::create([
                     'room_id' => $rm->id,
                     'amenity_id' => $amenity->id,
+                ]);
+            }
+
+            foreach ($policies as $policy) {
+                PolicyConfig::create([
+                    'room_id' => $rm->id,
+                    'policy_id' => $policy->id,
                 ]);
             }
         }

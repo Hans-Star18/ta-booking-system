@@ -12,9 +12,10 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Head, useForm, usePage } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
 
-export default function Add({ beds, amenities }) {
+export default function Add({ beds, amenities, policies }) {
     const [bedSelected, setBedSelected] = useState([])
     const [amenitySelected, setAmenitySelected] = useState([])
+    const [policySelected, setPolicySelected] = useState([])
 
     const { data, setData, post, processing, errors } = useForm({
         name: '',
@@ -24,6 +25,7 @@ export default function Add({ beds, amenities }) {
         description: '',
         bed_config: bedSelected,
         amenity_config: amenitySelected,
+        policy_config: policySelected,
     })
 
     useEffect(() => {
@@ -33,6 +35,10 @@ export default function Add({ beds, amenities }) {
     useEffect(() => {
         setData('amenity_config', amenitySelected)
     }, [amenitySelected])
+
+    useEffect(() => {
+        setData('policy_config', policySelected)
+    }, [policySelected])
 
     const handleBedSelected = (bedId) => {
         setBedSelected((prev) => {
@@ -52,6 +58,15 @@ export default function Add({ beds, amenities }) {
         })
     }
 
+    const handlePolicySelected = (policyId) => {
+        setPolicySelected((prev) => {
+            if (prev.includes(policyId)) {
+                return prev.filter((id) => id !== policyId)
+            }
+            return [...prev, policyId]
+        })
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
         post(route('organizer.rooms.store'), {
@@ -65,6 +80,7 @@ export default function Add({ beds, amenities }) {
                     setData('description', '')
                     setBedSelected([])
                     setAmenitySelected([])
+                    setPolicySelected([])
                 }
             },
         })
@@ -245,6 +261,38 @@ export default function Add({ beds, amenities }) {
                             </div>
                             <ValidationFeedback
                                 message={errors.amenity_config}
+                            />
+                        </div>
+                        <div className="col-span-2 mb-2 md:col-span-1">
+                            <Label htmlFor="policies">Policies</Label>
+                            <div className="grid grid-cols-3 gap-2">
+                                {policies.map((policy) => (
+                                    <div
+                                        key={policy.slug}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Checkbox
+                                            id={policy.slug}
+                                            name="policy_config"
+                                            value={policy.id}
+                                            checked={policySelected.includes(
+                                                policy.id
+                                            )}
+                                            onChange={() =>
+                                                handlePolicySelected(policy.id)
+                                            }
+                                        />
+                                        <Label
+                                            htmlFor={policy.slug}
+                                            className="mb-0"
+                                        >
+                                            {policy.name}
+                                        </Label>
+                                    </div>
+                                ))}
+                            </div>
+                            <ValidationFeedback
+                                message={errors.policy_config}
                             />
                         </div>
 

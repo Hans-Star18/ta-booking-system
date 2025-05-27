@@ -81,17 +81,35 @@ export default function Show({ room, allotments }) {
                         </div>
 
                         <div>
-                            <h2 className="mb-3 text-lg font-bold">Beds</h2>
-                            <div className="grid grid-cols-2 gap-2 text-gray-600">
-                                {room.beds.map((bed) => (
-                                    <div
-                                        className="flex items-center gap-2"
-                                        key={bed.id}
-                                    >
-                                        <CheckIcon className="size-4 font-bold" />{' '}
-                                        {bed.name}
-                                    </div>
-                                ))}
+                            <div className="mb-3">
+                                <h2 className="mb-3 text-lg font-bold">Beds</h2>
+                                <div className="grid grid-cols-2 gap-2 text-gray-600">
+                                    {room.beds.map((bed) => (
+                                        <div
+                                            className="flex items-center gap-2"
+                                            key={bed.id}
+                                        >
+                                            <CheckIcon className="size-4 font-bold" />{' '}
+                                            {bed.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <h2 className="mb-3 text-lg font-bold">
+                                    Policies
+                                </h2>
+                                <div className="grid grid-cols-2 gap-2 text-gray-600">
+                                    {room.policies.map((policy) => (
+                                        <div
+                                            className="flex items-center gap-2"
+                                            key={policy.id}
+                                        >
+                                            <CheckIcon className="size-4 font-bold" />{' '}
+                                            {policy.name}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 

@@ -21,7 +21,7 @@ class Room extends Model
         'cover_image',
     ];
 
-    protected $with = ['amenities', 'beds', 'photos'];
+    protected $with = ['amenities', 'beds', 'photos', 'policies'];
 
     const FILE_PATH = 'rooms';
 
@@ -61,6 +61,11 @@ class Room extends Model
     public function amenities()
     {
         return $this->belongsToMany(Amenity::class, 'amenity_configs');
+    }
+
+    public function policies()
+    {
+        return $this->belongsToMany(Policy::class, 'policy_configs');
     }
 
     public function allotments()
