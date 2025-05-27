@@ -4,14 +4,22 @@ namespace App\Http\Controllers\Customer;
 
 use App\Models\Room;
 use App\Models\Hotel;
+use App\Models\Policy;
+use Illuminate\Http\Request;
 use App\Traits\ReservationHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CheckAvaibilityRequest;
-use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
     use ReservationHelper;
+
+    protected $policies;
+
+    public function __construct()
+    {
+        $this->policies = Policy::all();
+    }
 
     public function index(Hotel $hotel)
     {
@@ -19,6 +27,7 @@ class ReservationController extends Controller
 
         return inertia("customers/reservation", [
             "hotel" => $hotel,
+            "policies" => $this->policies,
         ]);
     }
 
@@ -48,6 +57,7 @@ class ReservationController extends Controller
             "hotel" => $hotel,
             "hasCheckAvailability" => $hasCheckAvailability,
             "totalNights" => $this->calculateTotalNights($request->check_in, $request->check_out),
+            "policies" => $this->policies,
         ]);
     }
 
@@ -80,6 +90,7 @@ class ReservationController extends Controller
 
         return inertia("customers/reservation-detail", [
             "reservation" => $reservation,
+            "policies" => $this->policies,
         ]);
     }
 
@@ -100,6 +111,7 @@ class ReservationController extends Controller
 
         return inertia("customers/reservation-confirm", [
             "reservation" => $reservation,
+            "policies" => $this->policies,
         ]);
     }
 }

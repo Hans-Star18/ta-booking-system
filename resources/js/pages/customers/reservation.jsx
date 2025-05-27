@@ -10,6 +10,7 @@ export default function Reservation({
     hotel,
     hasCheckAvailability = false,
     totalNights = 1,
+    policies,
 }) {
     const searchParams = new URLSearchParams(window.location.search)
 
@@ -105,6 +106,8 @@ export default function Reservation({
                                 amenities={room.amenities}
                                 allotment={availabilityData.allotment}
                                 nights={totalNights}
+                                policies={policies}
+                                roomPolicies={room.policies}
                             />
                         ))
                     ) : (

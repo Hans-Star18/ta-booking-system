@@ -11,8 +11,9 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import Currency from '@/components/format/currency'
 import BasicAlert from '@/components/alert/basic-alert'
 import Anchor from '@/components/form/anchor'
+import PolicyList from '@/components/policy-list'
 
-export default function ReservationDetail({ reservation }) {
+export default function ReservationDetail({ reservation, policies }) {
     const hotel = reservation.hotel
     const room = reservation.room
 
@@ -225,21 +226,10 @@ export default function ReservationDetail({ reservation }) {
                                     <hr className="mb-2 text-gray-300 md:my-2" />
 
                                     <div className="md:px-4">
-                                        {includedBreakfast ? (
-                                            <div className="mb-3 flex items-center gap-3">
-                                                <CoffeeIcon className="size-4 text-amber-500" />{' '}
-                                                <span className="font-bold text-amber-500">
-                                                    Breakfast Included
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <div className="mb-3 flex items-center gap-3">
-                                                <XMarkIcon className="size-4 text-red-500" />{' '}
-                                                <span className="font-bold text-red-500">
-                                                    Breakfast Not Included
-                                                </span>
-                                            </div>
-                                        )}
+                                        <PolicyList
+                                            policies={policies}
+                                            roomPolicies={room.policies}
+                                        />
                                     </div>
                                 </div>
                                 <div className="border border-gray-300 px-4 py-2 md:px-0">

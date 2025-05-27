@@ -5,60 +5,216 @@ import Input from '@/components/form/input'
 import Label from '@/components/form/label'
 import { Textarea } from '@/components/form/textarea'
 import Currency from '@/components/format/currency'
+import PolicyList from '@/components/policy-list'
 import CustomerLayout from '@/layouts/customer-layout'
 import { Head, useForm } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
+import { useState, useMemo } from 'react'
 
-export default function ReservationConfirm({ reservation }) {
+const calculateRoomSubtotal = (roomPrice, extraBedPrice, totalNights) => {
+    return roomPrice * totalNights + extraBedPrice
+}
+
+const calculateTaxAmount = (subtotal, taxPercentage) => {
+    return (subtotal * taxPercentage) / 100
+}
+
+const calculateDiscountAmount = (subtotal, discountPercentage) => {
+    return (subtotal * discountPercentage) / 100
+}
+
+const calculateTotalPrice = (subtotal, discountAmount, taxAmount) => {
+    return subtotal - discountAmount + taxAmount
+}
+
+const calculatePayNow = (totalPrice, dpPercentage) => {
+    return (totalPrice * dpPercentage) / 100
+}
+
+const ReservationItem = ({ item, index, policies }) => (
+    <div key={index} className="grid grid-cols-1 md:grid-cols-4">
+        <div className="border border-b-0 border-gray-300 px-4 py-2 md:col-span-2 md:border-b md:px-0">
+            <div className="md:px-4">
+                <p className="text-sm font-semibold md:hidden">
+                    Room {index + 1}
+                </p>
+                <hr className="mb-2 text-gray-300 md:hidden" />
+                <p className="text-sm font-semibold">{item.room.name}</p>
+                <p className="text-sm">
+                    {item.checkIn} - {item.checkOut} ({item.totalNights} Night)
+                </p>
+                <p className="text-sm">Bed: {item.bed.name}</p>
+                <div className="flex gap-2 text-sm">
+                    Policies:
+                    <div className="flex flex-wrap gap-2">
+                        <PolicyList
+                            policies={policies}
+                            roomPolicies={item.room.policies}
+                            icon={false}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div className="border border-y-0 border-gray-300 px-4 py-2 md:border-y md:px-0">
+            <p className="text-sm font-semibold md:hidden">Requirements</p>
+            <hr className="mb-2 text-gray-300 md:hidden" />
+            <div className="md:px-4">
+                <p className="text-sm">
+                    {item.guests.adult} Adult & {item.guests.child} Child
+                </p>
+                <p className="text-sm">
+                    {item.needExtraBeds
+                        ? 'Extra bed confirmed'
+                        : 'No extra bed'}
+                </p>
+            </div>
+        </div>
+        <div className="border border-t-0 border-gray-300 px-4 py-2 md:border-t md:px-0">
+            <p className="text-sm font-semibold md:hidden">Subtotal</p>
+            <hr className="mb-2 text-gray-300 md:hidden" />
+            <div className="md:px-4">
+                <Currency value={item.subtotal} className="text-sm" />
+            </div>
+        </div>
+    </div>
+)
+
+const PriceSummary = ({
+    subtotal,
+    discountPercentage,
+    discountTotal,
+    taxPercentage,
+    taxAmount,
+    totalPrice,
+    dpPercentage,
+    payNow,
+    balanceToBePaid,
+}) => (
+    <>
+        <div className="grid grid-cols-4">
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
+                <p className="text-sm">Subtotal</p>
+            </div>
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
+                <Currency value={subtotal} className="text-sm" />
+            </div>
+        </div>
+        <div className="grid grid-cols-4">
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
+                <p className="text-sm">
+                    Discount (
+                    {discountPercentage
+                        ? `${discountPercentage}%`
+                        : 'Promotion Code'}
+                    )
+                </p>
+            </div>
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
+                <Currency value={discountTotal} className="text-sm" />
+            </div>
+        </div>
+        <div className="grid grid-cols-4">
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
+                <p className="text-sm">Tax {taxPercentage}%</p>
+            </div>
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
+                <Currency value={taxAmount} className="text-sm" />
+            </div>
+        </div>
+        <div className="grid grid-cols-4">
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
+                <p className="text-sm">Total Cost</p>
+            </div>
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
+                <Currency value={totalPrice} className="text-sm" />
+            </div>
+        </div>
+        <div className="grid grid-cols-4 bg-blue-200">
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
+                <p className="text-sm font-semibold">
+                    Pay Now ({dpPercentage}%)
+                </p>
+            </div>
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
+                <Currency value={payNow} className="text-sm font-semibold" />
+            </div>
+        </div>
+        <div className="grid grid-cols-4">
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
+                <p className="text-sm">
+                    Balance to be paid at hotel when check-in
+                </p>
+            </div>
+            <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
+                <Currency
+                    value={balanceToBePaid}
+                    className="text-sm font-semibold"
+                />
+            </div>
+        </div>
+    </>
+)
+
+export default function ReservationConfirm({ reservation, policies }) {
     const hotel = reservation.hotel
     const room = reservation.room
 
-    const handleSubtotal = (roomPrice, extraBedPrice, totalNights) => {
-        return roomPrice * totalNights + extraBedPrice
-    }
+    const [discountPercentage, setDiscountPercentage] = useState(0)
+    const [subtotal] = useState(reservation.totalPrice)
 
-    const [itemDetails, setItemDetails] = useState(() => {
-        const initialItems = []
-        for (let i = 0; i < reservation.allotment; i++) {
-            initialItems.push({
-                room: room,
-                checkIn: reservation.check_in,
-                checkOut: reservation.check_out,
-                totalNights: reservation.total_nights,
-                totalPrice: reservation.totalPrice,
-                bed: reservation.selectedBeds[i],
-                guests: reservation.guests[i],
-                needExtraBeds: reservation.needExtraBeds[i],
-                totalExtraBed: reservation.totalExtraBed[i],
-                extraBedPrices: reservation.extraBedPrices[i],
-                subtotal: handleSubtotal(
-                    reservation.room.price,
-                    reservation.extraBedPrices[i],
-                    reservation.total_nights
-                ),
-            })
-        }
-        return initialItems
+    const discountTotal = useMemo(
+        () => calculateDiscountAmount(subtotal, discountPercentage),
+        [subtotal, discountPercentage]
+    )
+
+    const taxAmount = useMemo(
+        () => calculateTaxAmount(subtotal, hotel.setting.tax_percentage || 0),
+        [subtotal, hotel.setting.tax_percentage]
+    )
+
+    const totalPrice = useMemo(
+        () => calculateTotalPrice(subtotal, discountTotal, taxAmount),
+        [subtotal, discountTotal, taxAmount]
+    )
+
+    const payNow = useMemo(
+        () => calculatePayNow(totalPrice, hotel.setting.dp_percentage),
+        [totalPrice, hotel.setting.dp_percentage]
+    )
+
+    const balanceToBePaid = useMemo(
+        () => totalPrice - payNow,
+        [totalPrice, payNow]
+    )
+
+    const [itemDetails] = useState(() => {
+        return Array.from({ length: reservation.allotment }, (_, i) => ({
+            room: room,
+            checkIn: reservation.check_in,
+            checkOut: reservation.check_out,
+            totalNights: reservation.total_nights,
+            totalPrice: reservation.totalPrice,
+            bed: reservation.selectedBeds[i],
+            guests: reservation.guests[i],
+            needExtraBeds: reservation.needExtraBeds[i],
+            totalExtraBed: reservation.totalExtraBed[i],
+            extraBedPrices: reservation.extraBedPrices[i],
+            subtotal: calculateRoomSubtotal(
+                reservation.room.price,
+                reservation.extraBedPrices[i],
+                reservation.total_nights
+            ),
+        }))
     })
-
-    const countTaxTotal = () => {
-        const taxPercentage = hotel.setting.tax_percentage || 0
-        const totalPrice = reservation.totalPrice - discountTotal
-        return (totalPrice * taxPercentage) / 100
-    }
 
     const {
         data: promotionCodeData,
         setData: setPromotionCodeData,
         post: postPromotionCode,
-        errors: promotionCodeErrors,
         processing: promotionCodeProcessing,
     } = useForm({
         promotion_code: '',
     })
-
-    const [discountPercentage, setDiscountPercentage] = useState(0)
-    const [discountTotal, setDiscountTotal] = useState(0)
 
     const handleCheckPromotion = () => {
         postPromotionCode(
@@ -68,6 +224,10 @@ export default function ReservationConfirm({ reservation }) {
             {
                 preserveScroll: true,
                 onSuccess: (response) => {
+                    if (!response.props.promotion_code) {
+                        setDiscountPercentage(0)
+                        return
+                    }
                     setDiscountPercentage(
                         response.props.promotion_code.discount
                     )
@@ -75,10 +235,6 @@ export default function ReservationConfirm({ reservation }) {
             }
         )
     }
-
-    useEffect(() => {
-        setDiscountTotal((reservation.totalPrice * discountPercentage) / 100)
-    }, [discountPercentage])
 
     return (
         <>
@@ -110,136 +266,29 @@ export default function ReservationConfirm({ reservation }) {
                                     </p>
                                 </div>
                             </div>
+
                             {itemDetails.map((item, index) => (
-                                <div
+                                <ReservationItem
                                     key={index}
-                                    className="grid grid-cols-1 md:grid-cols-4"
-                                >
-                                    <div className="border border-b-0 border-gray-300 px-4 py-2 md:col-span-2 md:border-b md:px-0">
-                                        <div className="md:px-4">
-                                            <p className="text-sm font-semibold md:hidden">
-                                                Room {index + 1}
-                                            </p>
-                                            <hr className="mb-2 text-gray-300 md:hidden" />
-                                            <p className="text-sm font-semibold">
-                                                {item.room.name}
-                                            </p>
-                                            <p className="text-sm">
-                                                {item.checkIn} - {item.checkOut}{' '}
-                                                ({item.totalNights} Night)
-                                            </p>
-                                            <p className="text-sm">
-                                                Bed: {item.bed.name}
-                                            </p>
-                                            <p className="text-sm">
-                                                Policies: Non Refundable
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="border border-y-0 border-gray-300 px-4 py-2 md:border-y md:px-0">
-                                        <p className="text-sm font-semibold md:hidden">
-                                            Requirements
-                                        </p>
-                                        <hr className="mb-2 text-gray-300 md:hidden" />
-                                        <div className="md:px-4">
-                                            <p className="text-sm">
-                                                {item.guests.adult} Adult &{' '}
-                                                {item.guests.child} Child
-                                            </p>
-                                            <p className="text-sm">
-                                                {item.needExtraBeds
-                                                    ? 'Extra bed confirmed'
-                                                    : 'No extra bed'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="border border-t-0 border-gray-300 px-4 py-2 md:border-t md:px-0">
-                                        <p className="text-sm font-semibold md:hidden">
-                                            Subtotal
-                                        </p>
-                                        <hr className="mb-2 text-gray-300 md:hidden" />
-                                        <div className="md:px-4">
-                                            <Currency
-                                                value={item.subtotal}
-                                                className="text-sm"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+                                    item={item}
+                                    index={index}
+                                    policies={policies}
+                                />
                             ))}
 
-                            <div className="grid grid-cols-4">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm">Subtotal</p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <Currency
-                                        value={reservation.totalPrice}
-                                        className="text-sm"
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-4">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm">
-                                        Discount (
-                                        {discountPercentage
-                                            ? `${discountPercentage}%`
-                                            : 'Promotion Code'}
-                                        )
-                                    </p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <Currency
-                                        value={discountTotal}
-                                        className="text-sm"
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-4">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm">
-                                        Tax {hotel.setting.tax_percentage ?? 0}%
-                                    </p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <Currency
-                                        value={countTaxTotal()}
-                                        className="text-sm"
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-4">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm">Total Cost</p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <p className="text-sm">USD 105</p>
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-4 bg-blue-200">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm font-semibold">
-                                        Pay Now (30%)
-                                    </p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <p className="text-sm font-semibold">
-                                        USD 105
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-4">
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-3">
-                                    <p className="text-sm">
-                                        Balance to be paid at hotel when
-                                        check-in
-                                    </p>
-                                </div>
-                                <div className="col-span-2 border border-gray-300 px-4 py-2 md:col-span-1">
-                                    <p className="text-sm">USD 105</p>
-                                </div>
-                            </div>
+                            <PriceSummary
+                                subtotal={subtotal}
+                                discountPercentage={discountPercentage}
+                                discountTotal={discountTotal}
+                                taxPercentage={
+                                    hotel.setting.tax_percentage || 0
+                                }
+                                taxAmount={taxAmount}
+                                totalPrice={totalPrice}
+                                dpPercentage={hotel.setting.dp_percentage}
+                                payNow={payNow}
+                                balanceToBePaid={balanceToBePaid}
+                            />
                         </div>
 
                         <div className="mb-3 flex flex-col justify-end gap-3 md:flex-row">
@@ -259,7 +308,7 @@ export default function ReservationConfirm({ reservation }) {
                             <Button
                                 variant="primary"
                                 className={'rounded-sm py-2'}
-                                onClick={() => handleCheckPromotion()}
+                                onClick={handleCheckPromotion}
                                 disabled={promotionCodeProcessing}
                             >
                                 Check Promotion

@@ -1,11 +1,11 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Modal } from 'react-responsive-modal'
 import 'react-responsive-modal/styles.css'
-import CoffeeIcon from '@/components/icons/coffe-icon'
 import Button from '@/components/form/button'
 import ImageSlider from '@/components/image-slider'
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { CheckIcon } from '@heroicons/react/24/outline'
 import Currency from '@/components/format/currency'
+import PolicyList from '@/components/policy-list'
 
 export default function RoomCard({
     roomImage,
@@ -19,6 +19,8 @@ export default function RoomCard({
     slidesRaw = [],
     amenities,
     allotment,
+    policies,
+    roomPolicies,
 }) {
     const [open, setOpen] = useState(false)
     const [includedBreakfast, setIncludedBreakfast] = useState(false)
@@ -33,21 +35,13 @@ export default function RoomCard({
         }))
     }, [slidesRaw, roomImage])
 
-    useEffect(() => {
-        setIncludedBreakfast(
-            amenities.some((amenity) =>
-                amenity.name.toLowerCase().includes('breakfast')
-            )
-        )
-    }, [amenities])
-
     const totalPrice = useMemo(() => {
         return price * allotment * nights
     }, [price, allotment, nights])
 
     return (
         <>
-            <div className="mb-6 grid grid-cols-1 overflow-hidden rounded-md bg-gray-100 md:h-52 md:grid-cols-4 md:gap-6">
+            <div className="mb-6 grid grid-cols-1 overflow-hidden rounded-md bg-gray-100 md:min-h-52 md:grid-cols-4 md:gap-6">
                 <div className="mb-3 w-full md:mb-0">
                     <img
                         src={roomImage}
@@ -58,21 +52,12 @@ export default function RoomCard({
                 </div>
                 <div className="col-span-2 mb-3 w-full px-3 md:mb-0 md:px-0 md:py-6">
                     <h1 className="mb-3 text-2xl font-bold">{roomName}</h1>
-                    {includedBreakfast ? (
-                        <div className="mb-3 flex items-center gap-3">
-                            <CoffeeIcon className="size-6 text-amber-500" />{' '}
-                            <span className="font-extrabold text-amber-500">
-                                Breakfast Included
-                            </span>
-                        </div>
-                    ) : (
-                        <div className="mb-3 flex items-center gap-3">
-                            <XMarkIcon className="size-6 text-red-500" />{' '}
-                            <span className="font-extrabold text-red-500">
-                                Breakfast Not Included
-                            </span>
-                        </div>
-                    )}
+                    <div className="mb-3 flex flex-wrap gap-4">
+                        <PolicyList
+                            policies={policies}
+                            roomPolicies={roomPolicies}
+                        />
+                    </div>
                     <div className="mb-3">
                         <p className="text-base">
                             Max Occupancy: {maxOccupancy}
