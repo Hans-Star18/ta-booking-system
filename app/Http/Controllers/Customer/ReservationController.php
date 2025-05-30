@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Traits\ReservationHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CheckAvaibilityRequest;
+use App\Http\Requests\Customer\StoreReservationRequest;
 
 class ReservationController extends Controller
 {
@@ -113,5 +114,12 @@ class ReservationController extends Controller
             "reservation" => $reservation,
             "policies" => $this->policies,
         ]);
+    }
+
+    public function storeReservation(StoreReservationRequest $request)
+    {
+        $reservation = $request->validated();
+
+        dd($reservation);
     }
 }

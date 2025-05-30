@@ -1,5 +1,5 @@
 import CustomerLayout from '@/layouts/customer-layout'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, router, useForm } from '@inertiajs/react'
 import Footer from '@/components/footer'
 import CoffeeIcon from '@/components/icons/coffe-icon'
 import Label from '@/components/form/label'
@@ -14,6 +14,10 @@ import Anchor from '@/components/form/anchor'
 import PolicyList from '@/components/policy-list'
 
 export default function ReservationDetail({ reservation, policies }) {
+    if (!reservation) {
+        return router.visit(route('customer.home'))
+    }
+
     const hotel = reservation.hotel
     const room = reservation.room
 

@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Organizer;
+namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateHotelRequest extends FormRequest
+class StoreReservationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        /** @var \App\Models\User $user */
-        $user = auth()->guard('web')->user();
-
-        return $user && $user->isOrganizer() && $user->hotel->id === $this->hotel->id;
+        return true;
     }
 
     /**
@@ -25,12 +22,13 @@ class UpdateHotelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'email', 'max:100'],
             'address' => ['required', 'string'],
             'phone' => ['required', 'string', 'max:20'],
-            'mobile' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'string', 'email', 'max:50', 'unique:hotels,email,' . $this->hotel->id],
-            'term_and_condition' => ['required', 'string'],
+            'city' => ['nullable', 'string', 'max:50'],
+            'request' => ['nullable', 'string'],
+            'terms' => ['required', 'accepted'],
         ];
     }
 }

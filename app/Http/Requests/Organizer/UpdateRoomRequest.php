@@ -22,7 +22,7 @@ class UpdateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => ['required', 'string', 'max:255'],
+            'name'          => ['required', 'string', 'max:100'],
             'max_occupancy' => ['required', 'integer', 'min:1'],
             'cover_image'   => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'price'         => ['required', 'numeric', 'min:0'],

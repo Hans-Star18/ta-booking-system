@@ -1,14 +1,19 @@
 import Footer from '@/components/footer'
+import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import { Checkbox } from '@/components/form/checkbox'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
 import { Textarea } from '@/components/form/textarea'
+import ValidationFeedback from '@/components/form/validation-feedback'
 import Currency from '@/components/format/currency'
 import PolicyList from '@/components/policy-list'
 import CustomerLayout from '@/layouts/customer-layout'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, router, useForm } from '@inertiajs/react'
+import HTMLReactParser from 'html-react-parser'
 import { useState, useMemo } from 'react'
+import Modal from 'react-responsive-modal'
+import { twMerge } from 'tailwind-merge'
 
 const calculateRoomSubtotal = (roomPrice, extraBedPrice, totalNights) => {
     return roomPrice * totalNights + extraBedPrice
@@ -156,11 +161,17 @@ const PriceSummary = ({
 )
 
 export default function ReservationConfirm({ reservation, policies }) {
+    if (!reservation) {
+        return router.visit(route('customer.home'))
+    }
+
     const hotel = reservation.hotel
     const room = reservation.room
 
     const [discountPercentage, setDiscountPercentage] = useState(0)
+    const [promotionCode, setPromotionCode] = useState('')
     const [subtotal] = useState(reservation.totalPrice)
+    const [open, setOpen] = useState(false)
 
     const discountTotal = useMemo(
         () => calculateDiscountAmount(subtotal, discountPercentage),
@@ -168,8 +179,12 @@ export default function ReservationConfirm({ reservation, policies }) {
     )
 
     const taxAmount = useMemo(
-        () => calculateTaxAmount(subtotal, hotel.setting.tax_percentage || 0),
-        [subtotal, hotel.setting.tax_percentage]
+        () =>
+            calculateTaxAmount(
+                subtotal - discountTotal,
+                hotel.setting.tax_percentage || 0
+            ),
+        [subtotal, hotel.setting.tax_percentage, discountTotal]
     )
 
     const totalPrice = useMemo(
@@ -231,7 +246,44 @@ export default function ReservationConfirm({ reservation, policies }) {
                     setDiscountPercentage(
                         response.props.promotion_code.discount
                     )
+                    setPromotionCode(response.props.promotion_code.code)
                 },
+            }
+        )
+    }
+
+    const {
+        data: reservationData,
+        setData: setReservationData,
+        post: postReservation,
+        processing: reservationProcessing,
+        errors: reservationErrors,
+    } = useForm({
+        name: '',
+        email: '',
+        address: '',
+        phone: '',
+        city: '',
+        request: '',
+        terms: false,
+    })
+
+    const handleBookNow = () => {
+        reservationData.promotion_code = promotionCode
+        reservationData.reservation = reservation
+        reservationData.subtotal = subtotal
+        reservationData.discount_total = discountTotal
+        reservationData.tax_amount = taxAmount
+        reservationData.total_price = totalPrice
+        reservationData.pay_now = payNow
+        reservationData.balance_to_be_paid = balanceToBePaid
+
+        console.log(reservationData)
+
+        postReservation(
+            route('customer.reservation.store', { hotel: hotel.uuid }),
+            {
+                preserveScroll: true,
             }
         )
     }
@@ -329,7 +381,19 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         id={'name'}
                                         name={'name'}
                                         placeholder="Your Full Name"
-                                        value=""
+                                        value={reservationData.name}
+                                        onChange={(e) =>
+                                            setReservationData({
+                                                name: e.target.value,
+                                            })
+                                        }
+                                        className={
+                                            reservationErrors.name &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.name}
                                     />
                                 </div>
                                 <div>
@@ -341,7 +405,19 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         name={'email'}
                                         type="email"
                                         placeholder="Email Address"
-                                        value=""
+                                        value={reservationData.email}
+                                        onChange={(e) =>
+                                            setReservationData({
+                                                email: e.target.value,
+                                            })
+                                        }
+                                        className={
+                                            reservationErrors.email &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.email}
                                     />
                                 </div>
                             </div>
@@ -355,7 +431,19 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         id={'address'}
                                         name={'address'}
                                         placeholder="Your Address"
-                                        value=""
+                                        value={reservationData.address}
+                                        onChange={(e) =>
+                                            setReservationData({
+                                                address: e.target.value,
+                                            })
+                                        }
+                                        className={
+                                            reservationErrors.address &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.address}
                                     />
                                 </div>
                             </div>
@@ -370,7 +458,19 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         type="tel"
                                         name={'phone'}
                                         placeholder="Phone Number / Whatsapp Number"
-                                        value=""
+                                        value={reservationData.phone}
+                                        onChange={(e) =>
+                                            setReservationData({
+                                                phone: e.target.value,
+                                            })
+                                        }
+                                        className={
+                                            reservationErrors.phone &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.phone}
                                     />
                                 </div>
                                 <div>
@@ -384,7 +484,19 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         id={'city'}
                                         name={'city'}
                                         placeholder="City"
-                                        value=""
+                                        value={reservationData.city}
+                                        onChange={(e) =>
+                                            setReservationData({
+                                                city: e.target.value,
+                                            })
+                                        }
+                                        className={
+                                            reservationErrors.city &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.city}
                                     />
                                 </div>
                             </div>
@@ -401,6 +513,19 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         id={'request'}
                                         name={'request'}
                                         placeholder="Comments / Special Request"
+                                        value={reservationData.request}
+                                        onChange={(e) =>
+                                            setReservationData({
+                                                request: e.target.value,
+                                            })
+                                        }
+                                        className={
+                                            reservationErrors.request &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.request}
                                     />
                                 </div>
                             </div>
@@ -409,32 +534,56 @@ export default function ReservationConfirm({ reservation, policies }) {
                                 <Checkbox
                                     id={'terms'}
                                     name={'terms'}
-                                    className={'text-start'}
+                                    checked={reservationData.terms}
+                                    onChange={(e) =>
+                                        setReservationData({
+                                            terms: e.target.checked,
+                                        })
+                                    }
+                                    className={twMerge(
+                                        reservationErrors.terms &&
+                                            'ring ring-red-500',
+                                        'text-start'
+                                    )}
                                 />
                                 <Label
                                     htmlFor={'terms'}
                                     required={true}
                                     className="m-0 text-sm"
                                 >
-                                    I acknowledge reading the Cancellation
-                                    Policy, Terms & Conditions and I understand
-                                    my credit card will be charged according to
-                                    the terms stated.
+                                    I acknowledge reading the{' '}
+                                    <button
+                                        className="inline cursor-pointer text-blue-500 underline"
+                                        onClick={() => setOpen(true)}
+                                    >
+                                        Cancellation Policy, Terms & Conditions
+                                    </button>{' '}
+                                    and I understand my credit card will be
+                                    charged according to the terms stated.
                                 </Label>
                             </div>
+                            <ValidationFeedback
+                                message={reservationErrors.terms}
+                            />
                         </div>
 
                         <div className="flex justify-end gap-2">
-                            <Button
+                            <Anchor
                                 className={'rounded-sm py-2'}
                                 variant="danger"
+                                href={route('customer.reservation.index', {
+                                    hotel: hotel.uuid,
+                                })}
+                                disabled={reservationProcessing}
                             >
                                 Cancel
-                            </Button>
+                            </Anchor>
 
                             <Button
                                 className={'rounded-sm py-2'}
                                 variant="success"
+                                disabled={reservationProcessing}
+                                onClick={handleBookNow}
                             >
                                 Book Now
                             </Button>
@@ -444,6 +593,20 @@ export default function ReservationConfirm({ reservation, policies }) {
 
                 <Footer />
             </CustomerLayout>
+
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                center
+                classNames={{
+                    modal: 'md:w-full rounded-lg',
+                }}
+            >
+                <h2 className="mb-3 text-2xl font-bold">{hotel.name} T&C</h2>
+                <div className="text-sm">
+                    {HTMLReactParser(hotel.term_and_condition)}
+                </div>
+            </Modal>
         </>
     )
 }
