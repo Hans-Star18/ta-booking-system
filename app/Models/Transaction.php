@@ -9,6 +9,7 @@ class Transaction extends Model
     protected $fillable = [
         'reservation_id',
         'transaction_id',
+        'invoice_number',
         'payment_method',
         'payment_status',
         'payment_type',
@@ -29,6 +30,13 @@ class Transaction extends Model
         'pay_now' => 'float',
         'balance_to_be_paid' => 'float',
     ];
+
+    public static function booted()
+    {
+        static::creating(function ($transaction) {
+            $transaction->invoice_number = 'INV-' . strtoupper(uniqid());
+        });
+    }
 
     public function reservation()
     {

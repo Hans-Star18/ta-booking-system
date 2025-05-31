@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Customer;
 
+use Carbon\Carbon;
 use App\Models\Room;
 use App\Models\Hotel;
 use App\Models\Policy;
+use App\Models\Reservation;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Traits\ReservationHelper;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CheckAvaibilityRequest;
 use App\Http\Requests\Customer\StoreReservationRequest;
+use Monarobase\CountryList\CountryListFacade as Countries;
 
 class ReservationController extends Controller
 {
@@ -110,16 +115,107 @@ class ReservationController extends Controller
             session()->put('reservation', $reservation);
         }
 
+        $countries = Countries::getList('en');
+
         return inertia("customers/reservation-confirm", [
             "reservation" => $reservation,
             "policies" => $this->policies,
+            "countries" => $countries,
         ]);
     }
 
     public function storeReservation(StoreReservationRequest $request)
     {
-        $reservation = $request->validated();
+        $reservationData = $request->reservation;
 
-        dd($reservation);
+        if (!$reservationData || !isset($reservationData['hotel']) || !isset($reservationData['hotel']['id'])) {
+            return back()->with('alert', [
+                'message' => 'Invalid reservation data. Please try again.',
+                'type' => 'error',
+            ]);
+        }
+
+        $customer = $request->safe()->only([
+            'first_name',
+            'last_name',
+            'email',
+            'address',
+            'phone',
+            'city',
+            'postal_code',
+            'country_code',
+            'request'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $reservation = Reservation::create([
+                'hotel_id' => $reservationData['hotel']['id'],
+                'reservation_number' => $this->createReservationNumber(),
+                'check_in' => Carbon::parse($reservationData['check_in']),
+                'check_out' => Carbon::parse($reservationData['check_out']),
+                'allotment' => intval($reservationData['allotment']),
+                'total_nights' => intval($reservationData['total_nights']),
+                'reservation_data' => $reservationData,
+            ]);
+
+            $reservation->reservationCustomers()->create($customer);
+
+            if (!isset($reservationData['room']) || !isset($reservationData['selectedBeds'])) {
+                throw new \Exception('Missing room or bed selection data');
+            }
+
+            $reservationRooms = collect(range(0, $reservationData['allotment'] - 1))->map(function ($i) use ($reservationData) {
+                if (
+                    !isset($reservationData['selectedBeds'][$i]['id']) ||
+                    !isset($reservationData['needExtraBeds'][$i]) ||
+                    !isset($reservationData['totalExtraBed'][$i]) ||
+                    !isset($reservationData['extraBedPrices'][$i]) ||
+                    !isset($reservationData['guests'][$i]['adult']) ||
+                    !isset($reservationData['guests'][$i]['child'])
+                ) {
+                    throw new \Exception("Incomplete reservation data for index {$i}");
+                }
+
+                return [
+                    'room_id' => $reservationData['room']['id'],
+                    'bed_id' => $reservationData['selectedBeds'][$i]['id'],
+                    'extra_bed_count' => $reservationData['needExtraBeds'][$i] ? $reservationData['totalExtraBed'][$i] : 0,
+                    'extra_bed_price' => $reservationData['extraBedPrices'][$i],
+                    'adult_guest' => $reservationData['guests'][$i]['adult'],
+                    'child_guest' => $reservationData['guests'][$i]['child'],
+                ];
+            })->toArray();
+
+            $reservation->reservationRooms()->createMany($reservationRooms);
+
+            $reservation->transaction()->create([
+                'subtotal' => $request->subtotal,
+                'discount' => $request->discount_total,
+                'tax_amount' => $request->tax_amount,
+                'total_price' => $request->total_price,
+                'pay_now' => $request->pay_now,
+                'balance_to_be_paid' => $request->balance_to_be_paid,
+                'promotion_code' => $request->promotion_code,
+            ]);
+
+            DB::commit();
+            session()->forget('reservation');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error storing reservation: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to create reservation: ' . $th->getMessage(),
+                'type' => 'error',
+            ]);
+        }
+
+        dd($reservation->with(['reservationRooms', 'reservationCustomers', 'transaction']));
+    }
+
+    protected function createReservationNumber()
+    {
+        return 'RES-' . Str::upper(Str::random(10)) . '-' . date('Ymd');
     }
 }

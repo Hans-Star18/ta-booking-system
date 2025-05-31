@@ -4,6 +4,7 @@ import Button from '@/components/form/button'
 import { Checkbox } from '@/components/form/checkbox'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
+import Select from '@/components/form/select'
 import { Textarea } from '@/components/form/textarea'
 import ValidationFeedback from '@/components/form/validation-feedback'
 import Currency from '@/components/format/currency'
@@ -160,10 +161,19 @@ const PriceSummary = ({
     </>
 )
 
-export default function ReservationConfirm({ reservation, policies }) {
+export default function ReservationConfirm({
+    reservation,
+    policies,
+    countries,
+}) {
     if (!reservation) {
         return router.visit(route('customer.home'))
     }
+
+    const countriesOptions = Object.entries(countries).map(([code, name]) => ({
+        value: code,
+        label: name,
+    }))
 
     const hotel = reservation.hotel
     const room = reservation.room
@@ -259,11 +269,14 @@ export default function ReservationConfirm({ reservation, policies }) {
         processing: reservationProcessing,
         errors: reservationErrors,
     } = useForm({
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
-        address: '',
         phone: '',
         city: '',
+        postal_code: '',
+        country_code: 'AF',
+        address: '',
         request: '',
         terms: false,
     })
@@ -278,7 +291,7 @@ export default function ReservationConfirm({ reservation, policies }) {
         reservationData.pay_now = payNow
         reservationData.balance_to_be_paid = balanceToBePaid
 
-        console.log(reservationData)
+        console.log(reservationData, reservationErrors)
 
         postReservation(
             route('customer.reservation.store', { hotel: hotel.uuid }),
@@ -374,28 +387,62 @@ export default function ReservationConfirm({ reservation, policies }) {
                             <hr className="mb-4 w-full text-gray-300" />
                             <div className="mb-3 grid gap-3 md:grid-cols-2 md:gap-6">
                                 <div>
-                                    <Label htmlFor={'name'} required={true}>
-                                        Your Name
+                                    <Label
+                                        htmlFor={'first_name'}
+                                        required={true}
+                                    >
+                                        First Name
                                     </Label>
                                     <Input
-                                        id={'name'}
-                                        name={'name'}
-                                        placeholder="Your Full Name"
-                                        value={reservationData.name}
+                                        id={'first_name'}
+                                        name={'first_name'}
+                                        placeholder="Your First Name"
+                                        value={reservationData.first_name}
                                         onChange={(e) =>
-                                            setReservationData({
-                                                name: e.target.value,
-                                            })
+                                            setReservationData((prev) => ({
+                                                ...prev,
+                                                first_name: e.target.value,
+                                            }))
                                         }
                                         className={
-                                            reservationErrors.name &&
+                                            reservationErrors.first_name &&
                                             'ring ring-red-500'
                                         }
                                     />
                                     <ValidationFeedback
-                                        message={reservationErrors.name}
+                                        message={reservationErrors.first_name}
                                     />
                                 </div>
+                                <div>
+                                    <Label
+                                        htmlFor={'last_name'}
+                                        required={true}
+                                    >
+                                        Last Name
+                                    </Label>
+                                    <Input
+                                        id={'last_name'}
+                                        name={'last_name'}
+                                        placeholder="Your First Name"
+                                        value={reservationData.last_name}
+                                        onChange={(e) =>
+                                            setReservationData((prev) => ({
+                                                ...prev,
+                                                last_name: e.target.value,
+                                            }))
+                                        }
+                                        className={
+                                            reservationErrors.last_name &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.last_name}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mb-3 grid gap-3 md:grid-cols-2 md:gap-6">
                                 <div>
                                     <Label htmlFor={'email'} required={true}>
                                         Email
@@ -403,13 +450,13 @@ export default function ReservationConfirm({ reservation, policies }) {
                                     <Input
                                         id={'email'}
                                         name={'email'}
-                                        type="email"
-                                        placeholder="Email Address"
+                                        placeholder="Your email"
                                         value={reservationData.email}
                                         onChange={(e) =>
-                                            setReservationData({
+                                            setReservationData((prev) => ({
+                                                ...prev,
                                                 email: e.target.value,
-                                            })
+                                            }))
                                         }
                                         className={
                                             reservationErrors.email &&
@@ -420,35 +467,7 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         message={reservationErrors.email}
                                     />
                                 </div>
-                            </div>
 
-                            <div className="mb-3 grid grid-cols-1">
-                                <div>
-                                    <Label htmlFor={'address'} required={true}>
-                                        Address
-                                    </Label>
-                                    <Input
-                                        id={'address'}
-                                        name={'address'}
-                                        placeholder="Your Address"
-                                        value={reservationData.address}
-                                        onChange={(e) =>
-                                            setReservationData({
-                                                address: e.target.value,
-                                            })
-                                        }
-                                        className={
-                                            reservationErrors.address &&
-                                            'ring ring-red-500'
-                                        }
-                                    />
-                                    <ValidationFeedback
-                                        message={reservationErrors.address}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="mb-3 grid gap-3 md:grid-cols-2 md:gap-6">
                                 <div>
                                     <Label htmlFor={'phone'} required={true}>
                                         Phone Number
@@ -460,9 +479,10 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         placeholder="Phone Number / Whatsapp Number"
                                         value={reservationData.phone}
                                         onChange={(e) =>
-                                            setReservationData({
+                                            setReservationData((prev) => ({
+                                                ...prev,
                                                 phone: e.target.value,
-                                            })
+                                            }))
                                         }
                                         className={
                                             reservationErrors.phone &&
@@ -473,12 +493,12 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         message={reservationErrors.phone}
                                     />
                                 </div>
+                            </div>
+
+                            <div className="mb-3 grid gap-3 md:grid-cols-3 md:gap-6">
                                 <div>
-                                    <Label htmlFor={'city'}>
-                                        City{' '}
-                                        <span className="text-sm text-gray-400">
-                                            (Optional)
-                                        </span>
+                                    <Label htmlFor={'city'} required={true}>
+                                        City
                                     </Label>
                                     <Input
                                         id={'city'}
@@ -486,9 +506,10 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         placeholder="City"
                                         value={reservationData.city}
                                         onChange={(e) =>
-                                            setReservationData({
+                                            setReservationData((prev) => ({
+                                                ...prev,
                                                 city: e.target.value,
-                                            })
+                                            }))
                                         }
                                         className={
                                             reservationErrors.city &&
@@ -499,8 +520,90 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         message={reservationErrors.city}
                                     />
                                 </div>
+                                <div>
+                                    <Label
+                                        htmlFor={'country_code'}
+                                        required={true}
+                                    >
+                                        Country
+                                    </Label>
+                                    <Select
+                                        id={'country_code'}
+                                        name={'country_code'}
+                                        defaultValue={
+                                            reservationData.country_code
+                                        }
+                                        options={countriesOptions}
+                                        onChange={(e) =>
+                                            setReservationData((prev) => ({
+                                                ...prev,
+                                                country_code: e.target.value,
+                                            }))
+                                        }
+                                        className={
+                                            reservationErrors.country_code &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.country_code}
+                                    />
+                                </div>
+                                <div>
+                                    <Label
+                                        htmlFor={'postal_code'}
+                                        required={true}
+                                    >
+                                        Postal Code
+                                    </Label>
+                                    <Input
+                                        id={'postal_code'}
+                                        name={'postal_code'}
+                                        placeholder="postal_code"
+                                        value={reservationData.postal_code}
+                                        onChange={(e) =>
+                                            setReservationData((prev) => ({
+                                                ...prev,
+                                                postal_code: e.target.value,
+                                            }))
+                                        }
+                                        className={
+                                            reservationErrors.postal_code &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.postal_code}
+                                    />
+                                </div>
                             </div>
 
+                            <div className="mb-3 grid grid-cols-1">
+                                <div>
+                                    <Label htmlFor={'address'} required={true}>
+                                        Address
+                                    </Label>
+                                    <Textarea
+                                        id={'address'}
+                                        name={'address'}
+                                        placeholder="Address"
+                                        value={reservationData.address}
+                                        onChange={(e) =>
+                                            setReservationData((prev) => ({
+                                                ...prev,
+                                                address: e.target.value,
+                                            }))
+                                        }
+                                        className={
+                                            reservationErrors.address &&
+                                            'ring ring-red-500'
+                                        }
+                                    />
+                                    <ValidationFeedback
+                                        message={reservationErrors.address}
+                                    />
+                                </div>
+                            </div>
                             <div className="mb-3 grid grid-cols-1">
                                 <div>
                                     <Label htmlFor={'request'}>
@@ -515,9 +618,10 @@ export default function ReservationConfirm({ reservation, policies }) {
                                         placeholder="Comments / Special Request"
                                         value={reservationData.request}
                                         onChange={(e) =>
-                                            setReservationData({
+                                            setReservationData((prev) => ({
+                                                ...prev,
                                                 request: e.target.value,
-                                            })
+                                            }))
                                         }
                                         className={
                                             reservationErrors.request &&
@@ -536,9 +640,10 @@ export default function ReservationConfirm({ reservation, policies }) {
                                     name={'terms'}
                                     checked={reservationData.terms}
                                     onChange={(e) =>
-                                        setReservationData({
+                                        setReservationData((prev) => ({
+                                            ...prev,
                                             terms: e.target.checked,
-                                        })
+                                        }))
                                     }
                                     className={twMerge(
                                         reservationErrors.terms &&

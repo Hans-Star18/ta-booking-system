@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservation_id')->constrained('reservations');
-            $table->string('transaction_id', 50)->unique();
+            $table->string('transaction_id', 50)->nullable()->unique();
             $table->string('payment_method', 20)->nullable();
             $table->string('payment_status', 20)->default('pending');
             $table->string('payment_type', 20)->nullable();

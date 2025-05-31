@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('hotel_id')->constrained('hotels');
-            $table->string('reservation_number', 20)->unique();
+            $table->string('reservation_number', 50)->unique();
             $table->date('check_in')->nullable();
             $table->date('check_out')->nullable();
             $table->integer('allotment')->default(1);

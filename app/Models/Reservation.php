@@ -36,4 +36,9 @@ class Reservation extends Model
     {
         return $this->hasOne(ReservationCustomer::class);
     }
+
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
+    }
 }
