@@ -32,7 +32,7 @@ class Reservation extends Model
         return $this->hasMany(ReservationRoom::class);
     }
 
-    public function reservationCustomers()
+    public function reservationCustomer()
     {
         return $this->hasOne(ReservationCustomer::class);
     }

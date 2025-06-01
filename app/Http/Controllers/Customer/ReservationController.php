@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CheckAvaibilityRequest;
 use App\Http\Requests\Customer\StoreReservationRequest;
+use App\Services\GetMidtransSnapTokenService;
+use App\Services\MidtransService;
+use App\Services\ReservationService;
 use Monarobase\CountryList\CountryListFacade as Countries;
 
 class ReservationController extends Controller
@@ -124,80 +127,23 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function storeReservation(StoreReservationRequest $request)
+    public function storeReservation(StoreReservationRequest $request, ReservationService $reservationService, MidtransService $midtransService)
     {
         $reservationData = $request->reservation;
 
-        if (!$reservationData || !isset($reservationData['hotel']) || !isset($reservationData['hotel']['id'])) {
+        if (!$reservationService->validateReservationData($reservationData)) {
             return back()->with('alert', [
                 'message' => 'Invalid reservation data. Please try again.',
                 'type' => 'error',
             ]);
         }
 
-        $customer = $request->safe()->only([
-            'first_name',
-            'last_name',
-            'email',
-            'address',
-            'phone',
-            'city',
-            'postal_code',
-            'country_code',
-            'request'
-        ]);
-
         DB::beginTransaction();
         try {
-            $reservation = Reservation::create([
-                'hotel_id' => $reservationData['hotel']['id'],
-                'reservation_number' => $this->createReservationNumber(),
-                'check_in' => Carbon::parse($reservationData['check_in']),
-                'check_out' => Carbon::parse($reservationData['check_out']),
-                'allotment' => intval($reservationData['allotment']),
-                'total_nights' => intval($reservationData['total_nights']),
-                'reservation_data' => $reservationData,
-            ]);
-
-            $reservation->reservationCustomers()->create($customer);
-
-            if (!isset($reservationData['room']) || !isset($reservationData['selectedBeds'])) {
-                throw new \Exception('Missing room or bed selection data');
-            }
-
-            $reservationRooms = collect(range(0, $reservationData['allotment'] - 1))->map(function ($i) use ($reservationData) {
-                if (
-                    !isset($reservationData['selectedBeds'][$i]['id']) ||
-                    !isset($reservationData['needExtraBeds'][$i]) ||
-                    !isset($reservationData['totalExtraBed'][$i]) ||
-                    !isset($reservationData['extraBedPrices'][$i]) ||
-                    !isset($reservationData['guests'][$i]['adult']) ||
-                    !isset($reservationData['guests'][$i]['child'])
-                ) {
-                    throw new \Exception("Incomplete reservation data for index {$i}");
-                }
-
-                return [
-                    'room_id' => $reservationData['room']['id'],
-                    'bed_id' => $reservationData['selectedBeds'][$i]['id'],
-                    'extra_bed_count' => $reservationData['needExtraBeds'][$i] ? $reservationData['totalExtraBed'][$i] : 0,
-                    'extra_bed_price' => $reservationData['extraBedPrices'][$i],
-                    'adult_guest' => $reservationData['guests'][$i]['adult'],
-                    'child_guest' => $reservationData['guests'][$i]['child'],
-                ];
-            })->toArray();
-
-            $reservation->reservationRooms()->createMany($reservationRooms);
-
-            $reservation->transaction()->create([
-                'subtotal' => $request->subtotal,
-                'discount' => $request->discount_total,
-                'tax_amount' => $request->tax_amount,
-                'total_price' => $request->total_price,
-                'pay_now' => $request->pay_now,
-                'balance_to_be_paid' => $request->balance_to_be_paid,
-                'promotion_code' => $request->promotion_code,
-            ]);
+            $reservation = $reservationService->createReservation($reservationData);
+            $reservationService->createReservationCustomer($reservation, $request);
+            $reservationService->createReservationRooms($reservation, $reservationData);
+            $reservationService->createReservationTransaction($reservation, $request);
 
             DB::commit();
             session()->forget('reservation');
@@ -211,11 +157,73 @@ class ReservationController extends Controller
             ]);
         }
 
-        dd($reservation->with(['reservationRooms', 'reservationCustomers', 'transaction']));
+        $midtransResponse = $midtransService->getSnapToken(
+            transactionDetails: $this->makeTransactionDetails($reservation),
+            customerDetails: $this->makeCustomerDetails($reservation),
+            items: $this->makeItems($reservation),
+            finishUrl: 'https://google.com',
+        );
+
+        dd($midtransResponse);
     }
 
-    protected function createReservationNumber()
+    protected function makeTransactionDetails(Reservation $reservation): array
     {
-        return 'RES-' . Str::upper(Str::random(10)) . '-' . date('Ymd');
+        return [
+            'order_id' => $reservation->reservation_number,
+            'gross_amount' => $reservation->transaction->pay_now,
+        ];
+    }
+
+    protected function makeCustomerDetails(Reservation $reservation): array
+    {
+        return [
+            'first_name' => $reservation->reservationCustomer->first_name,
+            'last_name' => $reservation->reservationCustomer->last_name,
+            'email' => $reservation->reservationCustomer->email,
+            'phone' => $reservation->reservationCustomer->phone,
+            'billing_address' => [
+                'first_name' => $reservation->reservationCustomer->first_name,
+                'last_name' => $reservation->reservationCustomer->last_name,
+                'email' => $reservation->reservationCustomer->email,
+                'phone' => $reservation->reservationCustomer->phone,
+                'address' => $reservation->reservationCustomer->address,
+                'city' => $reservation->reservationCustomer->city,
+                'postal_code' => $reservation->reservationCustomer->postal_code,
+                // 'country_code' => $reservation->reservationCustomer->country_code,
+            ],
+        ];
+    }
+
+    protected function makeItems(Reservation $reservation): array
+    {
+        $items = [];
+
+        $items[] = [
+            'id' => 'tax-' . $reservation->reservation_number,
+            'price' => $reservation->transaction->tax_amount,
+            'quantity' => 1,
+            'name' => 'Tax (' . $reservation->hotel->setting->tax_percentage . '%)',
+        ];
+
+        if ($reservation->transaction->discount_amount > 0) {
+            $items[] = [
+                'id' => 'discount-' . $reservation->reservation_number,
+                'price' => -$reservation->transaction->discount,
+                'quantity' => 1,
+                'name' => 'Discount (' . $reservation->transaction->promotion_code . ')',
+            ];
+        }
+
+        foreach ($reservation->reservationRooms as $reservationRoom) {
+            $items[] = [
+                'id' => 'resRoom-' . $reservationRoom->room->id,
+                'price' => $reservationRoom->room->price * $reservation->total_nights,
+                'quantity' => 1,
+                'name' => $reservationRoom->room->name . ' (' . $reservation->total_nights . ' night(s))',
+            ];
+        }
+
+        return $items;
     }
 }
