@@ -146,7 +146,7 @@ class ReservationController extends Controller
             $reservationService->createReservationTransaction($reservation, $request);
 
             DB::commit();
-            session()->forget('reservation');
+            // session()->forget('reservation');
         } catch (\Throwable $th) {
             DB::rollBack();
             logger()->error('Error storing reservation: ' . $th->getMessage());
