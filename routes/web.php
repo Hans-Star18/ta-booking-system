@@ -36,16 +36,13 @@ Route::group(["as" => "auth."], function () {
 
 Route::group(["as" => "customer."], function () {
     Route::get("/", [HomeController::class, "index"])->name("home");
-    // Route::get("/reservation", [HomeController::class, "reservation"])->name("reservation");
-    // Route::get("/reservation/confirm", [HomeController::class, "confirmReservation"])->name("reservation.confirm");
-    // Route::get("/reservation/finish", [HomeController::class, "finishReservation"])->name("reservation.finish");
 
     Route::get("/{hotel:uuid}", [ReservationController::class, "index"])->name("reservation.index");
     Route::get("/{hotel:uuid}/check-availability", [ReservationController::class, "checkAvailability"])->name("reservation.check-availability");
     Route::match(["get", "post"], "/{hotel:uuid}/reservation-detail/{room}", [ReservationController::class, "detail"])->name("reservation.detail");
     Route::match(["get", "post"], "/{hotel:uuid}/reservation-confirm", [ReservationController::class, "confirm"])->name("reservation.confirm");
     Route::post("/{hotel:uuid}/reservation-store", [ReservationController::class, "storeReservation"])->name("reservation.store");
-    // Route::get("/{hotel:uuid}/reservation-finish", [ReservationController::class, "finish"])->name("reservation.finish");
+    Route::get("/{hotel:uuid}/reservation-finish", [ReservationController::class, "finish"])->name("reservation.finish");
 
     Route::post("/{hotel:uuid}/check-promotion", CheckPromotionCodeController::class)->name("reservation.check-promotion");
 });

@@ -1,50 +1,130 @@
-import Footer from "@/components/footer";
-import CustomerLayout from "@/layouts/customer-layout";
-import { Head, Link } from "@inertiajs/react";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import Footer from '@/components/footer'
+import CustomerLayout from '@/layouts/customer-layout'
+import { Head } from '@inertiajs/react'
+import {
+    CheckCircleIcon,
+    ClockIcon,
+    PaperAirplaneIcon,
+    XCircleIcon,
+} from '@heroicons/react/24/outline'
+import Anchor from '@/components/form/anchor'
 
-export default function ReservationFinish() {
+export default function ReservationFinish({ reservation = null }) {
+    const statusIcons = {
+        settlement: <CheckCircleIcon className="h-24 w-24 text-green-500" />,
+        capture: <CheckCircleIcon className="h-24 w-24 text-green-500" />,
+        pending: <ClockIcon className="h-24 w-24 text-yellow-500" />,
+        expire: <XCircleIcon className="h-24 w-24 text-red-500" />,
+        default: <PaperAirplaneIcon className="h-24 w-24 text-blue-500" />,
+    }
+
+    const getStatusIcon = (status) => {
+        return statusIcons[status] || statusIcons.default
+    }
+
+    const statusTitle = {
+        settlement: 'Reservation Successful',
+        capture: 'Reservation Successful',
+        pending: 'Reseravtion Pending',
+        expire: 'Reservation Expired',
+        default: 'Reservation Unknown',
+    }
+
+    const statusBody = {
+        settlement: (
+            reservationNumber
+        ) => `Your reservation has been successfully completed and payment has been settled.
+            Reservation Number: <strong>${reservationNumber}</strong>
+            Thank you for choosing us!
+            We look forward to serving you.
+            You will receive a confirmation email shortly with all the details of your reservation.
+            You can check your reservation details using the button below.`,
+        capture: (
+            reservationNumber
+        ) => `Your reservation has been successfully completed and payment has been captured.
+            Reservation Number: <strong>${reservationNumber}</strong>
+            Thank you for choosing us!
+            We look forward to serving you.
+            You will receive a confirmation email shortly with all the details of your reservation.
+            You can check your reservation details using the button below.`,
+        pending: (
+            reservationNumber
+        ) => `Your reservation is currently pending payment confirmation.
+            Reservation Number: <strong>${reservationNumber}</strong>
+            Please complete the payment process to secure your reservation.
+            You will receive a confirmation email once the payment is confirmed.
+            You can check your reservation status using the button below.`,
+        expire: (
+            reservationNumber
+        ) => `Your reservation has expired due to incomplete payment.
+            Reservation Number: <strong>${reservationNumber}</strong>
+            Please make a new reservation if you still wish to book with us.
+            If you believe this is an error, please contact our customer service.
+            You can check your reservation details using the button below.`,
+        default: (
+            reservationNumber
+        ) => `We are unable to determine the status of your reservation.
+            Reservation Number: <strong>${reservationNumber}</strong>
+            Please contact our customer service for assistance.
+            We apologize for any inconvenience caused.
+            You can check your reservation details using the button below.`,
+    }
+
+    const getStatusTitle = (status) => {
+        return statusTitle[status] || statusTitle.default
+    }
+
+    const getStatusBody = (status, reservationNumber) => {
+        return (
+            statusBody[status]?.(reservationNumber) ||
+            statusBody.default(reservationNumber)
+        )
+    }
+
     return (
         <>
             <Head title="Reservation Finish" />
 
-            <CustomerLayout currenStep={4}>
-                <div className="bg-gray-100 w-full mt-6 p-4">
-                    <CheckCircleIcon className="w-24 h-24 text-green-500 mx-auto" />
+            <CustomerLayout currenStep={4} hotel={reservation.hotel}>
+                <div className="mt-6 w-full bg-gray-100 p-4">
+                    <div className="flex w-full justify-center">
+                        {getStatusIcon(reservation.transaction?.payment_status)}
+                    </div>
 
-                    <h1 className="text-2xl font-semibold text-center mt-4">
-                        Reservation Successful
+                    <h1 className="mt-4 text-center text-2xl font-semibold">
+                        {getStatusTitle(
+                            reservation.transaction?.payment_status
+                        )}
                     </h1>
-                    <p className="text-center text-gray-600 mt-2">
-                        Your reservation has been successfully completed.
-                        <br />
-                        Thank you for choosing us!
-                        <br />
-                        We look forward to serving you.
-                    </p>
-                    <p className="text-center text-gray-600 mt-2">
-                        You will receive a confirmation email shortly.
-                        <br />
-                        Please check your inbox for further details.
-                        <br />
-                        If you do not receive an email, please check your spam
-                        folder.
-                        <br />
-                        If you have any questions, please contact us.
-                    </p>
+                    <p
+                        className="mt-2 text-center whitespace-pre-line text-gray-600"
+                        dangerouslySetInnerHTML={{
+                            __html: getStatusBody(
+                                reservation.transaction?.payment_status,
+                                reservation.reservation_number
+                            ),
+                        }}
+                    />
 
-                    <div className="flex justify-center mt-6">
-                        <Link
-                            href={route("customer.home")}
-                            className="shadow-xs rounded-lg transition px-4 py-3 text-sm cursor-pointer bg-blue-500 hover:bg-blue-600 text-white"
+                    <div className="mt-6 flex justify-center gap-4">
+                        <Anchor
+                            href={route(
+                                'customer.reservation.index',
+                                reservation.hotel.uuid
+                            )}
+                            variant="primary"
                         >
                             Back To Home
-                        </Link>
+                        </Anchor>
+
+                        <Anchor href={'#'} variant="info">
+                            View Reservation Details
+                        </Anchor>
                     </div>
                 </div>
 
                 <Footer />
             </CustomerLayout>
         </>
-    );
+    )
 }

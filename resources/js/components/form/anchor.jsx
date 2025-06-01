@@ -13,10 +13,12 @@ export default function Anchor({
         secondary: 'bg-gray-500 hover:bg-gray-600 text-white',
         success: 'bg-green-500 hover:bg-green-600 text-white',
         danger: 'bg-red-500 hover:bg-red-600 text-white',
+        warning: 'bg-yellow-500 hover:bg-yellow-600 text-white',
+        info: 'bg-teal-500 hover:bg-teal-600 text-white',
     }
 
     let baseClasses =
-        'shadow-xs rounded-md transition px-4 py-2 text-sm cursor-pointer'
+        'shadow-xs rounded-md transition px-4 py-3 text-sm cursor-pointer'
 
     return (
         <Link

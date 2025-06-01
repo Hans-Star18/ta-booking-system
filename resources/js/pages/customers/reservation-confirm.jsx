@@ -291,12 +291,15 @@ export default function ReservationConfirm({
         reservationData.pay_now = payNow
         reservationData.balance_to_be_paid = balanceToBePaid
 
-        console.log(reservationData, reservationErrors)
-
         postReservation(
             route('customer.reservation.store', { hotel: hotel.uuid }),
             {
                 preserveScroll: true,
+                onSuccess: (response) => {
+                    if (response.props.snap_token) {
+                        window.snap.pay(response.props.snap_token)
+                    }
+                },
             }
         )
     }

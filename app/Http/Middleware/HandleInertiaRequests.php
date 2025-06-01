@@ -53,6 +53,7 @@ class HandleInertiaRequests extends Middleware
                 : null,
             'appName' => config('app.name'),
             'promotion_code' => $request->session()->get('promotion_code'),
+            'snap_token' => $request->session()->get('snap_token'),
         ]);
     }
 }

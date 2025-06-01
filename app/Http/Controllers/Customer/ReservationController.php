@@ -127,6 +127,18 @@ class ReservationController extends Controller
         ]);
     }
 
+    public function finish(Request $request)
+    {
+        session()->forget('reservation');
+        $reservation = Reservation::where('reservation_number', $request->get('order_id', null))
+            ->with(['hotel', 'reservationCustomer', 'transaction'])
+            ->first();
+
+        return inertia("customers/reservation-finish", [
+            "reservation" => $reservation,
+        ]);
+    }
+
     public function storeReservation(StoreReservationRequest $request, ReservationService $reservationService, MidtransService $midtransService)
     {
         $reservationData = $request->reservation;
@@ -161,10 +173,10 @@ class ReservationController extends Controller
             transactionDetails: $this->makeTransactionDetails($reservation),
             customerDetails: $this->makeCustomerDetails($reservation),
             items: $this->makeItems($reservation),
-            finishUrl: 'https://google.com',
+            finishUrl: route('customer.reservation.finish', $reservation->hotel->uuid),
         );
 
-        dd($midtransResponse);
+        return back()->with('snap_token', $midtransResponse);
     }
 
     protected function makeTransactionDetails(Reservation $reservation): array
@@ -190,40 +202,17 @@ class ReservationController extends Controller
                 'address' => $reservation->reservationCustomer->address,
                 'city' => $reservation->reservationCustomer->city,
                 'postal_code' => $reservation->reservationCustomer->postal_code,
-                // 'country_code' => $reservation->reservationCustomer->country_code,
             ],
         ];
     }
 
     protected function makeItems(Reservation $reservation): array
     {
-        $items = [];
-
-        $items[] = [
-            'id' => 'tax-' . $reservation->reservation_number,
-            'price' => $reservation->transaction->tax_amount,
+        return [[
+            'id' => 'payment-' . $reservation->reservation_number,
+            'price' => $reservation->transaction->pay_now,
             'quantity' => 1,
-            'name' => 'Tax (' . $reservation->hotel->setting->tax_percentage . '%)',
-        ];
-
-        if ($reservation->transaction->discount_amount > 0) {
-            $items[] = [
-                'id' => 'discount-' . $reservation->reservation_number,
-                'price' => -$reservation->transaction->discount,
-                'quantity' => 1,
-                'name' => 'Discount (' . $reservation->transaction->promotion_code . ')',
-            ];
-        }
-
-        foreach ($reservation->reservationRooms as $reservationRoom) {
-            $items[] = [
-                'id' => 'resRoom-' . $reservationRoom->room->id,
-                'price' => $reservationRoom->room->price * $reservation->total_nights,
-                'quantity' => 1,
-                'name' => $reservationRoom->room->name . ' (' . $reservation->total_nights . ' night(s))',
-            ];
-        }
-
-        return $items;
+            'name' => 'Payment ' . $reservation->hotel->setting->dp_percentage . '%',
+        ]];
     }
 }
