@@ -2,9 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\Reservation;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Exception;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class MidtransService
 {
@@ -31,7 +36,7 @@ class MidtransService
         array $customerDetails,
         array $items,
         string $finishUrl,
-        array $enabledPayments = [
+        ?array $enabledPayments = [
             "credit_card",
             "permata_va",
             "bca_va",
@@ -39,9 +44,10 @@ class MidtransService
             "bri_va",
             "echannel",
         ],
-        int $expiryDuration = 30
-    ): string {
+        ?int $expiryDuration = 30,
+    ): object {
         try {
+
             $params = [
                 'transaction_details' => $transactionDetails,
                 'callbacks' => [
@@ -64,11 +70,68 @@ class MidtransService
                 ],
             ];
 
-            return Snap::getSnapToken($params);
+            return Snap::createTransaction($params);
         } catch (Exception $e) {
             logger()->error('Failed to generate snap token: ' . $e->getMessage());
 
             throw new Exception('Failed to generate snap token: ' . $e->getMessage());
         }
+    }
+
+    public function handleNotification(Request $request)
+    {
+        try {
+            $reservationNumber = $request->order_id;
+            $statusCode = $request->status_code;
+            $grossAmount = $request->gross_amount;
+            $signatureKey = $request->signature_key;
+
+            if (!$this->isValidSignature($reservationNumber, $statusCode, $grossAmount, $signatureKey)) {
+                logger()->error('Invalid signature for reservation number: ' . $reservationNumber);
+                throw new Exception('Invalid signature');
+            }
+
+            $reservation = Reservation::where('reservation_number', $reservationNumber)->firstOrFail();
+
+            $transaction = $reservation->transaction;
+            $transaction->update([
+                'transaction_id' => $request->transaction_id,
+                'payment_type'   => $request->payment_type,
+                'transaction_id' => $request->transaction_id,
+                'payment_status' => $request->transaction_status,
+            ]);
+            $transaction->save();
+        } catch (ModelNotFoundException $e) {
+            logger()->error('Reservation not found for number: ' . $reservationNumber);
+            return response()->json(
+                ['error' => 'Reservation not found'],
+                HttpFoundationResponse::HTTP_NOT_FOUND
+            );
+        } catch (\Throwable $th) {
+            logger()->error('Error handling Midtrans notification: ' . $th->getMessage());
+
+            return response()->json(
+                ['error' => 'Invalid request'],
+                HttpFoundationResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        return response()->json(
+            ['status' => 'success'],
+            HttpFoundationResponse::HTTP_OK
+        );
+    }
+
+    protected function isValidSignature(
+        string $reservationNumber,
+        string $statusCode,
+        float $grossAmount,
+        string $signatureKey
+    ) {
+        $stringToHash = $reservationNumber . $statusCode . $grossAmount . $this->serverKey;
+
+        $calculatedSignature = hash('sha512', $stringToHash);
+
+        return $calculatedSignature === $signatureKey;
     }
 }

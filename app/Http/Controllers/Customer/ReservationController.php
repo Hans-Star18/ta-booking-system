@@ -129,10 +129,19 @@ class ReservationController extends Controller
 
     public function finish(Request $request)
     {
-        session()->forget('reservation');
-        $reservation = Reservation::where('reservation_number', $request->get('order_id', null))
-            ->with(['hotel', 'reservationCustomer', 'transaction'])
-            ->first();
+        try {
+            session()->forget('reservation');
+            $reservation = Reservation::where('reservation_number', $request->get('order_id', null))
+                ->with(['hotel', 'reservationCustomer', 'transaction'])
+                ->firstOrFail();
+        } catch (\Throwable $th) {
+            logger()->error('Error finishing reservation: ' . $th->getMessage());
+
+            return to_route('customer.reservation.index', $reservation->hotel->uuid)->with('alert', [
+                'message' => 'Reservation not found please try again',
+                'type' => 'error',
+            ]);
+        }
 
         return inertia("customers/reservation-finish", [
             "reservation" => $reservation,
@@ -157,6 +166,17 @@ class ReservationController extends Controller
             $reservationService->createReservationRooms($reservation, $reservationData);
             $reservationService->createReservationTransaction($reservation, $request);
 
+            $midtransResponse = $midtransService->getSnapToken(
+                transactionDetails: $this->makeTransactionDetails($reservation),
+                customerDetails: $this->makeCustomerDetails($reservation),
+                items: $this->makeItems($reservation),
+                finishUrl: route('customer.reservation.finish', $reservation->hotel->uuid),
+            );
+
+            $reservation->transaction->update([
+                'redirect_url' => $midtransResponse->redirect_url,
+            ]);
+
             DB::commit();
             // session()->forget('reservation');
         } catch (\Throwable $th) {
@@ -169,14 +189,7 @@ class ReservationController extends Controller
             ]);
         }
 
-        $midtransResponse = $midtransService->getSnapToken(
-            transactionDetails: $this->makeTransactionDetails($reservation),
-            customerDetails: $this->makeCustomerDetails($reservation),
-            items: $this->makeItems($reservation),
-            finishUrl: route('customer.reservation.finish', $reservation->hotel->uuid),
-        );
-
-        return back()->with('snap_token', $midtransResponse);
+        return back()->with('snap_token', $midtransResponse->token);
     }
 
     protected function makeTransactionDetails(Reservation $reservation): array
@@ -208,11 +221,13 @@ class ReservationController extends Controller
 
     protected function makeItems(Reservation $reservation): array
     {
-        return [[
-            'id' => 'payment-' . $reservation->reservation_number,
-            'price' => $reservation->transaction->pay_now,
-            'quantity' => 1,
-            'name' => 'Payment ' . $reservation->hotel->setting->dp_percentage . '%',
-        ]];
+        return [
+            [
+                'id' => 'payment-' . $reservation->reservation_number,
+                'price' => $reservation->transaction->pay_now,
+                'quantity' => 1,
+                'name' => 'Payment ' . $reservation->hotel->setting->dp_percentage . '%',
+            ]
+        ];
     }
 }

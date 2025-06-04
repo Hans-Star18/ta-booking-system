@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Customer;
 
 use App\Models\Hotel;
 use App\Http\Controllers\Controller;
-// use Illuminate\Http\Request;
+use App\Models\Reservation;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -18,20 +19,5 @@ class HomeController extends Controller
         }
 
         dd($hotelLink);
-    }
-
-    public function reservation()
-    {
-        return inertia("customers/reservation");
-    }
-
-    public function confirmReservation()
-    {
-        return inertia("customers/reservation-confirm");
-    }
-
-    public function finishReservation()
-    {
-        return inertia("customers/reservation-finish");
     }
 }
