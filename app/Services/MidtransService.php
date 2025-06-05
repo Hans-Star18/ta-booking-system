@@ -6,10 +6,9 @@ use App\Models\Reservation;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Exception;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
+use Midtrans\Notification;
+use Symfony\Component\HttpFoundation\Response;
 
 class MidtransService
 {
@@ -78,9 +77,11 @@ class MidtransService
         }
     }
 
-    public function handleNotification(Request $request)
+    public function handleNotification()
     {
         try {
+            $request = new Notification();
+
             $reservationNumber = $request->order_id;
             $statusCode = $request->status_code;
             $grossAmount = $request->gross_amount;
@@ -104,28 +105,37 @@ class MidtransService
         } catch (ModelNotFoundException $e) {
             logger()->error('Reservation not found for number: ' . $reservationNumber);
             return response()->json(
-                ['error' => 'Reservation not found'],
-                HttpFoundationResponse::HTTP_NOT_FOUND
+                [
+                    'message' => 'Reservation not found',
+                    'error' => $e->getMessage()
+                ],
+                Response::HTTP_NOT_FOUND
             );
         } catch (\Throwable $th) {
             logger()->error('Error handling Midtrans notification: ' . $th->getMessage());
 
             return response()->json(
-                ['error' => 'Invalid request'],
-                HttpFoundationResponse::HTTP_BAD_REQUEST
+                [
+                    'message' => 'Invalid request',
+                    'error' => $th->getMessage()
+                ],
+                Response::HTTP_BAD_REQUEST
             );
         }
 
         return response()->json(
-            ['status' => 'success'],
-            HttpFoundationResponse::HTTP_OK
+            [
+                'status' => 'success',
+                'reservation' => $reservation->transaction
+            ],
+            Response::HTTP_OK
         );
     }
 
     protected function isValidSignature(
         string $reservationNumber,
         string $statusCode,
-        float $grossAmount,
+        string $grossAmount,
         string $signatureKey
     ) {
         $stringToHash = $reservationNumber . $statusCode . $grossAmount . $this->serverKey;
