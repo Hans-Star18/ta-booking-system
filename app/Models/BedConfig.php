@@ -8,7 +8,7 @@ class BedConfig extends Model
 {
     protected $fillable = [
         'bed_id',
-        'room_id'
+        'room_id',
     ];
 
     public function bed()

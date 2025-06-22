@@ -19,8 +19,8 @@ class ReservationRoom extends Model
     protected $casts = [
         'extra_bed_count' => 'integer',
         'extra_bed_price' => 'float',
-        'adult_guest' => 'integer',
-        'child_guest' => 'integer',
+        'adult_guest'     => 'integer',
+        'child_guest'     => 'integer',
     ];
 
     public function reservation()

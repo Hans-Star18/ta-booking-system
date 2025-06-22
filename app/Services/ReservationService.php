@@ -18,13 +18,13 @@ class ReservationService
     public function createReservation($reservationData)
     {
         return Reservation::create([
-            'hotel_id' => $reservationData['hotel']['id'],
+            'hotel_id'           => $reservationData['hotel']['id'],
             'reservation_number' => $this->createReservationNumber(),
-            'check_in' => Carbon::parse($reservationData['check_in']),
-            'check_out' => Carbon::parse($reservationData['check_out']),
-            'allotment' => intval($reservationData['allotment']),
-            'total_nights' => intval($reservationData['total_nights']),
-            'reservation_data' => $reservationData,
+            'check_in'           => Carbon::parse($reservationData['check_in']),
+            'check_out'          => Carbon::parse($reservationData['check_out']),
+            'allotment'          => intval($reservationData['allotment']),
+            'total_nights'       => intval($reservationData['total_nights']),
+            'reservation_data'   => $reservationData,
         ]);
     }
 
@@ -39,7 +39,7 @@ class ReservationService
             'city',
             'postal_code',
             'country_code',
-            'request'
+            'request',
         ]);
 
         $reservation->reservationCustomer()->create($customer);
@@ -47,7 +47,7 @@ class ReservationService
 
     public function createReservationRooms($reservation, $reservationData)
     {
-        if (!isset($reservationData['room']) || !isset($reservationData['selectedBeds'])) {
+        if (! isset($reservationData['room']) || ! isset($reservationData['selectedBeds'])) {
             throw new \Exception('Missing room or bed selection data');
         }
 
@@ -56,12 +56,12 @@ class ReservationService
                 $this->validateRoomData($reservationData, $i);
 
                 return [
-                    'room_id' => $reservationData['room']['id'],
-                    'bed_id' => $reservationData['selectedBeds'][$i]['id'],
+                    'room_id'         => $reservationData['room']['id'],
+                    'bed_id'          => $reservationData['selectedBeds'][$i]['id'],
                     'extra_bed_count' => $reservationData['needExtraBeds'][$i] ? $reservationData['totalExtraBed'][$i] : 0,
                     'extra_bed_price' => $reservationData['extraBedPrices'][$i],
-                    'adult_guest' => $reservationData['guests'][$i]['adult'],
-                    'child_guest' => $reservationData['guests'][$i]['child'],
+                    'adult_guest'     => $reservationData['guests'][$i]['adult'],
+                    'child_guest'     => $reservationData['guests'][$i]['child'],
                 ];
             })
             ->toArray();
@@ -72,12 +72,12 @@ class ReservationService
     public function validateRoomData($reservationData, $index)
     {
         if (
-            !isset($reservationData['selectedBeds'][$index]['id']) ||
-            !isset($reservationData['needExtraBeds'][$index]) ||
-            !isset($reservationData['totalExtraBed'][$index]) ||
-            !isset($reservationData['extraBedPrices'][$index]) ||
-            !isset($reservationData['guests'][$index]['adult']) ||
-            !isset($reservationData['guests'][$index]['child'])
+            ! isset($reservationData['selectedBeds'][$index]['id']) ||
+            ! isset($reservationData['needExtraBeds'][$index]) ||
+            ! isset($reservationData['totalExtraBed'][$index]) ||
+            ! isset($reservationData['extraBedPrices'][$index]) ||
+            ! isset($reservationData['guests'][$index]['adult']) ||
+            ! isset($reservationData['guests'][$index]['child'])
         ) {
             throw new \Exception("Incomplete reservation data for index {$index}");
         }
@@ -86,18 +86,18 @@ class ReservationService
     public function createReservationTransaction($reservation, $request)
     {
         $reservation->transaction()->create([
-            'subtotal' => $request->subtotal,
-            'discount' => $request->discount_total,
-            'tax_amount' => $request->tax_amount,
-            'total_price' => $request->total_price,
-            'pay_now' => $request->pay_now,
+            'subtotal'           => $request->subtotal,
+            'discount'           => $request->discount_total,
+            'tax_amount'         => $request->tax_amount,
+            'total_price'        => $request->total_price,
+            'pay_now'            => $request->pay_now,
             'balance_to_be_paid' => $request->balance_to_be_paid,
-            'promotion_code' => $request->promotion_code,
+            'promotion_code'     => $request->promotion_code,
         ]);
     }
 
     public function createReservationNumber()
     {
-        return 'RES-' . Str::upper(Str::random(10)) . '-' . date('Ymd');
+        return 'RES-'.Str::upper(Str::random(10)).'-'.date('Ymd');
     }
 }

@@ -37,23 +37,23 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $request->user(),
+                'user'       => $request->user(),
                 'isLoggedIn' => $request->user() !== null,
-                'hotel' => $request->user()?->hotel,
+                'hotel'      => $request->user()?->hotel,
             ],
             'route' => [
                 'currentUrl' => $request->url(),
             ],
             'flash' => [
                 'success' => $request->session()->get('success'),
-                'error' => $request->session()->get('error'),
+                'error'   => $request->session()->get('error'),
             ],
             'alert' => $request->session()->has('alert')
                 ? array_merge($request->session()->get('alert'), ['_id' => uniqid()])
                 : null,
-            'appName' => config('app.name'),
+            'appName'        => config('app.name'),
             'promotion_code' => $request->session()->get('promotion_code'),
-            'snap_token' => $request->session()->get('snap_token'),
+            'snap_token'     => $request->session()->get('snap_token'),
         ]);
     }
 }

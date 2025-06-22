@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Organizer;
 
-use Illuminate\Http\Request;
-use App\Models\PromotionCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\StorePromotionCodeRequest;
 use App\Http\Requests\Organizer\UpdatePromotionCodeRequest;
+use App\Models\PromotionCode;
 use Illuminate\Support\Facades\DB;
 
 class PromotionCodeController extends Controller
@@ -18,8 +17,8 @@ class PromotionCodeController extends Controller
     {
         $promotionCodes = PromotionCode::all();
 
-        return inertia("organizers/promotion-codes/index", [
-            "promotionCodes" => $promotionCodes,
+        return inertia('organizers/promotion-codes/index', [
+            'promotionCodes' => $promotionCodes,
         ]);
     }
 
@@ -28,7 +27,7 @@ class PromotionCodeController extends Controller
      */
     public function create()
     {
-        return inertia("organizers/promotion-codes/add");
+        return inertia('organizers/promotion-codes/add');
     }
 
     /**
@@ -43,17 +42,17 @@ class PromotionCodeController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error creating promotion code: ' . $e->getMessage());
+            logger()->error('Error creating promotion code: '.$e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create promotion code',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Promotion code created successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 
@@ -62,8 +61,8 @@ class PromotionCodeController extends Controller
      */
     public function edit(PromotionCode $promotionCode)
     {
-        return inertia("organizers/promotion-codes/edit", [
-            "promotionCode" => $promotionCode,
+        return inertia('organizers/promotion-codes/edit', [
+            'promotionCode' => $promotionCode,
         ]);
     }
 
@@ -79,17 +78,17 @@ class PromotionCodeController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating promotion code: ' . $e->getMessage());
+            logger()->error('Error updating promotion code: '.$e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update promotion code',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Promotion code updated successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 
@@ -102,7 +101,7 @@ class PromotionCodeController extends Controller
 
         return back()->with('alert', [
             'message' => 'Promotion code deleted successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 }

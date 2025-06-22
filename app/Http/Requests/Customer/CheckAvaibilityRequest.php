@@ -22,7 +22,7 @@ class CheckAvaibilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'check_in' => ['required', 'date'],
+            'check_in'  => ['required', 'date'],
             'check_out' => ['required', 'date', 'after:check_in'],
         ];
     }

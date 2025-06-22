@@ -16,14 +16,14 @@ class IsOrganizerLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()?->isOrganizer()) {
+        if (! $request->user()?->isOrganizer()) {
             if ($request->user()) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
             }
             session()->flash('alert', [
-                'type' => 'error',
+                'type'    => 'error',
                 'message' => 'You must be logged in as an organizer to access this page.',
             ]);
 

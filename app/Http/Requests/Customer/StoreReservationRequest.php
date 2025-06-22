@@ -14,16 +14,16 @@ class StoreReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'string', 'max:50'],
-            'last_name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'string', 'email', 'max:100'],
-            'address' => ['required', 'string'],
-            'phone' => ['required', 'string', 'max:20'],
-            'city' => ['required', 'string', 'max:50'],
-            'postal_code' => ['required', 'string', 'max:10'],
+            'first_name'   => ['required', 'string', 'max:50'],
+            'last_name'    => ['required', 'string', 'max:50'],
+            'email'        => ['required', 'string', 'email', 'max:100'],
+            'address'      => ['required', 'string'],
+            'phone'        => ['required', 'string', 'max:20'],
+            'city'         => ['required', 'string', 'max:50'],
+            'postal_code'  => ['required', 'string', 'max:10'],
             'country_code' => ['required', 'string', 'max:5'],
-            'request' => ['nullable', 'string'],
-            'terms' => ['required', 'boolean', 'accepted'],
+            'request'      => ['nullable', 'string'],
+            'terms'        => ['required', 'boolean', 'accepted'],
         ];
     }
 }

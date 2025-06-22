@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Models\Hotel;
 use App\Http\Controllers\Controller;
-use App\Models\Reservation;
-use Illuminate\Http\Request;
+use App\Models\Hotel;
 
 class HomeController extends Controller
 {

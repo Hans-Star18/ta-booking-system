@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('promotion_codes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("hotel_id")->constrained("hotels")->cascadeOnDelete();
-            $table->string("code", 10)->unique();
-            $table->integer("discount");
-            $table->date("valid_until");
-            $table->boolean("is_active")->default(true);
+            $table->foreignId('hotel_id')->constrained('hotels')->cascadeOnDelete();
+            $table->string('code', 10)->unique();
+            $table->integer('discount');
+            $table->date('valid_until');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

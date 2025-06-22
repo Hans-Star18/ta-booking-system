@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -22,14 +21,15 @@ class LoginController extends Controller
             // TODO: cek apakah organizer atau admin
             if ($request->user()->isOrganizer()) {
                 return to_route('organizer.dashboard')->with('alert', [
-                    'type' => 'success',
+                    'type'    => 'success',
                     'message' => 'You are logged in as an organizer.',
                 ]);
             }
 
             dd('login with admin');
+
             return to_route('admin.dashboard')->with('alert', [
-                'type' => 'success',
+                'type'    => 'success',
                 'message' => 'You are logged in as an admin.',
             ]);
         }

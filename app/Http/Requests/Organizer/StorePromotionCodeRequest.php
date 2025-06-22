@@ -23,8 +23,8 @@ class StorePromotionCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'       => ['required', 'string', 'max:10'],
-            'discount'   => ['required', 'integer', 'min:1', 'max:100'],
+            'code'        => ['required', 'string', 'max:10'],
+            'discount'    => ['required', 'integer', 'min:1', 'max:100'],
             'valid_until' => ['required', 'date'],
         ];
     }

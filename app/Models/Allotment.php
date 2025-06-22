@@ -9,7 +9,7 @@ class Allotment extends Model
     protected $fillable = [
         'room_id',
         'date',
-        'allotment'
+        'allotment',
     ];
 
     protected $casts = [

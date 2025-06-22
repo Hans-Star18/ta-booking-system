@@ -4,7 +4,6 @@ namespace Database\Seeders\stub;
 
 use App\Models\Policy;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PolicySeeder extends Seeder
 {

@@ -1,0 +1,13 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "binary_operator_spaces": {
+            "operators": {
+                "=>": "align_single_space",
+                "=": "align_single_space"
+            }
+        },
+        "assign_null_coalescing_to_coalesce_equal": true
+    },
+    "exclude": ["resources", "vendor"]
+}

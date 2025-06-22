@@ -2,12 +2,9 @@
 
 namespace Database\Seeders\stub;
 
-use App\Models\Bed;
 use App\Models\Hotel;
-use App\Models\BedConfig;
-use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
 
 class HotelSeeder extends Seeder
 {
@@ -18,16 +15,16 @@ class HotelSeeder extends Seeder
     {
         $hotels = [
             [
-                'user_id' => 2,
-                'uuid' => Str::uuid(),
-                'name' => 'Hotel California',
-                'address' => 'Jl. Sunset Road No. 88, Kuta, Bali',
-                'phone' => '0361-123456',
-                'mobile' => '081234567890',
-                'email' => 'info@california.com',
-                'website' => 'www.california.com',
-                'term_and_condition' => $this->getTermAndConditions()
-            ]
+                'user_id'            => 2,
+                'uuid'               => Str::uuid(),
+                'name'               => 'Hotel California',
+                'address'            => 'Jl. Sunset Road No. 88, Kuta, Bali',
+                'phone'              => '0361-123456',
+                'mobile'             => '081234567890',
+                'email'              => 'info@california.com',
+                'website'            => 'www.california.com',
+                'term_and_condition' => $this->getTermAndConditions(),
+            ],
         ];
 
         foreach ($hotels as $hotel) {
@@ -37,7 +34,7 @@ class HotelSeeder extends Seeder
 
     protected function getTermAndConditions()
     {
-        return "<section>
+        return '<section>
             <h2>Terms and Conditions</h2>
 
             <h3>1. Check-in & Check-out</h3>
@@ -105,6 +102,6 @@ class HotelSeeder extends Seeder
 
             <p>By proceeding with the booking, you agree to the above Terms and Conditions.</p>
             </section>
-            ";
+            ';
     }
 }

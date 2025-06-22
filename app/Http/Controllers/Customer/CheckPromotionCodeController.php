@@ -14,7 +14,7 @@ class CheckPromotionCodeController extends Controller
 
         if (blank($promotionCode)) {
             return back()->with('alert', [
-                'type' => 'error',
+                'type'    => 'error',
                 'message' => 'Promotion code is required',
             ]);
         }
@@ -23,30 +23,31 @@ class CheckPromotionCodeController extends Controller
 
         if (blank($promotionCode)) {
             return back()->with('alert', [
-                'type' => 'error',
+                'type'    => 'error',
                 'message' => 'Promotion code is not found',
             ]);
         }
 
-        if (!$promotionCode->is_active) {
+        if (! $promotionCode->is_active) {
             return back()->with('alert', [
-                'type' => 'error',
+                'type'    => 'error',
                 'message' => 'Promotion code is invalid',
             ]);
         }
 
         if ($promotionCode->valid_until < now()) {
             return back()->with('alert', [
-                'type' => 'error',
+                'type'    => 'error',
                 'message' => 'Promotion code is expired',
             ]);
         }
 
         session()->flash('promotion_code', $promotionCode);
+
         return back()->with(
             'alert',
             [
-                'type' => 'success',
+                'type'    => 'success',
                 'message' => 'Congratulations! You have successfully applied the promotion code',
             ]
         );

@@ -22,17 +22,17 @@ class UpdateRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => ['required', 'string', 'max:100'],
-            'max_occupancy' => ['required', 'integer', 'min:1'],
-            'cover_image'   => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-            'price'         => ['required', 'numeric', 'min:0'],
-            'description'   => ['required', 'string'],
-            'bed_config'    => ['required', 'array'],
-            'bed_config.*'  => ['required', 'exists:beds,id'],
-            'amenity_config' => ['nullable', 'array'],
+            'name'             => ['required', 'string', 'max:100'],
+            'max_occupancy'    => ['required', 'integer', 'min:1'],
+            'cover_image'      => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'price'            => ['required', 'numeric', 'min:0'],
+            'description'      => ['required', 'string'],
+            'bed_config'       => ['required', 'array'],
+            'bed_config.*'     => ['required', 'exists:beds,id'],
+            'amenity_config'   => ['nullable', 'array'],
             'amenity_config.*' => ['nullable', 'exists:amenities,id'],
-            'policy_config' => ['nullable', 'array'],
-            'policy_config.*' => ['nullable', 'exists:policies,id'],
+            'policy_config'    => ['nullable', 'array'],
+            'policy_config.*'  => ['nullable', 'exists:policies,id'],
         ];
     }
 }

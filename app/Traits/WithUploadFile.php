@@ -2,32 +2,33 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait WithUploadFile
 {
-    public function storeFile(UploadedFile $file, String $path): String | null
+    public function storeFile(UploadedFile $file, string $path): ?string
     {
         try {
-            $filename = time() . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $filename = time().'-'.Str::random(8).'.'.$file->getClientOriginalExtension();
             Storage::disk('public')->putFileAs($path, $file, $filename);
         } catch (\Exception $e) {
-            logger()->error('Error storing file: ' . $e->getMessage());
+            logger()->error('Error storing file: '.$e->getMessage());
 
             return null;
         }
 
-        return $path . '/' . $filename;
+        return $path.'/'.$filename;
     }
 
-    public function deleteFile(?String $path): Bool
+    public function deleteFile(?string $path): bool
     {
         try {
             // Return false if path is null or empty
             if (empty($path)) {
                 logger()->warning('Cannot delete file: Path is empty or null');
+
                 return false;
             }
 
@@ -48,12 +49,14 @@ trait WithUploadFile
             // Validate the final path
             if (empty($path)) {
                 logger()->warning('Cannot delete file: Invalid path after processing');
+
                 return false;
             }
 
             // Check if file exists before attempting to delete
-            if (!Storage::disk('public')->exists($path)) {
-                logger()->warning('File not found for deletion: ' . $path);
+            if (! Storage::disk('public')->exists($path)) {
+                logger()->warning('File not found for deletion: '.$path);
+
                 return false;
             }
 
@@ -61,9 +64,9 @@ trait WithUploadFile
 
             return true;
         } catch (\Exception $e) {
-            logger()->error('Error deleting file: ' . $e->getMessage(), [
-                'path' => $path,
-                'exception' => $e
+            logger()->error('Error deleting file: '.$e->getMessage(), [
+                'path'      => $path,
+                'exception' => $e,
             ]);
 
             return false;

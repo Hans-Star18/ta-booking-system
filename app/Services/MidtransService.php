@@ -3,31 +3,34 @@
 namespace App\Services;
 
 use App\Models\Reservation;
-use Midtrans\Config;
-use Midtrans\Snap;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Midtrans\Config;
 use Midtrans\Notification;
+use Midtrans\Snap;
 use Symfony\Component\HttpFoundation\Response;
 
 class MidtransService
 {
     protected string $serverKey;
+
     protected bool $isProduction;
+
     protected bool $isSanitize;
+
     protected bool $is3ds;
 
     public function __construct()
     {
-        $this->serverKey = config('midtrans.serverKey');
+        $this->serverKey    = config('midtrans.serverKey');
         $this->isProduction = config('midtrans.isProduction');
-        $this->isSanitize = config('midtrans.isSanitize');
-        $this->is3ds = config('midtrans.is3ds');
+        $this->isSanitize   = config('midtrans.isSanitize');
+        $this->is3ds        = config('midtrans.is3ds');
 
-        Config::$serverKey = $this->serverKey;
+        Config::$serverKey    = $this->serverKey;
         Config::$isProduction = $this->isProduction;
-        Config::$isSanitized = $this->isSanitize;
-        Config::$is3ds = $this->is3ds;
+        Config::$isSanitized  = $this->isSanitize;
+        Config::$is3ds        = $this->is3ds;
     }
 
     public function getSnapToken(
@@ -36,12 +39,12 @@ class MidtransService
         array $items,
         string $finishUrl,
         ?array $enabledPayments = [
-            "credit_card",
-            "permata_va",
-            "bca_va",
-            "bni_va",
-            "bri_va",
-            "echannel",
+            'credit_card',
+            'permata_va',
+            'bca_va',
+            'bni_va',
+            'bri_va',
+            'echannel',
         ],
         ?int $expiryDuration = 30,
     ): object {
@@ -49,46 +52,46 @@ class MidtransService
 
             $params = [
                 'transaction_details' => $transactionDetails,
-                'callbacks' => [
-                    'finish' => $finishUrl
+                'callbacks'           => [
+                    'finish' => $finishUrl,
                 ],
                 'enabled_payments' => $enabledPayments,
-                'credit_card' => [
+                'credit_card'      => [
                     'secure' => true,
                 ],
-                'item_details' => $items,
+                'item_details'     => $items,
                 'customer_details' => $customerDetails,
-                'expiry' => [
+                'expiry'           => [
                     'start_time' => now()->format('Y-m-d H:i:s O'),
-                    'unit' => 'minutes',
-                    'duration' => $expiryDuration,
+                    'unit'       => 'minutes',
+                    'duration'   => $expiryDuration,
                 ],
                 'page_expiry' => [
                     'duration' => $expiryDuration,
-                    'unit' => 'minutes'
+                    'unit'     => 'minutes',
                 ],
             ];
 
             return Snap::createTransaction($params);
         } catch (Exception $e) {
-            logger()->error('Failed to generate snap token: ' . $e->getMessage());
+            logger()->error('Failed to generate snap token: '.$e->getMessage());
 
-            throw new Exception('Failed to generate snap token: ' . $e->getMessage());
+            throw new Exception('Failed to generate snap token: '.$e->getMessage());
         }
     }
 
     public function handleNotification()
     {
         try {
-            $request = new Notification();
+            $request = new Notification;
 
             $reservationNumber = $request->order_id;
-            $statusCode = $request->status_code;
-            $grossAmount = $request->gross_amount;
-            $signatureKey = $request->signature_key;
+            $statusCode        = $request->status_code;
+            $grossAmount       = $request->gross_amount;
+            $signatureKey      = $request->signature_key;
 
-            if (!$this->isValidSignature($reservationNumber, $statusCode, $grossAmount, $signatureKey)) {
-                logger()->error('Invalid signature for reservation number: ' . $reservationNumber);
+            if (! $this->isValidSignature($reservationNumber, $statusCode, $grossAmount, $signatureKey)) {
+                logger()->error('Invalid signature for reservation number: '.$reservationNumber);
                 throw new Exception('Invalid signature');
             }
 
@@ -103,21 +106,22 @@ class MidtransService
             ]);
             $transaction->save();
         } catch (ModelNotFoundException $e) {
-            logger()->error('Reservation not found for number: ' . $reservationNumber);
+            logger()->error('Reservation not found for number: '.$reservationNumber);
+
             return response()->json(
                 [
                     'message' => 'Reservation not found',
-                    'error' => $e->getMessage()
+                    'error'   => $e->getMessage(),
                 ],
                 Response::HTTP_NOT_FOUND
             );
         } catch (\Throwable $th) {
-            logger()->error('Error handling Midtrans notification: ' . $th->getMessage());
+            logger()->error('Error handling Midtrans notification: '.$th->getMessage());
 
             return response()->json(
                 [
                     'message' => 'Invalid request',
-                    'error' => $th->getMessage()
+                    'error'   => $th->getMessage(),
                 ],
                 Response::HTTP_BAD_REQUEST
             );
@@ -125,8 +129,8 @@ class MidtransService
 
         return response()->json(
             [
-                'status' => 'success',
-                'reservation' => $reservation->transaction
+                'status'      => 'success',
+                'reservation' => $reservation->transaction,
             ],
             Response::HTTP_OK
         );
@@ -138,7 +142,7 @@ class MidtransService
         string $grossAmount,
         string $signatureKey
     ) {
-        $stringToHash = $reservationNumber . $statusCode . $grossAmount . $this->serverKey;
+        $stringToHash = $reservationNumber.$statusCode.$grossAmount.$this->serverKey;
 
         $calculatedSignature = hash('sha512', $stringToHash);
 

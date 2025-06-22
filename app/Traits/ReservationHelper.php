@@ -2,14 +2,14 @@
 
 namespace App\Traits;
 
-use Carbon\Carbon;
-use App\Models\Room;
 use App\Models\Hotel;
+use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 trait ReservationHelper
 {
-    protected function availableRooms(Hotel $hotel, string $checkIn, string $checkOut, ?int $allotment = 1): Hotel|null
+    protected function availableRooms(Hotel $hotel, string $checkIn, string $checkOut, ?int $allotment = 1): ?Hotel
     {
         try {
             $dates = $this->collectDates($checkIn, $checkOut);
@@ -28,7 +28,7 @@ trait ReservationHelper
                 },
             ]);
         } catch (\Throwable $th) {
-            logger()->error('Error checking availability: ' . $th->getMessage());
+            logger()->error('Error checking availability: '.$th->getMessage());
 
             return null;
         }
@@ -36,7 +36,7 @@ trait ReservationHelper
         return $hotel;
     }
 
-    protected function availableRoom(Room $room, string $checkIn, string $checkOut, ?int $allotment = 1): Collection|null
+    protected function availableRoom(Room $room, string $checkIn, string $checkOut, ?int $allotment = 1): ?Collection
     {
         try {
             $dates = $this->collectDates($checkIn, $checkOut);
@@ -48,7 +48,7 @@ trait ReservationHelper
                 },
             ]);
         } catch (\Throwable $th) {
-            logger()->error('Error checking availability: ' . $th->getMessage());
+            logger()->error('Error checking availability: '.$th->getMessage());
 
             return null;
         }
@@ -56,29 +56,29 @@ trait ReservationHelper
         return $room->allotments;
     }
 
-    protected function dateParser(String $date): Carbon|null
+    protected function dateParser(string $date): ?Carbon
     {
         try {
             return Carbon::parse($date)->timezone('Asia/Makassar')->startOfDay();
         } catch (\Throwable $th) {
-            logger()->error('Error parsing date: ' . $th->getMessage());
+            logger()->error('Error parsing date: '.$th->getMessage());
 
             return null;
         }
     }
 
-    protected function collectDates(String $checkIn, String $checkOut): Collection
+    protected function collectDates(string $checkIn, string $checkOut): Collection
     {
         try {
             $startDate = $this->dateParser($checkIn);
-            $endDate = $this->dateParser($checkOut);
-            $dates = collect();
+            $endDate   = $this->dateParser($checkOut);
+            $dates     = collect();
 
             for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
                 $dates->push($date->format('Y-m-d'));
             }
         } catch (\Throwable $th) {
-            logger()->error('Error collecting dates: ' . $th->getMessage());
+            logger()->error('Error collecting dates: '.$th->getMessage());
 
             return collect();
         }
@@ -86,10 +86,10 @@ trait ReservationHelper
         return $dates;
     }
 
-    protected function calculateTotalNights(String $checkIn, String $checkOut): Int
+    protected function calculateTotalNights(string $checkIn, string $checkOut): int
     {
         $startDate = $this->dateParser($checkIn);
-        $endDate = $this->dateParser($checkOut);
+        $endDate   = $this->dateParser($checkOut);
 
         return $startDate->diffInDays($endDate);
     }

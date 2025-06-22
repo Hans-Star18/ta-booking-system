@@ -18,8 +18,8 @@ class Reservation extends Model
 
     protected $casts = [
         'reservation_data' => 'array',
-        'check_in' => 'date',
-        'check_out' => 'date',
+        'check_in'         => 'date',
+        'check_out'        => 'date',
     ];
 
     public function hotel()

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Organizer;
 
-use App\Models\Hotel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\UpdateHotelRequest;
+use App\Models\Hotel;
+use Illuminate\Support\Facades\DB;
 
 class HotelController extends Controller
 {
@@ -44,17 +43,17 @@ class HotelController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating hotel: ' . $e->getMessage());
+            logger()->error('Error updating hotel: '.$e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update hotel',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Hotel updated successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 }

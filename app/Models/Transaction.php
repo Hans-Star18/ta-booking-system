@@ -24,18 +24,18 @@ class Transaction extends Model
     ];
 
     protected $casts = [
-        'subtotal' => 'float',
-        'discount' => 'float',
-        'tax_amount' => 'float',
-        'total_price' => 'float',
-        'pay_now' => 'float',
+        'subtotal'           => 'float',
+        'discount'           => 'float',
+        'tax_amount'         => 'float',
+        'total_price'        => 'float',
+        'pay_now'            => 'float',
         'balance_to_be_paid' => 'float',
     ];
 
     public static function booted()
     {
         static::creating(function ($transaction) {
-            $transaction->invoice_number = 'INV-' . strtoupper(uniqid());
+            $transaction->invoice_number = 'INV-'.strtoupper(uniqid());
         });
     }
 

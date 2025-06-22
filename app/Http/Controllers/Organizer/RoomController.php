@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Organizer;
 
-use Carbon\Carbon;
-use App\Models\Bed;
-use App\Models\Room;
-use App\Models\Policy;
-use App\Models\Amenity;
-use App\Models\PhotoRoom;
-use Illuminate\Http\Request;
-use App\Traits\WithUploadFile;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Organizer\StoreRoomRequest;
-use App\Http\Requests\Organizer\UpdateRoomRequest;
 use App\Http\Requests\Organizer\UpdateBatchAllotmentRequest;
+use App\Http\Requests\Organizer\UpdateRoomRequest;
+use App\Models\Amenity;
+use App\Models\Bed;
+use App\Models\PhotoRoom;
+use App\Models\Policy;
+use App\Models\Room;
+use App\Traits\WithUploadFile;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoomController extends Controller
 {
@@ -32,29 +32,29 @@ class RoomController extends Controller
 
     public function create()
     {
-        $beds = Bed::all();
+        $beds      = Bed::all();
         $amenities = Amenity::all();
-        $policies = Policy::all();
+        $policies  = Policy::all();
 
         return inertia('organizers/rooms/add', [
-            'beds' => $beds,
+            'beds'      => $beds,
             'amenities' => $amenities,
-            'policies' => $policies,
+            'policies'  => $policies,
         ]);
     }
 
     public function store(StoreRoomRequest $request)
     {
-        $validated = $request->safe()->only(['name', 'max_occupancy', 'description', 'price']);
+        $validated             = $request->safe()->only(['name', 'max_occupancy', 'description', 'price']);
         $validated['hotel_id'] = $request->user()->hotel->id;
 
         DB::beginTransaction();
         try {
             $storedFileName = $this->storeFile($request->file('cover_image'), Room::FILE_PATH);
-            if (!$storedFileName) {
+            if (! $storedFileName) {
                 return back()->with('alert', [
                     'message' => 'Failed to store image',
-                    'type' => 'error',
+                    'type'    => 'error',
                 ]);
             }
             $validated['cover_image'] = $storedFileName;
@@ -67,17 +67,17 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing room: ' . $th->getMessage());
+            logger()->error('Error storing room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to store room',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return to_route('organizer.rooms.index')->with('alert', [
             'message' => 'Room created successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 
@@ -86,28 +86,28 @@ class RoomController extends Controller
         $allotments = $room->allotments->sortBy('date')->values()->toArray();
 
         return inertia('organizers/rooms/show', [
-            'room' => $room,
+            'room'       => $room,
             'allotments' => $allotments,
         ]);
     }
 
     public function edit(Room $room)
     {
-        $beds = Bed::all();
+        $beds      = Bed::all();
         $amenities = Amenity::all();
-        $policies = Policy::all();
+        $policies  = Policy::all();
 
         return inertia('organizers/rooms/edit', [
-            'room' => $room,
-            'beds' => $beds,
+            'room'      => $room,
+            'beds'      => $beds,
             'amenities' => $amenities,
-            'policies' => $policies,
+            'policies'  => $policies,
         ]);
     }
 
     public function update(Room $room, UpdateRoomRequest $request)
     {
-        $validated = $request->safe()->only(['name', 'max_occupancy', 'description', 'price']);
+        $validated             = $request->safe()->only(['name', 'max_occupancy', 'description', 'price']);
         $validated['hotel_id'] = $request->user()->hotel->id;
 
         DB::beginTransaction();
@@ -118,10 +118,10 @@ class RoomController extends Controller
                 }
 
                 $storedFileName = $this->storeFile($request->file('cover_image'), Room::FILE_PATH);
-                if (!$storedFileName) {
+                if (! $storedFileName) {
                     return back()->with('alert', [
                         'message' => 'Failed to store image',
-                        'type' => 'error',
+                        'type'    => 'error',
                     ]);
                 }
                 $validated['cover_image'] = $storedFileName;
@@ -134,17 +134,17 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating room: ' . $th->getMessage());
+            logger()->error('Error updating room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update room',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Room updated successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 
@@ -158,17 +158,17 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting room: ' . $th->getMessage());
+            logger()->error('Error deleting room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete room',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Room deleted successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 
@@ -177,10 +177,10 @@ class RoomController extends Controller
         DB::beginTransaction();
         try {
             $date = Carbon::parse($request->date)->timezone('Asia/Makassar');
-            if ($date->isPast() && !$date->isToday()) {
+            if ($date->isPast() && ! $date->isToday()) {
                 return back()->with('alert', [
                     'message' => 'Cannot set allotment for past dates',
-                    'type' => 'error',
+                    'type'    => 'error',
                 ]);
             }
 
@@ -193,7 +193,7 @@ class RoomController extends Controller
                 }
 
                 $room->allotments()->updateOrCreate([
-                    'date' => $date->format('Y-m-d'),
+                    'date'    => $date->format('Y-m-d'),
                     'room_id' => $room->id,
                 ], [
                     'allotment' => $request->allotment,
@@ -203,17 +203,17 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating allotment: ' . $th->getMessage());
+            logger()->error('Error updating allotment: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update allotment',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Allotment updated successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 
@@ -222,18 +222,18 @@ class RoomController extends Controller
         DB::beginTransaction();
         try {
             $startDate = Carbon::parse($request->start_date)->timezone('Asia/Makassar');
-            $endDate = Carbon::parse($request->end_date)->timezone('Asia/Makassar');
+            $endDate   = Carbon::parse($request->end_date)->timezone('Asia/Makassar');
             $allotment = $request->allotment;
 
             if ($startDate->gt($endDate)) {
                 return back()->with('alert', [
                     'message' => 'Start date must not be after end date',
-                    'type' => 'error',
+                    'type'    => 'error',
                 ]);
             }
 
             for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-                if ($date->isPast() && !$date->isToday()) {
+                if ($date->isPast() && ! $date->isToday()) {
                     continue;
                 }
 
@@ -243,7 +243,7 @@ class RoomController extends Controller
 
                 if ($existing && (blank($allotment) || $allotment == 0)) {
                     $existing->delete();
-                } elseif (!blank($allotment) && $allotment > 0) {
+                } elseif (! blank($allotment) && $allotment > 0) {
                     $room->allotments()->updateOrCreate(
                         ['date' => $dateString, 'room_id' => $room->id],
                         ['allotment' => $allotment]
@@ -254,17 +254,17 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating batch allotment: ' . $th->getMessage());
+            logger()->error('Error updating batch allotment: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update batch allotment',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Batch allotment updated successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 
@@ -285,10 +285,10 @@ class RoomController extends Controller
             $validated['room_id'] = $room->id;
 
             $storedFileName = $this->storeFile($request->file('file'), PhotoRoom::FILE_PATH);
-            if (!$storedFileName) {
+            if (! $storedFileName) {
                 return response()->json([
                     'message' => 'Failed to store image',
-                    'error' => 'Failed to store image',
+                    'error'   => 'Failed to store image',
                 ], Response::HTTP_BAD_REQUEST);
             }
             $validated['photo'] = $storedFileName;
@@ -298,17 +298,17 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing photo: ' . $th->getMessage());
+            logger()->error('Error storing photo: '.$th->getMessage());
 
             return response()->json([
                 'message' => 'Failed to store photo',
-                'error' => $th->getMessage(),
+                'error'   => $th->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
         return response()->json([
             'message' => 'Photo stored successfully',
-            'data' => $room->photos,
+            'data'    => $room->photos,
         ], Response::HTTP_OK);
     }
 
@@ -322,17 +322,17 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting photo: ' . $th->getMessage());
+            logger()->error('Error deleting photo: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete photo',
-                'type' => 'error',
+                'type'    => 'error',
             ]);
         }
 
         return back()->with('alert', [
             'message' => 'Photo deleted successfully',
-            'type' => 'success',
+            'type'    => 'success',
         ]);
     }
 }
