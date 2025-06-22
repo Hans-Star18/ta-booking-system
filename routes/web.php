@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Customer\CheckPromotionCodeController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\ReservationController;
+use App\Http\Controllers\Customer\TransactionController;
 use App\Http\Controllers\Organizer\HotelController;
 use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\PromotionCodeController;
@@ -45,4 +46,7 @@ Route::group(['as' => 'customer.'], function () {
     Route::get('/{hotel:uuid}/reservation-finish', [ReservationController::class, 'finish'])->name('reservation.finish');
 
     Route::post('/{hotel:uuid}/check-promotion', CheckPromotionCodeController::class)->name('reservation.check-promotion');
+    Route::get('/check-promotion', [CheckPromotionCodeController::class, 'check'])->name('promotion-code.check');
+
+    Route::get('/transaction/check', [TransactionController::class, 'check'])->name('transaction.check');
 });

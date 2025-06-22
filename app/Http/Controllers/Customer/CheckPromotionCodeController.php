@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Hotel;
+use App\Models\PromotionCode;
 use Illuminate\Http\Request;
 
 class CheckPromotionCodeController extends Controller
@@ -51,5 +52,35 @@ class CheckPromotionCodeController extends Controller
                 'message' => 'Congratulations! You have successfully applied the promotion code',
             ]
         );
+    }
+
+    public function check(Request $request)
+    {
+        try {
+            $code = $request->query('code', null);
+            if (blank($code)) {
+                return response()->json([
+                    'promotion_code' => null,
+                ]);
+            }
+
+            $promotionCode = PromotionCode::where('code', $code)->first();
+
+            if (blank($promotionCode)) {
+                return response()->json([
+                    'promotion_code' => null,
+                ]);
+            }
+
+            return response()->json([
+                'promotion_code' => $promotionCode,
+            ]);
+        } catch (\Throwable $th) {
+            logger()->error('Error checking promotion code: ' . $th->getMessage());
+
+            return response()->json([
+                'promotion_code' => null,
+            ]);
+        }
     }
 }

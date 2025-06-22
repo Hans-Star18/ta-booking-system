@@ -1,18 +1,10 @@
+import LoadAlert from '@/components/alert/load-alert'
 import Toast from '@/components/alert/toast'
 import CustomerHeader from '@/components/header/customer-header'
 import Stepper from '@/components/stepper'
-import { usePage } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
 
 export default function CustomerLayout({ children, currenStep = 1, hotel }) {
-    const [alert, setAlert] = useState(null)
-    const { alert: flashAlert } = usePage().props
-
-    useEffect(() => {
-        if (flashAlert) {
-            setAlert(flashAlert)
-        }
-    }, [flashAlert?._id])
+    const alert = LoadAlert()
 
     return (
         <>

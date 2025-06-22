@@ -116,10 +116,16 @@ export default function ReservationFinish({ reservation = null }) {
                         >
                             Back To Home
                         </Anchor>
-
-                        <Anchor href={'#'} variant="info">
-                            View Reservation Details
-                        </Anchor>
+                        <a
+                            className="cursor-pointer rounded-md bg-teal-500 px-4 py-3 text-sm text-white shadow-xs transition hover:bg-teal-600"
+                            href={route('customer.transaction.check', {
+                                reservation_number:
+                                    reservation.reservation_number,
+                            })}
+                            target="_blank"
+                        >
+                            View Transaction Details
+                        </a>
                     </div>
                 </div>
 
