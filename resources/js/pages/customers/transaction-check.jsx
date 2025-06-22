@@ -5,6 +5,7 @@ import LoadAlert from '@/components/alert/load-alert'
 import Toast from '@/components/alert/toast'
 import Currency from '@/components/format/currency'
 import { useState, useEffect } from 'react'
+import Anchor from '@/components/form/anchor'
 
 const PriceSummary = ({
     subtotal,
@@ -116,6 +117,15 @@ export default function TransactionCheck({ reservation = null }) {
         }
     }, [reservation])
 
+    const badgeBackground = {
+        pending: 'bg-yellow-300',
+        success: 'bg-green-300',
+        capture: 'bg-green-300',
+        settlement: 'bg-green-300',
+        deny: 'bg-red-300',
+        expire: 'bg-red-300',
+    }
+
     return (
         <>
             {alert && (
@@ -161,7 +171,7 @@ export default function TransactionCheck({ reservation = null }) {
                                 Transaction Detail
                             </h2>
 
-                            <div className="flex flex-col gap-2">
+                            <div className="mb-3 flex flex-col gap-2">
                                 <p className="font-bold">
                                     Res. Number :{' '}
                                     {reservation.reservation_number}
@@ -169,6 +179,14 @@ export default function TransactionCheck({ reservation = null }) {
                                 <p>
                                     Inv. Number :{' '}
                                     {reservation.transaction.invoice_number}
+                                </p>
+                                <p>
+                                    Transaction Status :{' '}
+                                    <span
+                                        className={`me-2 rounded-sm px-2.5 py-1 text-sm font-medium capitalize ${badgeBackground[reservation.transaction.payment_status]}`}
+                                    >
+                                        {reservation.transaction.payment_status}
+                                    </span>
                                 </p>
                             </div>
 
@@ -189,6 +207,21 @@ export default function TransactionCheck({ reservation = null }) {
                                     reservation.transaction.balance_to_be_paid
                                 }
                             />
+
+                            {reservation.transaction.payment_status ===
+                                'pending' && (
+                                <div className="mt-3 flex flex-col justify-end gap-2">
+                                    <a
+                                        target="_blank"
+                                        href={
+                                            reservation.transaction.redirect_url
+                                        }
+                                        className="w-fit rounded-sm bg-green-500 px-4 py-2 text-sm text-white shadow-xs transition hover:bg-green-600"
+                                    >
+                                        Continue to Payment
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     )}
                     <Footer />
