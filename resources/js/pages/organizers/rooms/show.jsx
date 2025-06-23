@@ -1,5 +1,6 @@
 import OrganizerLayout from '@/layouts/organizer-layout'
 import {
+    ArrowLeftIcon,
     CheckIcon,
     ChevronDoubleRightIcon,
     PencilSquareIcon,
@@ -23,14 +24,24 @@ export default function Show({ room, allotments }) {
                     <div className="mb-4 flex w-full items-center justify-between">
                         <h1 className="text-2xl font-bold">{room.name}</h1>
 
-                        <Anchor
-                            variant="success"
-                            href={route('organizer.rooms.edit', room)}
-                            className="flex items-center gap-1"
-                        >
-                            <PencilSquareIcon className="size-4" />
-                            Edit
-                        </Anchor>
+                        <div className="flex gap-2">
+                            <Anchor
+                                variant="secondary"
+                                href={route('organizer.rooms.index')}
+                                className="flex items-center gap-1"
+                            >
+                                <ArrowLeftIcon className="size-4" />
+                                Back
+                            </Anchor>
+                            <Anchor
+                                variant="success"
+                                href={route('organizer.rooms.edit', room)}
+                                className="flex items-center gap-1"
+                            >
+                                <PencilSquareIcon className="size-4" />
+                                Edit
+                            </Anchor>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

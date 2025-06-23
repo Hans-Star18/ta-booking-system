@@ -1,3 +1,4 @@
+import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import { HelperText } from '@/components/form/helper-text'
 import Input from '@/components/form/input'
@@ -117,7 +118,13 @@ export default function Add() {
                             </div>
                             <ValidationFeedback message={errors.valid_until} />
                         </div>
-                        <div className="col-span-3 flex items-center justify-end">
+                        <div className="col-span-3 flex items-center justify-end gap-2">
+                            <Anchor
+                                variant="danger"
+                                href={route('organizer.promotion-codes.index')}
+                            >
+                                Cancel
+                            </Anchor>
                             <Button
                                 variant="primary"
                                 onClick={handleSubmit}

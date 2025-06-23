@@ -1,3 +1,4 @@
+import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import { Checkbox } from '@/components/form/checkbox'
 import FileInput from '@/components/form/file-input'
@@ -291,7 +292,13 @@ export default function Edit({ room, beds, amenities, policies }) {
                             />
                         </div>
 
-                        <div className="col-span-2 flex items-center justify-end">
+                        <div className="col-span-2 flex items-center justify-end gap-2">
+                            <Anchor
+                                variant="secondary"
+                                href={route('organizer.rooms.show', room)}
+                            >
+                                Back
+                            </Anchor>
                             <Button
                                 variant="success"
                                 onClick={handleSubmit}

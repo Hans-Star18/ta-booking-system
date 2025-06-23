@@ -1,4 +1,5 @@
 import Confirm from '@/components/alert/confirm'
+import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -82,6 +83,12 @@ export default function PhotoManagement({ room }) {
                         <h1 className="text-2xl font-bold">
                             Photo Management for {room.name}
                         </h1>
+                        <Anchor
+                            variant="secondary"
+                            href={route('organizer.rooms.show', room)}
+                        >
+                            Back
+                        </Anchor>
                     </div>
 
                     <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-4">

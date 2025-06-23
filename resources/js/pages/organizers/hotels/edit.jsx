@@ -1,3 +1,4 @@
+import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
@@ -24,8 +25,6 @@ export default function Edit({ hotel }) {
             onSuccess: () => {},
         })
     }
-
-    console.log(data.name)
 
     return (
         <>
@@ -143,7 +142,13 @@ export default function Edit({ hotel }) {
                                 message={errors.term_and_condition}
                             />
                         </div>
-                        <div className="col-span-3 flex items-center justify-end">
+                        <div className="col-span-3 flex items-center justify-end gap-2">
+                            <Anchor
+                                variant="secondary"
+                                href={route('organizer.hotels.index')}
+                            >
+                                Back
+                            </Anchor>
                             <Button
                                 variant="success"
                                 onClick={handleSubmit}

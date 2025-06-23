@@ -1,3 +1,4 @@
+import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import { HelperText } from '@/components/form/helper-text'
 import Input from '@/components/form/input'
@@ -133,7 +134,13 @@ export default function Edit({ promotionCode }) {
                             />
                             <ValidationFeedback message={errors.is_active} />
                         </div>
-                        <div className="col-span-2 flex items-center justify-end">
+                        <div className="col-span-2 flex items-center justify-end gap-2">
+                            <Anchor
+                                variant="secondary"
+                                href={route('organizer.promotion-codes.index')}
+                            >
+                                Back
+                            </Anchor>
                             <Button
                                 variant="success"
                                 onClick={handleSubmit}
