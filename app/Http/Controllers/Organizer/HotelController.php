@@ -34,7 +34,7 @@ class HotelController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating hotel: ' . $e->getMessage());
+            logger()->error('Error updating hotel: '.$e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update hotel',

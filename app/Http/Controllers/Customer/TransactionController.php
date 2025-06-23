@@ -13,7 +13,7 @@ class TransactionController extends Controller
         try {
             $reservationNumber = $request->query('reservation_number', null);
 
-            if (!$reservationNumber) {
+            if (! $reservationNumber) {
                 return inertia('customers/transaction-check', [
                     'reservation' => null,
                 ]);
@@ -23,7 +23,7 @@ class TransactionController extends Controller
                 ->with(['hotel', 'transaction'])
                 ->firstOrFail();
         } catch (\Throwable $th) {
-            logger()->error('Error checking transaction: ' . $th->getMessage());
+            logger()->error('Error checking transaction: '.$th->getMessage());
 
             return inertia('customers/transaction-check', [
                 'reservation' => null,

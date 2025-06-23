@@ -5,14 +5,13 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\UpdateSettingRequest;
 use App\Models\Setting;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SettingController extends Controller
 {
     public function index()
     {
-        $hotel = auth()->guard('web')->user()->hotel;
+        $hotel   = auth()->guard('web')->user()->hotel;
         $setting = $hotel->setting;
 
         return inertia('organizers/settings/index', [
@@ -36,7 +35,7 @@ class SettingController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating setting: ' . $e->getMessage());
+            logger()->error('Error updating setting: '.$e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update setting',

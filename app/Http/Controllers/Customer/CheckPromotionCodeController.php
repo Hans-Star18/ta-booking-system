@@ -76,7 +76,7 @@ class CheckPromotionCodeController extends Controller
                 'promotion_code' => $promotionCode,
             ]);
         } catch (\Throwable $th) {
-            logger()->error('Error checking promotion code: ' . $th->getMessage());
+            logger()->error('Error checking promotion code: '.$th->getMessage());
 
             return response()->json([
                 'promotion_code' => null,
