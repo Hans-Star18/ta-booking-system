@@ -364,7 +364,7 @@ export default function ReservationConfirm({
                                 id={'promotion-code'}
                                 name={'promotion-code'}
                                 placeholder="Promotion Code"
-                                value={promotionCodeData.promotion_code}
+                                defaultValue={promotionCodeData.promotion_code}
                                 onChange={(e) =>
                                     setPromotionCodeData({
                                         promotion_code: e.target.value,
@@ -400,7 +400,9 @@ export default function ReservationConfirm({
                                         id={'first_name'}
                                         name={'first_name'}
                                         placeholder="Your First Name"
-                                        value={reservationData.first_name}
+                                        defaultValue={
+                                            reservationData.first_name
+                                        }
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,
@@ -427,7 +429,7 @@ export default function ReservationConfirm({
                                         id={'last_name'}
                                         name={'last_name'}
                                         placeholder="Your First Name"
-                                        value={reservationData.last_name}
+                                        defaultValue={reservationData.last_name}
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,
@@ -454,7 +456,7 @@ export default function ReservationConfirm({
                                         id={'email'}
                                         name={'email'}
                                         placeholder="Your email"
-                                        value={reservationData.email}
+                                        defaultValue={reservationData.email}
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,
@@ -480,7 +482,7 @@ export default function ReservationConfirm({
                                         type="tel"
                                         name={'phone'}
                                         placeholder="Phone Number / Whatsapp Number"
-                                        value={reservationData.phone}
+                                        defaultValue={reservationData.phone}
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,
@@ -507,7 +509,7 @@ export default function ReservationConfirm({
                                         id={'city'}
                                         name={'city'}
                                         placeholder="City"
-                                        value={reservationData.city}
+                                        defaultValue={reservationData.city}
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,
@@ -563,7 +565,9 @@ export default function ReservationConfirm({
                                         id={'postal_code'}
                                         name={'postal_code'}
                                         placeholder="postal_code"
-                                        value={reservationData.postal_code}
+                                        defaultValue={
+                                            reservationData.postal_code
+                                        }
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,
@@ -590,7 +594,7 @@ export default function ReservationConfirm({
                                         id={'address'}
                                         name={'address'}
                                         placeholder="Address"
-                                        value={reservationData.address}
+                                        defaultValue={reservationData.address}
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,
@@ -619,7 +623,7 @@ export default function ReservationConfirm({
                                         id={'request'}
                                         name={'request'}
                                         placeholder="Comments / Special Request"
-                                        value={reservationData.request}
+                                        defaultValue={reservationData.request}
                                         onChange={(e) =>
                                             setReservationData((prev) => ({
                                                 ...prev,

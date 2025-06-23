@@ -228,7 +228,9 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
                                                 id="allotment"
                                                 type="number"
                                                 name="allotment"
-                                                value={singleData.allotment}
+                                                defaultValue={
+                                                    singleData.allotment
+                                                }
                                                 onChange={(e) =>
                                                     setSingleData(
                                                         'allotment',
@@ -357,7 +359,7 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
                                         type="number"
                                         name="allotment-batch"
                                         placeholder="Allotment"
-                                        value={batchData.allotment}
+                                        defaultValue={batchData.allotment}
                                         onChange={(e) =>
                                             setBatchData(
                                                 'allotment',

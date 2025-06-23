@@ -25,7 +25,7 @@ export default function Edit({ hotel }) {
         })
     }
 
-    console.log(data)
+    console.log(data.name)
 
     return (
         <>
@@ -49,7 +49,7 @@ export default function Edit({ hotel }) {
                                 id="name"
                                 name="name"
                                 placeholder="Enter Hotel Name"
-                                value={data.name}
+                                defaultValue={data.name}
                                 onChange={(e) =>
                                     setData('name', e.target.value)
                                 }
@@ -66,7 +66,7 @@ export default function Edit({ hotel }) {
                                 id="phone"
                                 name="phone"
                                 placeholder="Enter Hotel Phone"
-                                value={data.phone}
+                                defaultValue={data.phone}
                                 onChange={(e) =>
                                     setData('phone', e.target.value)
                                 }
@@ -82,7 +82,7 @@ export default function Edit({ hotel }) {
                                 id="mobile"
                                 name="mobile"
                                 placeholder="Enter Hotel Mobile"
-                                value={data.mobile}
+                                defaultValue={data.mobile}
                                 onChange={(e) =>
                                     setData('mobile', e.target.value)
                                 }
@@ -98,7 +98,7 @@ export default function Edit({ hotel }) {
                                 id="email"
                                 name="email"
                                 placeholder="Enter Hotel Email"
-                                value={data.email}
+                                defaultValue={data.email}
                                 onChange={(e) =>
                                     setData('email', e.target.value)
                                 }
@@ -121,7 +121,7 @@ export default function Edit({ hotel }) {
                                     errors.address && 'ring ring-red-500'
                                 }
                                 rows={1}
-                                value={data.address}
+                                defaultValue={data.address}
                             />
                             <ValidationFeedback message={errors.address} />
                         </div>
@@ -130,7 +130,7 @@ export default function Edit({ hotel }) {
                                 Terms and Conditions
                             </Label>
                             <TextEditor
-                                value={data.term_and_condition}
+                                defaultValue={data.term_and_condition}
                                 onChange={(value) =>
                                     setData('term_and_condition', value)
                                 }

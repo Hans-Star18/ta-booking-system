@@ -52,7 +52,7 @@ export default function Edit({ promotionCode }) {
                                 id="code"
                                 name="code"
                                 placeholder="Enter Promotion Code"
-                                value={data.code}
+                                defaultValue={data.code}
                                 onChange={(e) =>
                                     setData('code', e.target.value)
                                 }
@@ -69,7 +69,7 @@ export default function Edit({ promotionCode }) {
                                 name="discount"
                                 placeholder="Enter Discount Percentage"
                                 type="number"
-                                value={data.discount}
+                                defaultValue={data.discount}
                                 onChange={(e) =>
                                     setData(
                                         'discount',

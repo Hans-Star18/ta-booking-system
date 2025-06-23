@@ -7,7 +7,7 @@ export function Textarea({
     className = '',
     onChange,
     rows = 3,
-    value,
+    defaultValue,
 }) {
     return (
         <textarea
@@ -20,9 +20,9 @@ export function Textarea({
             rows={rows}
             placeholder={placeholder}
             onChange={onChange}
-            value={value}
+            defaultValue={defaultValue}
         >
-            {value}
+            {defaultValue}
         </textarea>
     )
 }

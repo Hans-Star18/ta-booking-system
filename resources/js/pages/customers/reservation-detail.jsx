@@ -306,7 +306,7 @@ export default function ReservationDetail({ reservation, policies }) {
                                                 options={getValidAdultOptions(
                                                     index
                                                 )}
-                                                value={
+                                                defaultValue={
                                                     data.guests[index]?.adult
                                                 }
                                                 onChange={(e) => {
@@ -324,7 +324,7 @@ export default function ReservationDetail({ reservation, policies }) {
                                                 options={getValidChildOptions(
                                                     index
                                                 )}
-                                                value={
+                                                defaultValue={
                                                     data.guests[index]?.child
                                                 }
                                                 onChange={(e) => {

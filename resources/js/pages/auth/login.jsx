@@ -66,7 +66,7 @@ export default function Login() {
                                                 id={'email'}
                                                 name={'email'}
                                                 type={'email'}
-                                                value={data.email}
+                                                defaultValue={data.email}
                                                 onChange={(e) =>
                                                     setData(
                                                         'email',
@@ -99,7 +99,7 @@ export default function Login() {
                                                             ? 'text'
                                                             : 'password'
                                                     }
-                                                    value={data.password}
+                                                    defaultValue={data.password}
                                                     onChange={(e) =>
                                                         setData(
                                                             'password',

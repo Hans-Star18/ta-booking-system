@@ -103,7 +103,7 @@ export default function Edit({ room, beds, amenities, policies }) {
                                 id="name"
                                 name="name"
                                 placeholder="Enter Room Type Name"
-                                value={data.name}
+                                defaultValue={data.name}
                                 onChange={(e) =>
                                     setData('name', e.target.value)
                                 }
@@ -122,7 +122,7 @@ export default function Edit({ room, beds, amenities, policies }) {
                                 type="number"
                                 min="1"
                                 step="1"
-                                value={data.max_occupancy}
+                                defaultValue={data.max_occupancy}
                                 onChange={(e) =>
                                     setData(
                                         'max_occupancy',
@@ -165,7 +165,7 @@ export default function Edit({ room, beds, amenities, policies }) {
                                 type="number"
                                 min="0"
                                 step="0.01"
-                                value={data.price}
+                                defaultValue={data.price}
                                 onChange={(e) =>
                                     setData(
                                         'price',
@@ -181,7 +181,7 @@ export default function Edit({ room, beds, amenities, policies }) {
                                 Description
                             </Label>
                             <TextEditor
-                                value={data.description}
+                                defaultValue={data.description}
                                 onChange={(value) =>
                                     setData('description', value)
                                 }
@@ -204,7 +204,7 @@ export default function Edit({ room, beds, amenities, policies }) {
                                         <Checkbox
                                             id={bed.slug}
                                             name="bed_config"
-                                            value={bed.id}
+                                            defaultValue={bed.id}
                                             onChange={() =>
                                                 handleBedSelected(bed.id)
                                             }
@@ -234,7 +234,7 @@ export default function Edit({ room, beds, amenities, policies }) {
                                         <Checkbox
                                             id={amenity.slug}
                                             name="amenity_config"
-                                            value={amenity.id}
+                                            defaultValue={amenity.id}
                                             checked={amenitySelected.includes(
                                                 amenity.id
                                             )}
@@ -269,7 +269,7 @@ export default function Edit({ room, beds, amenities, policies }) {
                                         <Checkbox
                                             id={policy.slug}
                                             name="policy_config"
-                                            value={policy.id}
+                                            defaultValue={policy.id}
                                             checked={policySelected.includes(
                                                 policy.id
                                             )}
