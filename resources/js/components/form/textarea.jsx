@@ -20,7 +20,7 @@ export function Textarea({
             rows={rows}
             placeholder={placeholder}
             onChange={onChange}
-            defaultValue={defaultValue}
+            value={defaultValue}
         >
             {defaultValue}
         </textarea>

@@ -7,7 +7,7 @@ export default function TextEditor({ defaultValue, onChange, className }) {
     return (
         <JoditEditor
             ref={editor}
-            defaultValue={defaultValue}
+            value={defaultValue}
             onChange={onChange}
             className={className}
         />
