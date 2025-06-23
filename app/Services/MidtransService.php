@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MidtransService
 {
-    protected string $serverKey;
+    // protected string $serverKey;
 
     protected bool $isProduction;
 
@@ -22,18 +22,19 @@ class MidtransService
 
     public function __construct()
     {
-        $this->serverKey    = config('midtrans.serverKey');
+        // $this->serverKey    = config('midtrans.serverKey');
         $this->isProduction = config('midtrans.isProduction');
         $this->isSanitize   = config('midtrans.isSanitize');
         $this->is3ds        = config('midtrans.is3ds');
 
-        Config::$serverKey    = $this->serverKey;
+        // Config::$serverKey    = $this->serverKey;
         Config::$isProduction = $this->isProduction;
         Config::$isSanitized  = $this->isSanitize;
         Config::$is3ds        = $this->is3ds;
     }
 
     public function getSnapToken(
+        ?string $serverKey = null,
         array $transactionDetails,
         array $customerDetails,
         array $items,
@@ -48,8 +49,10 @@ class MidtransService
         ],
         ?int $expiryDuration = 30,
     ): object {
-        try {
+        $serverKey = $serverKey ?? config('midtrans.serverKey');
+        Config::$serverKey    = $serverKey;
 
+        try {
             $params = [
                 'transaction_details' => $transactionDetails,
                 'callbacks'           => [
@@ -74,9 +77,9 @@ class MidtransService
 
             return Snap::createTransaction($params);
         } catch (Exception $e) {
-            logger()->error('Failed to generate snap token: '.$e->getMessage());
+            logger()->error('Failed to generate snap token: ' . $e->getMessage());
 
-            throw new Exception('Failed to generate snap token: '.$e->getMessage());
+            throw new Exception('Failed to generate snap token: ' . $e->getMessage());
         }
     }
 
@@ -90,12 +93,13 @@ class MidtransService
             $grossAmount       = $request->gross_amount;
             $signatureKey      = $request->signature_key;
 
-            if (! $this->isValidSignature($reservationNumber, $statusCode, $grossAmount, $signatureKey)) {
-                logger()->error('Invalid signature for reservation number: '.$reservationNumber);
+            $reservation = Reservation::where('reservation_number', $reservationNumber)->firstOrFail();
+            $serverKey   = $reservation->hotel->setting->midtrans_server_key;
+
+            if (! $this->isValidSignature($reservationNumber, $statusCode, $grossAmount, $signatureKey, $serverKey)) {
+                logger()->error('Invalid signature for reservation number: ' . $reservationNumber);
                 throw new Exception('Invalid signature');
             }
-
-            $reservation = Reservation::where('reservation_number', $reservationNumber)->firstOrFail();
 
             $transaction = $reservation->transaction;
             $transaction->update([
@@ -106,7 +110,7 @@ class MidtransService
             ]);
             $transaction->save();
         } catch (ModelNotFoundException $e) {
-            logger()->error('Reservation not found for number: '.$reservationNumber);
+            logger()->error('Reservation not found for number: ' . $reservationNumber);
 
             return response()->json(
                 [
@@ -116,7 +120,7 @@ class MidtransService
                 Response::HTTP_NOT_FOUND
             );
         } catch (\Throwable $th) {
-            logger()->error('Error handling Midtrans notification: '.$th->getMessage());
+            logger()->error('Error handling Midtrans notification: ' . $th->getMessage());
 
             return response()->json(
                 [
@@ -140,9 +144,10 @@ class MidtransService
         string $reservationNumber,
         string $statusCode,
         string $grossAmount,
-        string $signatureKey
+        string $signatureKey,
+        string $serverKey
     ) {
-        $stringToHash = $reservationNumber.$statusCode.$grossAmount.$this->serverKey;
+        $stringToHash = $reservationNumber . $statusCode . $grossAmount . $serverKey;
 
         $calculatedSignature = hash('sha512', $stringToHash);
 

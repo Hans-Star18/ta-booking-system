@@ -42,7 +42,8 @@ export default function OrganizerSidebar() {
         {
             icon: <Cog8ToothIcon className="size-6" />,
             name: 'General Setting',
-            href: '/settings',
+            href: route('organizer.settings.index'),
+            routeActive: 'organizer.settings',
         },
         {
             icon: <ArrowLeftStartOnRectangleIcon className="size-6" />,

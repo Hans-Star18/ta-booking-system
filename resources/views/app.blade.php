@@ -12,8 +12,16 @@
         rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('midtrans.clientKey') }}"></script>
+    @php
+        $hotel = session()->get('hotel');
+        $clientKey = $hotel?->setting?->midtrans_client_key ?? null;
+        $midtransClientKey = $clientKey ?? config('midtrans.clientKey');
+    @endphp
+
+    @if ($midtransClientKey)
+        <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{ $midtransClientKey }}"></script>
+    @endif
 
     <title inertia>{{ config('app.name', 'Ta Booking System') }}</title>
 

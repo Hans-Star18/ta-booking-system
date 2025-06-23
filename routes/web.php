@@ -10,6 +10,7 @@ use App\Http\Controllers\Organizer\HotelController;
 use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\PromotionCodeController;
 use App\Http\Controllers\Organizer\RoomController;
+use App\Http\Controllers\Organizer\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -25,6 +26,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::resource('promotion-codes', PromotionCodeController::class)->except('show');
         Route::resource('hotels', HotelController::class)->except(['create', 'store', 'destroy', 'show']);
+        Route::resource('settings', SettingController::class)->except(['create', 'store', 'destroy', 'show']);
     });
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');

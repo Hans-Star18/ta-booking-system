@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class HotelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $hotel = auth()->guard('web')->user()->hotel;
@@ -21,9 +18,6 @@ class HotelController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Hotel $hotel)
     {
         return inertia('organizers/hotels/edit', [
@@ -31,9 +25,6 @@ class HotelController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateHotelRequest $request, Hotel $hotel)
     {
         DB::beginTransaction();
@@ -43,7 +34,7 @@ class HotelController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating hotel: '.$e->getMessage());
+            logger()->error('Error updating hotel: ' . $e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update hotel',
