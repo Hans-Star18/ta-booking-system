@@ -434,6 +434,7 @@ export default function ReservationDetail({ reservation, policies }) {
                                 variant="danger"
                                 href={route('customer.reservation.index', {
                                     hotel: hotel.uuid,
+                                    action: 'cancel',
                                 })}
                             >
                                 Cancel Reservation

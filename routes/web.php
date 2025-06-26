@@ -48,6 +48,5 @@ Route::group(['as' => 'customer.'], function () {
     Route::match(['get', 'post'], '/{hotel:uuid}/reservation-confirm', [ReservationController::class, 'confirm'])->name('reservation.confirm');
     Route::post('/{hotel:uuid}/reservation-store', [ReservationController::class, 'storeReservation'])->name('reservation.store');
     Route::get('/{hotel:uuid}/reservation-finish', [ReservationController::class, 'finish'])->name('reservation.finish');
-
     Route::post('/{hotel:uuid}/check-promotion', CheckPromotionCodeController::class)->name('reservation.check-promotion');
 });

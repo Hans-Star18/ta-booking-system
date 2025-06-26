@@ -27,8 +27,18 @@ class ReservationController extends Controller
         $this->policies = Policy::all();
     }
 
-    public function index(Hotel $hotel)
+    public function index(Hotel $hotel, Request $request)
     {
+        $action = $request->get('action', null);
+        if ($action == 'cancel') {
+            session()->forget('reservation');
+
+            return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
+                'message' => 'Reservation cancelled',
+                'type'    => 'success',
+            ]);
+        }
+
         $hotel->load(['rooms', 'rooms.photos', 'rooms.allotments']);
 
         return inertia('customers/reservation', [
@@ -56,7 +66,7 @@ class ReservationController extends Controller
             }
         } catch (\Throwable $th) {
             $hasCheckAvailability = false;
-            logger()->error('Error checking availability: '.$th->getMessage());
+            logger()->error('Error checking availability: ' . $th->getMessage());
         }
 
         return inertia('customers/reservation', [
@@ -84,7 +94,7 @@ class ReservationController extends Controller
             ]);
         }
 
-        if ($reservation && $request->method() == 'POST') {
+        if ($reservation && ($request->method() == 'POST' || $request->action == 'continue')) {
             $reservation['room']         = $room;
             $reservation['check_in']     = $reservation['check_in']->format('d F Y');
             $reservation['check_out']    = $reservation['check_out']->format('d F Y');
@@ -106,6 +116,7 @@ class ReservationController extends Controller
         $reservation = session()->get('reservation');
         if ($request->method() == 'POST') {
             $reservation['hotel']          = $hotel;
+            $reservation['room']           = $reservation['room'] ?? $request->room ?? null;
             $reservation['selectedBeds']   = $request->selectedBeds;
             $reservation['needExtraBeds']  = $request->needExtraBeds;
             $reservation['totalExtraBed']  = $request->totalExtraBed;
@@ -133,7 +144,7 @@ class ReservationController extends Controller
                 ->with(['hotel', 'reservationCustomer', 'transaction'])
                 ->firstOrFail();
         } catch (\Throwable $th) {
-            logger()->error('Error finishing reservation: '.$th->getMessage());
+            logger()->error('Error finishing reservation: ' . $th->getMessage());
 
             return to_route('customer.reservation.index', $reservation->hotel->uuid)->with('alert', [
                 'message' => 'Reservation not found please try again',
@@ -180,10 +191,10 @@ class ReservationController extends Controller
             // session()->forget('reservation');
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing reservation: '.$th->getMessage());
+            logger()->error('Error storing reservation: ' . $th->getMessage());
 
             return back()->with('alert', [
-                'message' => 'Failed to create reservation: '.$th->getMessage(),
+                'message' => 'Failed to create reservation: ' . $th->getMessage(),
                 'type'    => 'error',
             ]);
         }
@@ -222,11 +233,20 @@ class ReservationController extends Controller
     {
         return [
             [
-                'id'       => 'payment-'.$reservation->reservation_number,
+                'id'       => 'payment-' . $reservation->reservation_number,
                 'price'    => $reservation->transaction->pay_now,
                 'quantity' => 1,
-                'name'     => 'Payment '.$reservation->hotel->setting->dp_percentage.'%',
+                'name'     => 'Payment ' . $reservation->hotel->setting->dp_percentage . '%',
             ],
         ];
+    }
+
+    public function cancel(Request $request)
+    {
+        session()->forget('reservation');
+
+        return response()->json([
+            'message' => 'Reservation cancelled',
+        ]);
     }
 }

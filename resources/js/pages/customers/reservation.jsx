@@ -2,9 +2,10 @@ import CustomerLayout from '@/layouts/customer-layout'
 import RoomCard from '@/components/room-card'
 import Footer from '@/components/footer'
 import AvailabilityCheck from '@/components/availability-check'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, useForm, usePage } from '@inertiajs/react'
 import HTMLReactParser from 'html-react-parser'
 import BasicAlert from '@/components/alert/basic-alert'
+import InformationAlert from '@/components/alert/information-alert'
 
 export default function Reservation({
     hotel,
@@ -13,6 +14,7 @@ export default function Reservation({
     policies,
 }) {
     const searchParams = new URLSearchParams(window.location.search)
+    const reservation = usePage().props.reservation
 
     const {
         data: availabilityData,
@@ -68,6 +70,21 @@ export default function Reservation({
         )
     }
 
+    const handleCancelReservation = () => {
+        window.location.href = route('customer.reservation.index', {
+            hotel: hotel.uuid,
+            action: 'cancel',
+        })
+    }
+
+    const handleShowDetails = (roomId) => {
+        window.location.href = route('customer.reservation.detail', {
+            hotel: hotel.uuid,
+            room: roomId,
+            action: 'continue',
+        })
+    }
+
     return (
         <>
             <Head title={`${hotel.name}`} />
@@ -89,6 +106,20 @@ export default function Reservation({
                     handleCheckAvailability={handleCheckAvailability}
                     processing={availabilityProcessing}
                 />
+
+                {reservation?.room?.id && !hasCheckAvailability && (
+                    <InformationAlert
+                        title="Reservation"
+                        message="You have a reservation before, but not yet confirmed. Please confirm your reservation to proceed."
+                        variant="primary"
+                        actionButtonText="Show details"
+                        closeButtonText="Cancel Reservation"
+                        actionButtonOnClick={() =>
+                            handleShowDetails(reservation.room.id)
+                        }
+                        closeButtonOnClick={handleCancelReservation}
+                    />
+                )}
 
                 <div>
                     {hotel.rooms && hotel.rooms.length > 0 ? (

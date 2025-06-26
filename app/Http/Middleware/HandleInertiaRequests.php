@@ -54,6 +54,7 @@ class HandleInertiaRequests extends Middleware
             'appName'        => config('app.name'),
             'promotion_code' => $request->session()->get('promotion_code'),
             'snap_token'     => $request->session()->get('snap_token'),
+            'reservation'    => $request->session()->get('reservation'),
         ]);
     }
 }

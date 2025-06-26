@@ -685,6 +685,7 @@ export default function ReservationConfirm({
                                 variant="danger"
                                 href={route('customer.reservation.index', {
                                     hotel: hotel.uuid,
+                                    action: 'cancel',
                                 })}
                                 disabled={reservationProcessing}
                             >
