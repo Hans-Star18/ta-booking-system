@@ -8,6 +8,15 @@ class OrganizerController extends Controller
 {
     public function index()
     {
-        return inertia('organizers/dashboard');
+        $hotel = auth()->guard('web')->user()->hotel;
+        $reservations = $hotel->reservations()
+            ->whereHas('transaction')
+            ->with(['transaction', 'hotel', 'reservationCustomer', 'reservationRooms'])
+            ->get();
+
+        return inertia('organizers/dashboard/index', [
+            'hotel' => $hotel,
+            'reservations' => $reservations,
+        ]);
     }
 }

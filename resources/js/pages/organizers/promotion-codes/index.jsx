@@ -49,7 +49,7 @@ export default function Index({ promotionCodes }) {
                     <Anchor
                         variant="success"
                         href={route('organizer.promotion-codes.edit', row.id)}
-                        className={'px-4 py-2'}
+                        className={'px-4 py-1'}
                     >
                         Edit
                     </Anchor>
@@ -57,7 +57,7 @@ export default function Index({ promotionCodes }) {
                     <Button
                         variant="danger"
                         onClick={() => handleDelete(row.id)}
-                        className={'px-4 py-2'}
+                        className={'px-4 py-1'}
                         disabled={processing}
                     >
                         Delete
