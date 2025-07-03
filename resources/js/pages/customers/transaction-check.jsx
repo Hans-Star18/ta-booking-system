@@ -5,7 +5,6 @@ import LoadAlert from '@/components/alert/load-alert'
 import Toast from '@/components/alert/toast'
 import Currency from '@/components/format/currency'
 import { useState, useEffect } from 'react'
-import Anchor from '@/components/form/anchor'
 
 const PriceSummary = ({
     subtotal,

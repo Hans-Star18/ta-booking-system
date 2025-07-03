@@ -19,7 +19,7 @@ export default function OrganizerSidebar() {
             icon: <Squares2X2Icon className="size-6" />,
             name: 'Dashboard',
             href: route('organizer.dashboard'),
-            routeActive: 'organizer.dashboard',
+            routeActive: ['organizer.dashboard', 'organizer.reservations'],
         },
         {
             icon: <BuildingLibraryIcon className="size-6" />,
@@ -55,7 +55,12 @@ export default function OrganizerSidebar() {
     ]
 
     const isActive = useCallback(
-        (path) => route().current().includes(path),
+        (paths) => {
+            if (Array.isArray(paths)) {
+                return paths.some((path) => route().current().includes(path))
+            }
+            return route().current().includes(paths)
+        },
         [route().current()]
     )
 
