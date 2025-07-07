@@ -4,11 +4,26 @@ export default function InformationItem({
     labelColSpan = 3,
     valueColSpan = 8,
 }) {
+    const colSpanVariants = {
+        1: 'col-span-1',
+        2: 'col-span-2',
+        3: 'col-span-3',
+        4: 'col-span-4',
+        5: 'col-span-5',
+        6: 'col-span-6',
+        7: 'col-span-7',
+        8: 'col-span-8',
+        9: 'col-span-9',
+        10: 'col-span-10',
+        11: 'col-span-11',
+        12: 'col-span-12',
+    }
+
     return (
         <div className="grid grid-cols-12 gap-2">
-            <p className={`col-span-${labelColSpan}`}>{label}</p>
+            <p className={colSpanVariants[labelColSpan]}>{label}</p>
             <span className="col-span-1">:</span>
-            <span className={`col-span-${valueColSpan}`}>{value}</span>
+            <span className={colSpanVariants[valueColSpan]}>{value}</span>
         </div>
     )
 }
