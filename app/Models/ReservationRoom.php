@@ -23,6 +23,8 @@ class ReservationRoom extends Model
         'child_guest'     => 'integer',
     ];
 
+    protected $with = ['room', 'bed'];
+
     public function reservation()
     {
         return $this->belongsTo(Reservation::class);

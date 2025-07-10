@@ -32,15 +32,22 @@ class Transaction extends Model
         'balance_to_be_paid' => 'float',
     ];
 
+    protected $with = ['promotion'];
+
     public static function booted()
     {
         static::creating(function ($transaction) {
-            $transaction->invoice_number = 'INV-'.strtoupper(uniqid());
+            $transaction->invoice_number = 'INV-' . strtoupper(uniqid());
         });
     }
 
     public function reservation()
     {
         return $this->belongsTo(Reservation::class);
+    }
+
+    public function promotion()
+    {
+        return $this->belongsTo(PromotionCode::class, 'promotion_code', 'code');
     }
 }

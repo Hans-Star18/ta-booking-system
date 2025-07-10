@@ -34,7 +34,7 @@ export default function ReservationSection({ reservation }) {
                     valueColSpan={7}
                 />
                 <InformationItem
-                    label="Down Payment"
+                    label="Deposit Amount"
                     value={<Currency value={reservation.transaction.pay_now} />}
                     labelColSpan={4}
                     valueColSpan={7}
