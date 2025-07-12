@@ -18,8 +18,6 @@ import ValidationFeedback from '@/components/form/validation-feedback'
 export default function AllotmentManagementCalendar({ room, allotments }) {
     const calendarRef = useRef(null)
     const [events, setEvents] = useState([])
-    const [onRes, setOnRes] = useState(0)
-    const [available, setAvailable] = useState(0)
     const [isEditing, setIsEditing] = useState(false)
     const [openManageAllotmentModal, setOpenManageAllotmentModal] =
         useState(false)
@@ -61,7 +59,7 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
         const specificEvents = (allotments || []).map((a) => {
             return {
                 id: `allotment-${a.id}`,
-                title: a.allotment,
+                title: a.available,
                 start: a.date,
                 extendedProps: {
                     calendar: 'Success',
@@ -167,9 +165,15 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
     }
 
     const renderEventContent = (eventInfo) => {
-        const colorClass = eventInfo.event.extendedProps.calendar
-            ? `fc-bg-${eventInfo.event.extendedProps.calendar.toLowerCase()}`
-            : 'fc-bg-danger'
+        let colorClass = 'fc-bg-danger'
+        if (eventInfo.event.extendedProps.allotment === 0) {
+            colorClass = 'fc-bg-danger'
+        } else if (eventInfo.event.extendedProps.onRes === 0) {
+            colorClass = 'fc-bg-success'
+        } else if (eventInfo.event.extendedProps.onRes > 0) {
+            colorClass = 'fc-bg-warning'
+        }
+
         return (
             <div
                 className={`event-fc-color fc-event-main flex ${colorClass} items-center rounded-sm p-1`}
