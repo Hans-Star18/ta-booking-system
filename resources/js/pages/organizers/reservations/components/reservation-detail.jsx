@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import Currency from '@/components/format/currency'
 import { formatDate } from '@/utils/format'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
-import { Link } from '@inertiajs/react'
 
 export default function ReservationDetail({ reservation }) {
     const [reservationRooms, setReservationRooms] = useState(

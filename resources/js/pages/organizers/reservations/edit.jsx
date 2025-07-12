@@ -18,7 +18,10 @@ export default function Edit({ reservation }) {
                         <div className="flex gap-2">
                             <Anchor
                                 variant="secondary"
-                                href={route('organizer.dashboard')}
+                                href={route(
+                                    'organizer.reservations.show',
+                                    reservation.id
+                                )}
                                 className="flex items-center gap-1"
                             >
                                 <ArrowLeftIcon className="size-4" />
@@ -29,7 +32,10 @@ export default function Edit({ reservation }) {
 
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <CustomerSection reservation={reservation} />
-                        <ReservationSection reservation={reservation} />
+                        <ReservationSection
+                            reservation={reservation}
+                            method="edit"
+                        />
                     </div>
                 </div>
             </OrganizerLayout>

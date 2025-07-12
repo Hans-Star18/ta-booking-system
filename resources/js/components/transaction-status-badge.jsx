@@ -71,6 +71,17 @@ export default function TransactionStatusBadge({ status }) {
                     {status}
                 </span>
             )
+        case 'refund':
+            return (
+                <span
+                    className={twMerge(
+                        baseClass,
+                        'bg-blue-50 text-blue-700 ring-blue-600/20'
+                    )}
+                >
+                    {status}
+                </span>
+            )
         default:
             return (
                 <span
