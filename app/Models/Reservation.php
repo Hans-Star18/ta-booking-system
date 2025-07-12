@@ -13,8 +13,13 @@ class Reservation extends Model
         'check_out',
         'allotment',
         'total_nights',
+        'status',
         'reservation_data',
     ];
+
+    const PENDING = 'pending';
+    const CONFIRMED = 'confirmed';
+    const CANCELLED = 'cancelled';
 
     protected $casts = [
         'reservation_data' => 'array',

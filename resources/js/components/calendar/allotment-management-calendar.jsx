@@ -58,17 +58,19 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
         const endDate = new Date(new Date().getFullYear() + 3, 11, 31)
 
         const defaultEvents = generateDefaultEvents(startDate, endDate)
-        const specificEvents = (allotments || []).map((a) => ({
-            id: `allotment-${a.id}`,
-            title: a.allotment,
-            start: a.date,
-            extendedProps: {
-                calendar: 'Success',
-                allotment: a.allotment,
-                onRes: 0,
-                available: 0,
-            },
-        }))
+        const specificEvents = (allotments || []).map((a) => {
+            return {
+                id: `allotment-${a.id}`,
+                title: a.allotment,
+                start: a.date,
+                extendedProps: {
+                    calendar: 'Success',
+                    allotment: a.allotment,
+                    onRes: a.onRes,
+                    available: a.available,
+                },
+            }
+        })
 
         setEvents(mergeEvents(defaultEvents, specificEvents))
     }, [allotments])
@@ -78,9 +80,9 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
         setSingleData({
             date: event.start,
             allotment: event.extendedProps.allotment,
+            onRes: event.extendedProps.onRes,
+            available: event.extendedProps.available,
         })
-        setOnRes(0)
-        setAvailable(0)
         onOpenManageAllotmentModal()
     }
 
@@ -246,11 +248,11 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
                                 </div>
                                 <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
                                     <p className="w-24">On Res</p>
-                                    <p>: {onRes}</p>
+                                    <p>: {singleData.onRes}</p>
                                 </div>
                                 <div className="mb-4 flex items-center border-b border-gray-500 pb-2 text-slate-700">
                                     <p className="w-24">Available</p>
-                                    <p>: {available}</p>
+                                    <p>: {singleData.available}</p>
                                 </div>
                                 <div className="flex justify-end">
                                     {isEditing ? (
