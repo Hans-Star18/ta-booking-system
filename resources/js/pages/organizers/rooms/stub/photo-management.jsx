@@ -78,7 +78,7 @@ export default function PhotoManagement({ room }) {
             <Head title="Photo Management" />
 
             <OrganizerLayout>
-                <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
+                <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
                     <div className="mb-4 flex items-center justify-between">
                         <h1 className="text-2xl font-bold">
                             Photo Management for {room.name}

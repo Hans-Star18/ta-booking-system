@@ -86,7 +86,7 @@ export default function Edit({ room, beds, amenities, policies }) {
             <Head title={`Edit ${room.name}`} />
 
             <OrganizerLayout>
-                <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
+                <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
                     <div className="mb-4 flex items-center justify-between">
                         <h1 className="text-2xl font-bold">Edit {room.name}</h1>
                     </div>

@@ -62,7 +62,7 @@ const columns = [
                 </Anchor>
                 <Anchor
                     variant="success"
-                    // href={route('organizer.reservations.show', row.id)}
+                    href={route('organizer.reservations.edit', row.id)}
                     className={'px-4 py-1'}
                 >
                     Edit
@@ -95,7 +95,7 @@ export default function Index({ reservations }) {
             <Head title="Organizer Dashboard" />
 
             <OrganizerLayout>
-                <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
+                <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
                     <div className="mb-4 flex items-center justify-between">
                         <h1 className="text-2xl font-bold">Dashboard</h1>
                     </div>

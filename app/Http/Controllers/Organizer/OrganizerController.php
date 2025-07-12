@@ -29,4 +29,13 @@ class OrganizerController extends Controller
             'reservation' => $reservation,
         ]);
     }
+
+    public function edit(Reservation $reservation)
+    {
+        $reservation->load(['transaction', 'reservationCustomer']);
+
+        return inertia('organizers/reservations/edit', [
+            'reservation' => $reservation,
+        ]);
+    }
 }
