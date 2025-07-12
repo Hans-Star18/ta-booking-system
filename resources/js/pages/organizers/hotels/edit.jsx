@@ -17,11 +17,13 @@ export default function Edit({ hotel }) {
         mobile: hotel.mobile,
         email: hotel.email,
         term_and_condition: hotel.term_and_condition,
+        website: hotel.website,
     })
 
     const handleSubmit = (e) => {
         e.preventDefault()
         put(route('organizer.hotels.update', hotel.id), {
+            preserveScroll: true,
             onSuccess: () => {},
         })
     }
@@ -105,7 +107,25 @@ export default function Edit({ hotel }) {
                             />
                             <ValidationFeedback message={errors.email} />
                         </div>
-                        <div className="col-span-3 mb-2 md:col-span-2">
+                        <div className="col-span-3 mb-2 md:col-span-1">
+                            <Label htmlFor="website" required={true}>
+                                Website
+                            </Label>
+                            <Input
+                                id="website"
+                                name="website"
+                                placeholder="Enter Hotel Website"
+                                defaultValue={data.website}
+                                onChange={(e) =>
+                                    setData('website', e.target.value)
+                                }
+                                className={
+                                    errors.website && 'ring ring-red-500'
+                                }
+                            />
+                            <ValidationFeedback message={errors.website} />
+                        </div>
+                        <div className="col-span-3 mb-2 md:col-span-1">
                             <Label htmlFor="address" required={true}>
                                 Address
                             </Label>

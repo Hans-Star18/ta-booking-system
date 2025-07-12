@@ -1,14 +1,12 @@
 import Anchor from '@/components/form/anchor'
 import OrganizerLayout from '@/layouts/organizer-layout'
-import { Head, useForm } from '@inertiajs/react'
-import { formatWebsiteUrl, formatEmailUrl } from '@/utils/format'
-import HTMLReactParser from 'html-react-parser'
-import Label from '@/components/form/label'
-import Input from '@/components/form/input'
-import ValidationFeedback from '@/components/form/validation-feedback'
+import { Head, usePage } from '@inertiajs/react'
 import Currency from '@/components/format/currency'
+import CopyInput from '@/components/form/copy-input'
 
-export default function Index({ setting }) {
+export default function Index({ hotel, setting }) {
+    const baseUrl = usePage().props.base_url
+
     return (
         <>
             <Head title="Organizer Settings" />
@@ -66,6 +64,18 @@ export default function Index({ setting }) {
                             <p className="text-base">
                                 <Currency value={setting.extra_bed_price} />
                             </p>
+                        </div>
+                        <hr className="col-span-3 text-gray-300" />
+                        <div className="col-span-3 mb-4">
+                            <h2 className="text-sm text-gray-500">
+                                Link to access booking page
+                            </h2>
+                            <div>
+                                <CopyInput
+                                    value={`${baseUrl}/${hotel.uuid}`}
+                                    readOnly={true}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

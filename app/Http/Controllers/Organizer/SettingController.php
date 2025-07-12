@@ -15,6 +15,7 @@ class SettingController extends Controller
         $setting = $hotel->setting;
 
         return inertia('organizers/settings/index', [
+            'hotel'   => $hotel,
             'setting' => $setting,
         ]);
     }
@@ -35,7 +36,7 @@ class SettingController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating setting: '.$e->getMessage());
+            logger()->error('Error updating setting: ' . $e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update setting',

@@ -11,6 +11,7 @@ export default function Input({
     min,
     max,
     step,
+    readOnly = false,
 }) {
     return (
         <input
@@ -23,6 +24,7 @@ export default function Input({
             min={min}
             max={max}
             step={step}
+            readOnly={readOnly}
             onKeyDown={(e) => {
                 if (type === 'number') {
                     // Prevent non-numeric input
