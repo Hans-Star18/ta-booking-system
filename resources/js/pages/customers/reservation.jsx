@@ -2,19 +2,24 @@ import CustomerLayout from '@/layouts/customer-layout'
 import RoomCard from '@/components/room-card'
 import Footer from '@/components/footer'
 import AvailabilityCheck from '@/components/availability-check'
-import { Head, useForm, usePage } from '@inertiajs/react'
+import { Head, router, useForm, usePage } from '@inertiajs/react'
 import HTMLReactParser from 'html-react-parser'
 import BasicAlert from '@/components/alert/basic-alert'
 import InformationAlert from '@/components/alert/information-alert'
 
 export default function Reservation({
     hotel,
+    rooms,
     hasCheckAvailability = false,
     totalNights = 1,
     policies,
 }) {
     const searchParams = new URLSearchParams(window.location.search)
     const reservation = usePage().props.reservation
+
+    if (!reservation || !rooms) {
+        return router.visit(route('customer.home'))
+    }
 
     const {
         data: availabilityData,
@@ -122,8 +127,8 @@ export default function Reservation({
                 )}
 
                 <div>
-                    {hotel.rooms && hotel.rooms.length > 0 ? (
-                        hotel.rooms.map((room) => (
+                    {rooms && rooms.length > 0 ? (
+                        rooms.map((room) => (
                             <RoomCard
                                 key={room.id}
                                 roomImage={room.cover_image}

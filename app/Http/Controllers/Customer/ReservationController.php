@@ -43,6 +43,7 @@ class ReservationController extends Controller
 
         return inertia('customers/reservation', [
             'hotel'    => $hotel,
+            'rooms'    => $hotel->rooms,
             'policies' => $this->policies,
         ]);
     }
@@ -71,6 +72,7 @@ class ReservationController extends Controller
 
         return inertia('customers/reservation', [
             'hotel'                => $hotel,
+            'rooms'                => $hotel?->rooms,
             'hasCheckAvailability' => $hasCheckAvailability,
             'totalNights'          => $this->calculateTotalNights($request->check_in, $request->check_out),
             'policies'             => $this->policies,
@@ -80,7 +82,7 @@ class ReservationController extends Controller
     public function detail(Hotel $hotel, Room $room, Request $request)
     {
         $reservation = session()->get('reservation');
-        if (blank($this->availableRoom($room, $reservation['check_in'], $reservation['check_out']))) {
+        if (blank($this->availableRoom($room, $reservation['check_in'], $reservation['check_out'], $reservation['allotment']))) {
             return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
                 'message' => 'Room not available please try again',
                 'type'    => 'error',
@@ -96,8 +98,8 @@ class ReservationController extends Controller
 
         if ($reservation && ($request->method() == 'POST' || $request->action == 'continue')) {
             $reservation['room']         = $room;
-            $reservation['check_in']     = $reservation['check_in']->format('d F Y');
-            $reservation['check_out']    = $reservation['check_out']->format('d F Y');
+            $reservation['check_in']     = $this->dateParser($reservation['check_in'])->format('d F Y');
+            $reservation['check_out']    = $this->dateParser($reservation['check_out'])->format('d F Y');
             $reservation['allotment']    = $reservation['allotment'];
             $reservation['total_nights'] = $this->calculateTotalNights($reservation['check_in'], $reservation['check_out']);
 

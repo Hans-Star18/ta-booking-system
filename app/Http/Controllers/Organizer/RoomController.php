@@ -127,7 +127,10 @@ class RoomController extends Controller
             $reservationData = $onReservations->firstWhere('date', $date->format('Y-m-d'));
 
             $onRes = $reservationData ? $reservationData['total_allotment'] : 0;
-            $available = $allotment->allotment - $onRes;
+            $available = max(0, $allotment->allotment - $onRes); // Pastikan tidak negatif
+
+            // Debug: Log perhitungan untuk setiap tanggal
+            logger()->info("Date: {$date->format('Y-m-d')}, Allotment: {$allotment->allotment}, OnRes: {$onRes}, Available: {$available}");
 
             return [
                 'id' => $allotment->id,
