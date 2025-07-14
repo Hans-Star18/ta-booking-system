@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('settings', SettingController::class)->except(['create', 'store', 'destroy', 'show']);
     });
 
-    Route::group(['as' => 'admin.', 'prefix' => 'manage', 'middleware' => 'isAdminLogin'], function () {
+    Route::group(['as' => 'admin.', 'prefix' => 'manage/admin', 'middleware' => 'isAdminLogin'], function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
         Route::resource('companies', CompanyController::class);

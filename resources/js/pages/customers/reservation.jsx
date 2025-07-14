@@ -17,7 +17,7 @@ export default function Reservation({
     const searchParams = new URLSearchParams(window.location.search)
     const reservation = usePage().props.reservation
 
-    if (!reservation || !rooms) {
+    if (!rooms) {
         return router.visit(route('customer.home'))
     }
 
