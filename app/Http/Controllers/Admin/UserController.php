@@ -105,12 +105,28 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $user->hotel()->delete();
+            $user->delete();
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            logger()->error('Error deleting user: ' . $th->getMessage());
+            DB::rollBack();
+
+            return back()->with('alert', [
+                'message' => 'Failed to delete user',
+                'type'    => 'error',
+            ]);
+        }
+
+        return to_route('admin.users.index')->with('alert', [
+            'message' => 'User deleted successfully',
+            'type'    => 'success',
+        ]);
     }
 
     public function updatePassword(ChangePasswordRequest $request, User $user)

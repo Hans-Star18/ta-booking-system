@@ -27,6 +27,16 @@ class Reservation extends Model
         'check_out'        => 'date',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($reservation) {
+            $reservation->reservationRooms()->delete();
+            $reservation->reservationCustomer()->delete();
+            $reservation->transaction()->delete();
+        });
+    }
+
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);

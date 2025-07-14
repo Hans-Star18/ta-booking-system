@@ -4,7 +4,7 @@ import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import Badge from '@/components/form/badge'
 import AdminLayout from '@/layouts/admin-layout'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, router, useForm } from '@inertiajs/react'
 import {
     EyeIcon,
     PencilSquareIcon,
@@ -120,6 +120,11 @@ export default function Index({ users }) {
             onConfirm: () => {
                 destroy(route('admin.users.destroy', userId), {
                     preserveScroll: true,
+                    onSuccess: () => {
+                        router.reload({
+                            only: ['users'],
+                        })
+                    },
                 })
             },
         })

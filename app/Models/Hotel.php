@@ -22,6 +22,17 @@ class Hotel extends Model
         'setting',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($hotel) {
+            $hotel->rooms()->delete();
+            $hotel->promotionCodes()->delete();
+            $hotel->reservations()->delete();
+            $hotel->setting()->delete();
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -32,11 +32,7 @@ class Room extends Model
             $room->amenities()->detach();
             $room->beds()->detach();
             $room->allotments()->delete();
-
-            // You could add validation here
-            // if ($room->hasActiveBookings()) {
-            //     throw new \Exception('Cannot delete room with active bookings');
-            // }
+            $room->photos()->delete();
         });
     }
 
