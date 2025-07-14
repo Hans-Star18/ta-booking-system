@@ -109,7 +109,7 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-            $user->hotel()->delete();
+            $user->hotel()->update(['user_id' => null]);
             $user->delete();
 
             DB::commit();

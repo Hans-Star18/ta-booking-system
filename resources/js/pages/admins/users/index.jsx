@@ -4,8 +4,9 @@ import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import Badge from '@/components/form/badge'
 import AdminLayout from '@/layouts/admin-layout'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, Link, router, useForm } from '@inertiajs/react'
 import {
+    ArrowTopRightOnSquareIcon,
     EyeIcon,
     PencilSquareIcon,
     TrashIcon,
@@ -108,7 +109,12 @@ export default function Index({ users }) {
 
     const renderHasHotel = (hotel) => {
         return hotel ? (
-            <Badge variant="success">Yes</Badge>
+            <div className="flex items-center gap-2">
+                <Badge variant="success">Yes</Badge>
+                <Link href={route('admin.companies.show', hotel.id)}>
+                    <ArrowTopRightOnSquareIcon className="size-5" />
+                </Link>
+            </div>
         ) : (
             <Badge variant="danger">No</Badge>
         )

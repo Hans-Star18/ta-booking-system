@@ -3,12 +3,18 @@ import Badge from '@/components/form/badge'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
 import AdminLayout from '@/layouts/admin-layout'
-import { Head } from '@inertiajs/react'
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
+import { Head, Link } from '@inertiajs/react'
 
 export default function Show({ user }) {
     const renderHasHotel = (hotel) => {
         return hotel ? (
-            <Badge variant="success">Yes</Badge>
+            <div className="flex items-center gap-2">
+                <Badge variant="success">Yes</Badge>
+                <Link href={route('admin.companies.show', hotel.id)}>
+                    <ArrowTopRightOnSquareIcon className="size-5" />
+                </Link>
+            </div>
         ) : (
             <Badge variant="danger">No</Badge>
         )
