@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ChangePasswordRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -35,7 +39,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit(Request $request, User $user)
+    public function edit(User $user)
     {
         $roles = Role::all()->map(function ($role) {
             return [
@@ -53,9 +57,27 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $user->update($request->validated());
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error updating user: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to update user',
+                'type'    => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'User updated successfully',
+            'type'    => 'success',
+        ]);
     }
 
     /**
@@ -64,5 +86,30 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updatePassword(ChangePasswordRequest $request, User $user)
+    {
+        DB::beginTransaction();
+        try {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            logger()->error('Error updating password: ' . $th->getMessage());
+            DB::rollBack();
+
+            return back()->with('alert', [
+                'message' => 'Failed to update password',
+                'type'    => 'error',
+            ]);
+        }
+
+        return back()->with('alert', [
+            'message' => 'Password updated successfully',
+            'type'    => 'success',
+        ]);
     }
 }

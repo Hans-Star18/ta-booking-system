@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::resource('companies', CompanyController::class);
         Route::resource('users', UserController::class);
+        Route::put('users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update-password');
     });
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');

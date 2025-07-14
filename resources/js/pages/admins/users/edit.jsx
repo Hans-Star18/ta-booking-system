@@ -1,14 +1,12 @@
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
-import { HelperText } from '@/components/form/helper-text'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
 import Select from '@/components/form/select'
 import ValidationFeedback from '@/components/form/validation-feedback'
 import AdminLayout from '@/layouts/admin-layout'
-import OrganizerLayout from '@/layouts/organizer-layout'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import { useState } from 'react'
 import Modal from 'react-responsive-modal'
 
@@ -19,6 +17,15 @@ export default function Edit({ user, roles }) {
         name: user.name,
         email: user.email,
         role_id: user.role.id,
+    })
+
+    const {
+        data: dataPassword,
+        setData: setDataPassword,
+        errors: errorsPassword,
+        put: putPassword,
+        processing: processingPassword,
+    } = useForm({
         password: '',
         password_confirmation: '',
     })
@@ -27,12 +34,18 @@ export default function Edit({ user, roles }) {
         e.preventDefault()
         put(route('admin.users.update', user.id), {
             preserveScroll: true,
-            onSuccess: (response) => {
-                router.reload({ only: ['users'] })
-            },
         })
     }
 
+    const handleSubmitPassword = (e) => {
+        e.preventDefault()
+        putPassword(route('admin.users.update-password', user.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setOpenModal(false)
+            },
+        })
+    }
     return (
         <>
             <Head title="Admin User Detail" />
@@ -129,12 +142,13 @@ export default function Edit({ user, roles }) {
                         <Input
                             id="password"
                             name="password"
+                            type="password"
                             placeholder="Enter Password"
                             onChange={(e) =>
-                                setData('password', e.target.value)
+                                setDataPassword('password', e.target.value)
                             }
                         />
-                        <ValidationFeedback message={errors.password} />
+                        <ValidationFeedback message={errorsPassword.password} />
                     </div>
                     <div className="mb-4">
                         <Label htmlFor="password_confirmation">
@@ -143,13 +157,17 @@ export default function Edit({ user, roles }) {
                         <Input
                             id="password_confirmation"
                             name="password_confirmation"
+                            type="password"
                             placeholder="Enter Confirm Password"
                             onChange={(e) =>
-                                setData('password_confirmation', e.target.value)
+                                setDataPassword(
+                                    'password_confirmation',
+                                    e.target.value
+                                )
                             }
                         />
                         <ValidationFeedback
-                            message={errors.password_confirmation}
+                            message={errorsPassword.password_confirmation}
                         />
                     </div>
 
@@ -160,7 +178,11 @@ export default function Edit({ user, roles }) {
                         >
                             Cancel
                         </Button>
-                        <Button variant="success" onClick={handleSubmit}>
+                        <Button
+                            variant="success"
+                            onClick={handleSubmitPassword}
+                            disabled={processingPassword}
+                        >
                             Save
                         </Button>
                     </div>
