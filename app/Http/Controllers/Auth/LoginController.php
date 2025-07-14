@@ -18,6 +18,14 @@ class LoginController extends Controller
         $credentials = $request->safe()->only('email', 'password');
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             if ($request->user()->isOrganizer()) {
+                if (!$request->user()->hotel) {
+                    Auth::logout();
+                    return back()->with('alert', [
+                        'type'    => 'warning',
+                        'message' => 'You are not authorized to access this page.',
+                    ]);
+                }
+
                 return to_route('organizer.dashboard')->with('alert', [
                     'type'    => 'success',
                     'message' => 'You are logged in as an organizer.',
