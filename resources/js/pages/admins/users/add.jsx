@@ -1,132 +1,138 @@
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
-import { HelperText } from '@/components/form/helper-text'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
+import Select from '@/components/form/select'
 import ValidationFeedback from '@/components/form/validation-feedback'
-import OrganizerLayout from '@/layouts/organizer-layout'
-import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import AdminLayout from '@/layouts/admin-layout'
+import {
+    ArrowPathIcon,
+    EyeIcon,
+    EyeSlashIcon,
+} from '@heroicons/react/24/outline'
 import { Head, useForm } from '@inertiajs/react'
-import Flatpickr from 'react-flatpickr'
+import { useState } from 'react'
 
-export default function Add() {
+export default function Add({ roles }) {
+    const [showPassword, setShowPassword] = useState(false)
+
     const { data, setData, post, processing, errors } = useForm({
-        code: '',
-        discount: '',
-        valid_until: '',
+        name: '',
+        email: '',
+        role_id: '',
+        password: '',
     })
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        post(route('organizer.promotion-codes.store'), {
+        post(route('admin.users.store'), {
             preserveScroll: true,
-            onSuccess: (response) => {
-                if (response.props.alert.type === 'success') {
-                    setData('code', '')
-                    setData('discount', '')
-                    setData('valid_until', '')
-                }
-            },
         })
     }
 
     return (
         <>
-            <Head title="Add Promotion Code" />
+            <Head title="Admin User Add" />
 
-            <OrganizerLayout>
+            <AdminLayout>
                 <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
                     <div className="mb-4 flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">
-                            Add Promotion Code
-                        </h1>
+                        <h1 className="text-2xl font-bold">User Add</h1>
                     </div>
 
                     <form
-                        className="grid grid-cols-1 gap-4 md:grid-cols-3"
+                        className="grid grid-cols-1 gap-6 md:grid-cols-2"
                         encType="multipart/form-data"
                         method="POST"
                     >
-                        <div className="col-span-3 mb-2 md:col-span-1">
-                            <Label htmlFor="code" required={true}>
-                                Promotion Code
+                        <div className="col-span-2 mb-2 md:col-span-1">
+                            <Label htmlFor="name" required={true}>
+                                Name
                             </Label>
                             <Input
-                                id="code"
-                                name="code"
-                                placeholder="Enter Promotion Code"
-                                defaultValue={data.code}
+                                id="name"
+                                name="name"
+                                placeholder="Enter Name"
+                                defaultValue={data.name}
                                 onChange={(e) =>
-                                    setData('code', e.target.value)
+                                    setData('name', e.target.value)
                                 }
-                                className={errors.code && 'ring ring-red-500'}
                             />
-                            <ValidationFeedback message={errors.code} />
+                            <ValidationFeedback message={errors.name} />
                         </div>
-                        <div className="col-span-3 mb-2 md:col-span-1">
-                            <Label htmlFor="discount" required={true}>
-                                Discount Percentage
+                        <div className="col-span-2 mb-2 md:col-span-1">
+                            <Label htmlFor="email" required={true}>
+                                Email
                             </Label>
                             <Input
-                                id="discount"
-                                name="discount"
-                                placeholder="Enter Discount Percentage"
-                                type="number"
-                                defaultValue={data.discount}
+                                id="email"
+                                name="email"
+                                placeholder="Enter Email"
+                                defaultValue={data.email}
                                 onChange={(e) =>
-                                    setData(
-                                        'discount',
-                                        parseInt(e.target.value) || ''
-                                    )
-                                }
-                                className={
-                                    errors.discount && 'ring ring-red-500'
+                                    setData('email', e.target.value)
                                 }
                             />
-                            <HelperText message="Discount percentage must be between 1 and 100" />
-                            <ValidationFeedback message={errors.discount} />
+                            <ValidationFeedback message={errors.email} />
                         </div>
-                        <div className="col-span-3 mb-2 md:col-span-1">
-                            <Label htmlFor="valid_until" required={true}>
-                                Valid Until
+                        <div className="col-span-2 mb-2 md:col-span-1">
+                            <Label htmlFor="role_id" required={true}>
+                                Role
                             </Label>
-                            <div
-                                className={`h-11 w-full appearance-none rounded-lg border border-gray-300 bg-white px-2 py-2.5 focus:border-blue-300 focus:ring-3 focus:ring-blue-500/20 focus:outline-none md:px-4 ${
-                                    errors.valid_until
-                                        ? 'ring ring-red-500'
-                                        : ''
-                                }`}
-                            >
-                                <Flatpickr
-                                    value={data.valid_until}
-                                    onChange={(selectedDates) => {
-                                        setData(
-                                            'valid_until',
-                                            selectedDates[0]
-                                                .toISOString()
-                                                .split('T')[0]
-                                        )
-                                    }}
-                                    options={{
-                                        disableMobile: 'true',
-                                        minDate: 'today',
-                                        dateFormat: 'd F Y',
-                                    }}
-                                    className="h-full w-full focus:outline-none"
-                                    placeholder="Valid Until"
+                            <Select
+                                id="role_id"
+                                name="role_id"
+                                options={roles}
+                                defaultValue={data.role_id}
+                                onChange={(e) =>
+                                    setData('role_id', e.target.value)
+                                }
+                            />
+                            <ValidationFeedback message={errors.role_id} />
+                        </div>
+                        <div className="col-span-2 mb-2 md:col-span-1">
+                            <Label htmlFor={'password'} required={true}>
+                                Password
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id={'password'}
+                                    name={'password'}
+                                    type={showPassword ? 'text' : 'password'}
+                                    defaultValue={data.password}
+                                    onChange={(e) =>
+                                        setData('password', e.target.value)
+                                    }
+                                    placeholder="Enter your password"
+                                    className={
+                                        errors.password && 'ring ring-red-500'
+                                    }
                                 />
+
+                                <span
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    className="absolute top-1/2 right-4 z-30 -translate-y-1/2 cursor-pointer"
+                                >
+                                    {showPassword ? (
+                                        <EyeIcon className="size-5 text-gray-500" />
+                                    ) : (
+                                        <EyeSlashIcon className="size-5 text-gray-500" />
+                                    )}
+                                </span>
                             </div>
-                            <ValidationFeedback message={errors.valid_until} />
+                            <ValidationFeedback message={errors.password} />
                         </div>
-                        <div className="col-span-3 flex items-center justify-end gap-2">
+                        <div className="col-span-2 flex items-center justify-end gap-2">
                             <Anchor
-                                variant="danger"
-                                href={route('organizer.promotion-codes.index')}
+                                variant="secondary"
+                                href={route('admin.users.index')}
                             >
-                                Cancel
+                                Back
                             </Anchor>
                             <Button
-                                variant="primary"
+                                variant="success"
                                 onClick={handleSubmit}
                                 className={'flex items-center gap-2'}
                                 disabled={processing}
@@ -134,12 +140,12 @@ export default function Add() {
                                 {processing && (
                                     <ArrowPathIcon className="size-5 animate-spin" />
                                 )}
-                                Add Promotion Code
+                                Add User
                             </Button>
                         </div>
                     </form>
                 </div>
-            </OrganizerLayout>
+            </AdminLayout>
         </>
     )
 }

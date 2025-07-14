@@ -62,7 +62,9 @@ export default function Edit({ user, roles }) {
                         method="POST"
                     >
                         <div className="col-span-2 mb-2 md:col-span-1">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="name" required={true}>
+                                Name
+                            </Label>
                             <Input
                                 id="name"
                                 name="name"
@@ -75,7 +77,9 @@ export default function Edit({ user, roles }) {
                             <ValidationFeedback message={errors.name} />
                         </div>
                         <div className="col-span-2 mb-2 md:col-span-1">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email" required={true}>
+                                Email
+                            </Label>
                             <Input
                                 id="email"
                                 name="email"
@@ -88,7 +92,9 @@ export default function Edit({ user, roles }) {
                             <ValidationFeedback message={errors.email} />
                         </div>
                         <div className="col-span-2 mb-2 md:col-span-1">
-                            <Label htmlFor="role_id">Role</Label>
+                            <Label htmlFor="role_id" required={true}>
+                                Role
+                            </Label>
                             <Select
                                 id="role_id"
                                 name="role_id"
@@ -138,7 +144,9 @@ export default function Edit({ user, roles }) {
                 <h2 className="mb-3 text-xl font-bold">Change Password</h2>
                 <div>
                     <div className="mb-4">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password" required={true}>
+                            Password
+                        </Label>
                         <Input
                             id="password"
                             name="password"
@@ -151,7 +159,7 @@ export default function Edit({ user, roles }) {
                         <ValidationFeedback message={errorsPassword.password} />
                     </div>
                     <div className="mb-4">
-                        <Label htmlFor="password_confirmation">
+                        <Label htmlFor="password_confirmation" required={true}>
                             Confirm Password
                         </Label>
                         <Input

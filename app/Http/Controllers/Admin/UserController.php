@@ -4,15 +4,27 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ChangePasswordRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    protected $roles;
+
+    public function __construct()
+    {
+        $this->roles = Role::all()->map(function ($role) {
+            return [
+                'value' => $role->id,
+                'label' => $role->name,
+            ];
+        });
+    }
+
     public function index()
     {
         $users = User::with(['role', 'hotel'])->get();
@@ -24,12 +36,35 @@ class UserController extends Controller
 
     public function create()
     {
-        //
+        return inertia('admins/users/add', [
+            'roles' => $this->roles,
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            User::create([
+                ...$request->safe()->except('password'),
+                'password' => Hash::make($request->password),
+            ]);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            logger()->error('Error creating user: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to create user',
+                'type'    => 'error',
+            ]);
+        }
+
+        return to_route('admin.users.index')->with('alert', [
+            'message' => 'User created successfully',
+            'type'    => 'success',
+        ]);
     }
 
     public function show(User $user)
@@ -41,22 +76,12 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $roles = Role::all()->map(function ($role) {
-            return [
-                'value' => $role->id,
-                'label' => $role->name,
-            ];
-        });
-
         return inertia('admins/users/edit', [
             'user' => $user->load(['hotel']),
-            'roles' => $roles,
+            'roles' => $this->roles,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateUserRequest $request, User $user)
     {
         DB::beginTransaction();
