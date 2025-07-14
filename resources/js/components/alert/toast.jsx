@@ -3,6 +3,7 @@ import {
     CheckCircleIcon,
     XCircleIcon,
     XMarkIcon,
+    ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 
@@ -24,12 +25,14 @@ export default function Toast({ message, type, id }) {
         info: <InformationCircleIcon className="size-5" />,
         success: <CheckCircleIcon className="size-5" />,
         error: <XCircleIcon className="size-5" />,
+        warning: <ExclamationTriangleIcon className="size-5" />,
     }
 
     const colorClass = {
         info: 'bg-blue-100 text-blue-500',
         success: 'bg-green-100 text-green-500',
         error: 'bg-red-100 text-red-500',
+        warning: 'bg-yellow-100 text-yellow-500',
     }
 
     const handleClose = () => {
