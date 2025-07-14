@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Customer\CheckPromotionCodeController;
@@ -36,6 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
         Route::resource('companies', CompanyController::class);
+        Route::resource('users', UserController::class);
     });
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');

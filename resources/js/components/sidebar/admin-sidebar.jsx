@@ -31,8 +31,8 @@ export default function AdminSidebar() {
         {
             icon: <UsersIcon className="size-6" />,
             name: 'Users',
-            href: '#',
-            routeActive: '#',
+            href: route('admin.users.index'),
+            routeActive: 'admin.users',
         },
         {
             icon: <BedFrontIcon className="size-6" />,

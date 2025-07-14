@@ -16,7 +16,6 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->safe()->only('email', 'password');
-
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             if ($request->user()->isOrganizer()) {
                 return to_route('organizer.dashboard')->with('alert', [

@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class PromotionCodeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $promotionCodes = PromotionCode::all();
