@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrganizerController extends Controller
@@ -17,9 +18,13 @@ class OrganizerController extends Controller
             ->with(['transaction'])
             ->get();
 
+        // Check if user was authenticated via remember me
+        $isRemembered = Auth::viaRemember();
+
         return inertia('organizers/dashboard/index', [
             'hotel' => $hotel,
             'reservations' => $reservations,
+            'isRemembered' => $isRemembered,
         ]);
     }
 

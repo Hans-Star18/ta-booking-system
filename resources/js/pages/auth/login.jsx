@@ -13,12 +13,11 @@ import ValidationFeedback from '@/components/form/validation-feedback'
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false)
-    const [isChecked, setIsChecked] = useState(false)
 
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
-        remember: isChecked,
+        remember: false,
     })
 
     const submit = (e) => {
@@ -138,14 +137,15 @@ export default function Login() {
                                                     <input
                                                         type="checkbox"
                                                         className="h-5 w-5 cursor-pointer appearance-none rounded-md border border-gray-300 checked:border-transparent checked:bg-blue-500 disabled:opacity-60"
-                                                        checked={isChecked}
+                                                        checked={data.remember}
                                                         onChange={() =>
-                                                            setIsChecked(
-                                                                !isChecked
+                                                            setData(
+                                                                'remember',
+                                                                !data.remember
                                                             )
                                                         }
                                                     />
-                                                    {isChecked && (
+                                                    {data.remember && (
                                                         <svg
                                                             xmlns="http://www.w3.org/2000/svg"
                                                             fill="none"

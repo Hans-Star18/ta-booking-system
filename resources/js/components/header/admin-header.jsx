@@ -1,0 +1,55 @@
+import { useState } from 'react'
+import UserDropdown from '@/components/header/user-dropdown'
+import {
+    Bars3CenterLeftIcon,
+    EllipsisHorizontalIcon,
+    XMarkIcon,
+} from '@heroicons/react/24/outline'
+import { useSidebar } from '@/components/context/siderbar-context'
+
+export default function AdminHeader() {
+    const { toggleSidebar, toggleMobileSidebar, isMobileOpen } = useSidebar()
+    const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false)
+
+    const toggleApplicationMenu = () => {
+        setApplicationMenuOpen(!isApplicationMenuOpen)
+    }
+
+    return (
+        <header className="sticky top-0 z-40 flex w-full border-gray-200 bg-white lg:border-b">
+            <div className="flex grow flex-col items-center justify-between lg:flex-row lg:px-6">
+                <div className="flex w-full items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
+                    <button
+                        className="block h-10 w-10 text-gray-500 lg:hidden"
+                        onClick={toggleMobileSidebar}
+                    >
+                        {isMobileOpen ? (
+                            <XMarkIcon className="block h-6 w-8" />
+                        ) : (
+                            <Bars3CenterLeftIcon className="block h-6 w-8" />
+                        )}
+                    </button>
+                    <button
+                        onClick={toggleSidebar}
+                        className="z-40 hidden h-10 w-10 items-center justify-center rounded-lg border-gray-200 p-2 text-gray-500 lg:flex lg:h-11 lg:w-11 lg:border"
+                    >
+                        <Bars3CenterLeftIcon className="hidden fill-current lg:block" />
+                    </button>
+                    <button
+                        onClick={toggleApplicationMenu}
+                        className="z-40 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden"
+                    >
+                        <EllipsisHorizontalIcon className="size-6" />
+                    </button>
+                </div>
+                <div
+                    className={`${
+                        isApplicationMenuOpen ? 'flex' : 'hidden'
+                    } w-full items-center justify-end gap-4 px-5 py-4 shadow-sm lg:flex lg:px-0 lg:shadow-none`}
+                >
+                    <UserDropdown />
+                </div>
+            </div>
+        </header>
+    )
+}

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Customer\CheckPromotionCodeController;
@@ -28,6 +30,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('promotion-codes', PromotionCodeController::class)->except('show');
         Route::resource('hotels', HotelController::class)->except(['create', 'store', 'destroy', 'show']);
         Route::resource('settings', SettingController::class)->except(['create', 'store', 'destroy', 'show']);
+    });
+
+    Route::group(['as' => 'admin.', 'prefix' => 'manage', 'middleware' => 'isAdminLogin'], function () {
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+
+        Route::resource('companies', CompanyController::class);
     });
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
