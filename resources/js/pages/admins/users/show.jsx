@@ -6,7 +6,6 @@ import AdminLayout from '@/layouts/admin-layout'
 import { Head } from '@inertiajs/react'
 
 export default function Show({ user }) {
-    console.log(user)
     const renderHasHotel = (hotel) => {
         return hotel ? (
             <Badge variant="success">Yes</Badge>

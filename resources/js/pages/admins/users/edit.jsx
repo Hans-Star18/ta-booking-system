@@ -5,39 +5,42 @@ import Input from '@/components/form/input'
 import Label from '@/components/form/label'
 import Select from '@/components/form/select'
 import ValidationFeedback from '@/components/form/validation-feedback'
+import AdminLayout from '@/layouts/admin-layout'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Head, router, useForm } from '@inertiajs/react'
-import Flatpickr from 'react-flatpickr'
+import { useState } from 'react'
+import Modal from 'react-responsive-modal'
 
-export default function Edit({ promotionCode }) {
+export default function Edit({ user, roles }) {
+    const [openModal, setOpenModal] = useState(false)
+
     const { data, setData, put, processing, errors } = useForm({
-        code: promotionCode.code,
-        discount: promotionCode.discount,
-        valid_until: promotionCode.valid_until,
-        is_active: promotionCode.is_active,
+        name: user.name,
+        email: user.email,
+        role_id: user.role.id,
+        password: '',
+        password_confirmation: '',
     })
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        put(route('organizer.promotion-codes.update', promotionCode.id), {
+        put(route('admin.users.update', user.id), {
             preserveScroll: true,
             onSuccess: (response) => {
-                router.reload({ only: ['promotionCodes'] })
+                router.reload({ only: ['users'] })
             },
         })
     }
 
     return (
         <>
-            <Head title="Add Promotion Code" />
+            <Head title="Admin User Detail" />
 
-            <OrganizerLayout>
+            <AdminLayout>
                 <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
                     <div className="mb-4 flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">
-                            Add Promotion Code
-                        </h1>
+                        <h1 className="text-2xl font-bold">User Detail</h1>
                     </div>
 
                     <form
@@ -46,98 +49,59 @@ export default function Edit({ promotionCode }) {
                         method="POST"
                     >
                         <div className="col-span-2 mb-2 md:col-span-1">
-                            <Label htmlFor="code" required={true}>
-                                Promotion Code
-                            </Label>
+                            <Label htmlFor="name">Name</Label>
                             <Input
-                                id="code"
-                                name="code"
-                                placeholder="Enter Promotion Code"
-                                defaultValue={data.code}
+                                id="name"
+                                name="name"
+                                placeholder="Enter Name"
+                                defaultValue={data.name}
                                 onChange={(e) =>
-                                    setData('code', e.target.value)
-                                }
-                                className={errors.code && 'ring ring-red-500'}
-                            />
-                            <ValidationFeedback message={errors.code} />
-                        </div>
-                        <div className="col-span-2 mb-2 md:col-span-1">
-                            <Label htmlFor="discount" required={true}>
-                                Discount Percentage
-                            </Label>
-                            <Input
-                                id="discount"
-                                name="discount"
-                                placeholder="Enter Discount Percentage"
-                                type="number"
-                                defaultValue={data.discount}
-                                onChange={(e) =>
-                                    setData(
-                                        'discount',
-                                        parseInt(e.target.value) || ''
-                                    )
-                                }
-                                className={
-                                    errors.discount && 'ring ring-red-500'
+                                    setData('name', e.target.value)
                                 }
                             />
-                            <HelperText message="Discount percentage must be between 1 and 100" />
-                            <ValidationFeedback message={errors.discount} />
+                            <ValidationFeedback message={errors.name} />
                         </div>
                         <div className="col-span-2 mb-2 md:col-span-1">
-                            <Label htmlFor="valid_until" required={true}>
-                                Valid Until
-                            </Label>
-                            <div
-                                className={`h-11 w-full appearance-none rounded-lg border border-gray-300 bg-white px-2 py-2.5 focus:border-blue-300 focus:ring-3 focus:ring-blue-500/20 focus:outline-none md:px-4 ${
-                                    errors.valid_until
-                                        ? 'ring ring-red-500'
-                                        : ''
-                                }`}
-                            >
-                                <Flatpickr
-                                    value={data.valid_until}
-                                    onChange={(selectedDates) => {
-                                        setData(
-                                            'valid_until',
-                                            selectedDates[0]
-                                                .toISOString()
-                                                .split('T')[0]
-                                        )
-                                    }}
-                                    options={{
-                                        disableMobile: 'true',
-                                        minDate: 'today',
-                                        dateFormat: 'd F Y',
-                                    }}
-                                    className="h-full w-full focus:outline-none"
-                                    placeholder="Valid Until"
-                                />
-                            </div>
-                            <ValidationFeedback message={errors.valid_until} />
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                name="email"
+                                placeholder="Enter Email"
+                                defaultValue={data.email}
+                                onChange={(e) =>
+                                    setData('email', e.target.value)
+                                }
+                            />
+                            <ValidationFeedback message={errors.email} />
                         </div>
                         <div className="col-span-2 mb-2 md:col-span-1">
-                            <Label htmlFor="is_active" required={true}>
-                                Status
-                            </Label>
+                            <Label htmlFor="role_id">Role</Label>
                             <Select
-                                id="is_active"
-                                name="is_active"
-                                options={[
-                                    { value: true, label: 'Active' },
-                                    { value: false, label: 'Inactive' },
-                                ]}
-                                defaultValue={data.is_active}
+                                id="role_id"
+                                name="role_id"
+                                options={roles}
+                                defaultValue={data.role_id}
                                 onChange={(e) =>
-                                    setData('is_active', e.target.value)
+                                    setData('role_id', e.target.value)
                                 }
                             />
-                            <ValidationFeedback message={errors.is_active} />
+                            <ValidationFeedback message={errors.role_id} />
+                        </div>
+                        <div className="col-span-2 mb-2 md:col-span-1">
+                            <Label htmlFor="password">Change Password</Label>
+                            <Button
+                                variant="primary"
+                                className={'flex items-center gap-2'}
+                                disabled={processing}
+                                onClick={() => setOpenModal(true)}
+                            >
+                                Change Password
+                            </Button>
                         </div>
                         <div className="col-span-2 flex items-center justify-end gap-2">
                             <Anchor
                                 variant="secondary"
-                                href={route('organizer.promotion-codes.index')}
+                                href={route('admin.users.index')}
                             >
                                 Back
                             </Anchor>
@@ -150,12 +114,58 @@ export default function Edit({ promotionCode }) {
                                 {processing && (
                                     <ArrowPathIcon className="size-5 animate-spin" />
                                 )}
-                                Update Promotion Code
+                                Update User
                             </Button>
                         </div>
                     </form>
                 </div>
-            </OrganizerLayout>
+            </AdminLayout>
+
+            <Modal open={openModal} onClose={() => setOpenModal(false)} center>
+                <h2 className="mb-3 text-xl font-bold">Change Password</h2>
+                <div>
+                    <div className="mb-4">
+                        <Label htmlFor="password">Password</Label>
+                        <Input
+                            id="password"
+                            name="password"
+                            placeholder="Enter Password"
+                            onChange={(e) =>
+                                setData('password', e.target.value)
+                            }
+                        />
+                        <ValidationFeedback message={errors.password} />
+                    </div>
+                    <div className="mb-4">
+                        <Label htmlFor="password_confirmation">
+                            Confirm Password
+                        </Label>
+                        <Input
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            placeholder="Enter Confirm Password"
+                            onChange={(e) =>
+                                setData('password_confirmation', e.target.value)
+                            }
+                        />
+                        <ValidationFeedback
+                            message={errors.password_confirmation}
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2">
+                        <Button
+                            variant="secondary"
+                            onClick={() => setOpenModal(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="success" onClick={handleSubmit}>
+                            Save
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </>
     )
 }

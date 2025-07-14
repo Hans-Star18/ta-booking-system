@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -34,12 +35,19 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Request $request, User $user)
     {
-        //
+        $roles = Role::all()->map(function ($role) {
+            return [
+                'value' => $role->id,
+                'label' => $role->name,
+            ];
+        });
+
+        return inertia('admins/users/edit', [
+            'user' => $user->load(['hotel']),
+            'roles' => $roles,
+        ]);
     }
 
     /**
