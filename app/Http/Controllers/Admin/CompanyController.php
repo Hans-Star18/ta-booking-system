@@ -81,11 +81,31 @@ class CompanyController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Hotel $hotel)
     {
-        //
+        DB::beginTransaction();
+        try {
+            if ($hotel->reservations()->exists()) {
+                return back()->with('alert', [
+                    'message' => "You can't delete this hotel because it has reservations",
+                    'type'    => 'error',
+                ]);
+            }
+
+            $hotel->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            logger()->error('Error deleting hotel: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to delete hotel',
+                'type'    => 'error',
+            ]);
+        }
+
+        return to_route('admin.companies.index')->with('alert', [
+            'message' => 'Hotel deleted successfully',
+            'type'    => 'success',
+        ]);
     }
 }

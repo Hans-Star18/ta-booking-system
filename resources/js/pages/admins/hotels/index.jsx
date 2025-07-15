@@ -1,3 +1,4 @@
+import Confirm from '@/components/alert/confirm'
 import CompactGrid from '@/components/datatable/theme/compact-grid'
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
