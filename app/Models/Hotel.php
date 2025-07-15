@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Hotel extends Model
 {
@@ -35,6 +37,10 @@ class Hotel extends Model
             $hotel->promotionCodes()->delete();
             $hotel->reservations()->delete();
             $hotel->setting()->delete();
+        });
+
+        static::creating(function ($hotel) {
+            $hotel->uuid = Str::uuid7();
         });
     }
 

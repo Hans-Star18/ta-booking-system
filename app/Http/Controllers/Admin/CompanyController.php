@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreHotelRequest;
 use App\Http\Requests\Organizer\UpdateHotelRequest;
 use App\Models\Hotel;
 use App\Models\Role;
@@ -21,20 +22,40 @@ class CompanyController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $hotelOrganizerOptions = User::where('role_id', Role::HOTEL_ORGANIZER)->get()->map(function ($user) {
+            return [
+                'value' => $user->id,
+                'label' => $user->name,
+            ];
+        });
+
+        return inertia('admins/hotels/add', [
+            'hotelOrganizerOptions' => $hotelOrganizerOptions,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreHotelRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            Hotel::create($request->validated());
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            logger()->error('Error creating hotel: ' . $th->getMessage());
+
+            return back()->with('alert', [
+                'message' => 'Failed to create hotel',
+                'type'    => 'error',
+            ]);
+        }
+
+        return to_route('admin.companies.index')->with('alert', [
+            'message' => 'Hotel created successfully',
+            'type'    => 'success',
+        ]);
     }
 
     public function show(Hotel $hotel)

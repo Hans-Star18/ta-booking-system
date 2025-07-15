@@ -9,6 +9,7 @@ export default function Select({
     className,
     defaultValue,
     onChange,
+    placeholder = '',
     disabled = false,
 }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -22,13 +23,18 @@ export default function Select({
                 )}
                 id={id}
                 name={name}
+                placeholder={placeholder}
                 defaultValue={defaultValue}
                 onChange={onChange}
                 onClick={() => setIsOpen(!isOpen)}
                 disabled={disabled}
             >
+                <option value="" hidden>
+                    {placeholder}
+                </option>
                 {options.map((option) => (
                     <option
+                        selected={option.value === defaultValue}
                         key={option.value}
                         value={option.value}
                         disabled={option?.disabled ?? false}
