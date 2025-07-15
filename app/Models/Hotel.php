@@ -16,6 +16,11 @@ class Hotel extends Model
         'website',
         'term_and_condition',
         'uuid',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     protected $with = [
