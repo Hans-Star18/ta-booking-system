@@ -16,6 +16,9 @@ class Role extends Model
         'name',
     ];
 
+    const HOTEL_ORGANIZER = 2;
+    const ADMIN = 1;
+
     public function users()
     {
         return $this->hasMany(User::class);

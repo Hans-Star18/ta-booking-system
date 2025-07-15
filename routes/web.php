@@ -36,7 +36,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['as' => 'admin.', 'prefix' => 'manage/admin', 'middleware' => 'isAdminLogin'], function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-        Route::resource('companies', CompanyController::class);
+        Route::resource('companies', CompanyController::class)->parameters([
+            'companies' => 'hotel',
+        ]);
         Route::resource('users', UserController::class);
         Route::put('users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update-password');
     });

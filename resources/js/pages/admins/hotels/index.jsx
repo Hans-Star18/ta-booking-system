@@ -7,7 +7,7 @@ import {
     PencilSquareIcon,
     TrashIcon,
 } from '@heroicons/react/24/outline'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, router, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import DataTable, { defaultThemes } from 'react-data-table-component'
@@ -39,6 +39,10 @@ export default function Index({ hotels }) {
             selector: (row) => row.website,
         },
         {
+            name: 'Is Active',
+            cell: (row) => isActiveRender(row.is_active),
+        },
+        {
             name: 'Created At',
             selector: (row) => row.created_at,
             sortable: true,
@@ -47,15 +51,23 @@ export default function Index({ hotels }) {
             name: 'Actions',
             cell: (row) => (
                 <div className="flex items-center gap-2">
-                    <Anchor variant="primary" href="#" className={'px-2 py-1'}>
+                    <Anchor
+                        variant="primary"
+                        href={route('admin.companies.show', row.id)}
+                        className={'px-2 py-1'}
+                    >
                         <EyeIcon className="size-5" />
                     </Anchor>
-                    <Anchor variant="success" href="#" className={'px-2 py-1'}>
+                    <Anchor
+                        variant="success"
+                        href={route('admin.companies.edit', row.id)}
+                        className={'px-2 py-1'}
+                    >
                         <PencilSquareIcon className="size-5" />
                     </Anchor>
                     <Button
                         variant="danger"
-                        // onClick={() => handleDelete(row.id)}
+                        onClick={() => handleDelete(row.id)}
                         className={'px-2 py-1'}
                         disabled={processing}
                     >
@@ -78,36 +90,39 @@ export default function Index({ hotels }) {
                 mobile: hotel.mobile,
                 email: hotel.email,
                 website: hotel.website,
+                is_active: hotel.is_active,
                 created_at: moment(hotel.created_at).format('DD MMM YYYY'),
             }))
         )
     }, [hotels])
 
-    // const handleStatusRender = (status) => {
-    //     return status ? (
-    //         <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
-    //             Active
-    //         </span>
-    //     ) : (
-    //         <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-red-600/20 ring-inset">
-    //             Inactive
-    //         </span>
-    //     )
-    // }
+    const isActiveRender = (isActive) => {
+        return isActive ? (
+            <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
+                Active
+            </span>
+        ) : (
+            <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-red-600/20 ring-inset">
+                Inactive
+            </span>
+        )
+    }
 
-    // const handleDelete = (promotionCodeId) => {
-    //     Confirm({
-    //         action: 'delete',
-    //         onConfirm: () => {
-    //             destroy(
-    //                 route('organizer.promotion-codes.destroy', promotionCodeId),
-    //                 {
-    //                     preserveScroll: true,
-    //                 }
-    //             )
-    //         },
-    //     })
-    // }
+    const handleDelete = (hotelId) => {
+        Confirm({
+            action: 'delete',
+            onConfirm: () => {
+                destroy(route('admin.companies.destroy', hotelId), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        router.reload({
+                            only: ['hotels'],
+                        })
+                    },
+                })
+            },
+        })
+    }
 
     return (
         <>

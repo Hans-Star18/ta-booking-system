@@ -14,7 +14,7 @@ class UpdateHotelRequest extends FormRequest
         /** @var \App\Models\User $user */
         $user = auth()->guard('web')->user();
 
-        return $user && $user->isOrganizer() && $user->hotel->id === $this->hotel->id;
+        return $user && $user->isOrganizer() && $user->hotel->id === $this->hotel->id || $user->isAdmin();
     }
 
     /**
@@ -32,6 +32,8 @@ class UpdateHotelRequest extends FormRequest
             'email'              => ['required', 'string', 'email', 'max:50', 'unique:hotels,email,' . $this->hotel->id],
             'website'            => ['required', 'string', 'max:100'],
             'term_and_condition' => ['required', 'string'],
+            'is_active'          => ['sometimes', 'required', 'boolean'],
+            'user_id'            => ['sometimes', 'required', 'exists:users,id'],
         ];
     }
 }
