@@ -7,7 +7,7 @@ import Badge from '@/components/form/badge'
 import { useState } from 'react'
 import Anchor from '@/components/form/anchor'
 
-export default function Edit({ hotel, hotelOrganizerOptions }) {
+export default function Show({ hotel }) {
     const [data, setData] = useState({
         name: hotel.name,
         address: hotel.address,
