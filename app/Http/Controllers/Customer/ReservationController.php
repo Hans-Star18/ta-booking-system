@@ -41,6 +41,13 @@ class ReservationController extends Controller
 
         $hotel->load(['rooms', 'rooms.photos', 'rooms.allotments']);
 
+        if (!$hotel->is_active) {
+            return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
+                'message' => 'Hotel is not active, please contact the hotel owner',
+                'type'    => 'error',
+            ]);
+        }
+
         return inertia('customers/reservation', [
             'hotel'    => $hotel,
             'rooms'    => $hotel->rooms,
@@ -53,6 +60,13 @@ class ReservationController extends Controller
         $hasCheckAvailability = false;
 
         try {
+            if (!$hotel->is_active) {
+                return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
+                    'message' => 'Hotel is not active, please contact the hotel owner',
+                    'type'    => 'error',
+                ]);
+            }
+
             if ($hotel = $this->availableRooms($hotel, $request->check_in, $request->check_out, $request->allotment)) {
                 session()->put('reservation', [
                     'hotel'     => $hotel,
@@ -81,6 +95,13 @@ class ReservationController extends Controller
 
     public function detail(Hotel $hotel, Room $room, Request $request)
     {
+        if (!$hotel->is_active) {
+            return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
+                'message' => 'Hotel is not active, please contact the hotel owner',
+                'type'    => 'error',
+            ]);
+        }
+
         $reservation = session()->get('reservation');
         if (blank($this->availableRoom($room, $reservation['check_in'], $reservation['check_out'], $reservation['allotment']))) {
             return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
@@ -114,6 +135,13 @@ class ReservationController extends Controller
 
     public function confirm(Hotel $hotel, Request $request)
     {
+        if (!$hotel->is_active) {
+            return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
+                'message' => 'Hotel is not active, please contact the hotel owner',
+                'type'    => 'error',
+            ]);
+        }
+
         session()->put('hotel', $hotel);
         $reservation = session()->get('reservation');
         if ($request->method() == 'POST') {

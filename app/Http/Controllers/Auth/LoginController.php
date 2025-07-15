@@ -26,6 +26,14 @@ class LoginController extends Controller
                     ]);
                 }
 
+                if (!$request->user()->hotel->is_active) {
+                    Auth::logout();
+                    return back()->with('alert', [
+                        'type'    => 'warning',
+                        'message' => 'Your hotel is not active, please contact the administrator',
+                    ]);
+                }
+
                 return to_route('organizer.dashboard')->with('alert', [
                     'type'    => 'success',
                     'message' => 'You are logged in as an organizer.',
