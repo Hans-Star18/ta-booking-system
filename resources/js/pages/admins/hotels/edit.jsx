@@ -41,7 +41,6 @@ export default function Edit({ hotel, hotelOrganizerOptions }) {
 
                     <form
                         className="grid grid-cols-1 gap-6 md:grid-cols-2"
-                        encType="multipart/form-data"
                         method="POST"
                     >
                         <div className="col-span-2 mb-2 md:col-span-1">

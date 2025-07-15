@@ -37,12 +37,11 @@ class CompanyController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Hotel $hotel)
     {
-        //
+        return inertia('admins/hotels/show', [
+            'hotel' => $hotel->load('user'),
+        ]);
     }
 
     public function edit(Hotel $hotel)
