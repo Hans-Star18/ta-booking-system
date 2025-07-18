@@ -130,7 +130,9 @@ export default function Show({ hotel }) {
                             <Label htmlFor="user_id" required={true}>
                                 Hotel Organizer
                             </Label>
-                            <div>{data.organizer}</div>
+                            <div className="text-sm font-medium">
+                                {data.organizer}
+                            </div>
                         </div>
                         <div className="col-span-2 mb-2 md:col-span-1">
                             <Label htmlFor="is_active" required={true}>
@@ -142,7 +144,7 @@ export default function Show({ hotel }) {
                             <Label htmlFor="term_and_condition" required={true}>
                                 Terms and Conditions
                             </Label>
-                            <div>
+                            <div className="text-sm font-medium">
                                 {HTMLReactParser(data.term_and_condition || '')}
                             </div>
                         </div>

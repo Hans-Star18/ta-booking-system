@@ -34,7 +34,6 @@ export default function Select({
                 </option>
                 {options.map((option) => (
                     <option
-                        selected={option.value === defaultValue}
                         key={option.value}
                         value={option.value}
                         disabled={option?.disabled ?? false}
