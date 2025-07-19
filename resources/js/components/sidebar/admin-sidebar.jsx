@@ -43,8 +43,8 @@ export default function AdminSidebar() {
         {
             icon: <HomeIcon className="size-6" />,
             name: 'Amenities',
-            href: '#',
-            routeActive: '#',
+            href: route('admin.amenities.index'),
+            routeActive: 'admin.amenities',
         },
         {
             icon: <ShieldCheckIcon className="size-6" />,

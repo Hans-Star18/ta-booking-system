@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BedController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\UserController;
@@ -43,6 +44,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('users', UserController::class);
         Route::put('users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update-password');
         Route::resource('beds', BedController::class)->except(['show']);
+        Route::resource('amenities', AmenityController::class)->except(['show']);
     });
 
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');

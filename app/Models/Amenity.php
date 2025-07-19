@@ -16,8 +16,17 @@ class Amenity extends Model
         'slug',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($amenity) {
+            $amenity->rooms()->detach();
+        });
+    }
+
     public function rooms()
     {
-        return $this->belongsToMany(Room::class);
+        return $this->belongsToMany(Room::class, 'amenity_configs');
     }
 }
