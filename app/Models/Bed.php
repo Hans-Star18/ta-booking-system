@@ -14,7 +14,6 @@ class Bed extends Model
     protected $fillable = [
         'name',
         'slug',
-        'icon',
         'description',
         'capacity',
     ];
