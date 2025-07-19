@@ -12,7 +12,7 @@ class OrganizerController extends Controller
 {
     public function index()
     {
-        $hotel = auth()->guard('web')->user()->hotel;
+        $hotel        = auth()->guard('web')->user()->hotel;
         $reservations = $hotel->reservations()
             ->whereHas('transaction')
             ->with(['transaction'])
@@ -22,7 +22,7 @@ class OrganizerController extends Controller
         $isRemembered = Auth::viaRemember();
 
         return inertia('organizers/dashboard/index', [
-            'hotel' => $hotel,
+            'hotel'        => $hotel,
             'reservations' => $reservations,
             'isRemembered' => $isRemembered,
         ]);
@@ -49,13 +49,13 @@ class OrganizerController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         $request->validate([
-            'status' => 'required|in:pending,confirmed,cancelled',
+            'status'         => 'required|in:pending,confirmed,cancelled',
             'payment_status' => 'required|in:pending,success,capture,settlement,expire,refund,failed',
         ]);
 
         DB::beginTransaction();
         try {
-            $reservation->status = $request->status;
+            $reservation->status                      = $request->status;
             $reservation->transaction->payment_status = $request->payment_status;
             $reservation->transaction->save();
             $reservation->save();
@@ -63,7 +63,7 @@ class OrganizerController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating reservation: ' . $th->getMessage());
+            logger()->error('Error updating reservation: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update reservation',

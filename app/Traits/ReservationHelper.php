@@ -32,12 +32,12 @@ trait ReservationHelper
 
             $hotel->rooms = $hotel->rooms->filter(function ($room) use ($dates, $allotment) {
                 $availableAllotments = $this->calculateAvailableAllotments($room, $dates, $allotment);
-                $isAvailable = !blank($availableAllotments);
+                $isAvailable         = ! blank($availableAllotments);
 
                 return $isAvailable;
             });
         } catch (\Throwable $th) {
-            logger()->error('Error checking availability: ' . $th->getMessage());
+            logger()->error('Error checking availability: '.$th->getMessage());
 
             return null;
         }
@@ -61,9 +61,10 @@ trait ReservationHelper
             ]);
 
             $availableAllotments = $this->calculateAvailableAllotments($room, $dates, $allotment);
+
             return $availableAllotments;
         } catch (\Throwable $th) {
-            logger()->error('Error checking availability: ' . $th->getMessage());
+            logger()->error('Error checking availability: '.$th->getMessage());
 
             return null;
         }
@@ -74,7 +75,7 @@ trait ReservationHelper
         try {
             return Carbon::parse($date)->timezone('Asia/Makassar')->startOfDay();
         } catch (\Throwable $th) {
-            logger()->error('Error parsing date: ' . $th->getMessage());
+            logger()->error('Error parsing date: '.$th->getMessage());
 
             return null;
         }
@@ -91,7 +92,7 @@ trait ReservationHelper
                 $dates->push($date->format('Y-m-d'));
             }
         } catch (\Throwable $th) {
-            logger()->error('Error collecting dates: ' . $th->getMessage());
+            logger()->error('Error collecting dates: '.$th->getMessage());
 
             return collect();
         }
@@ -114,15 +115,15 @@ trait ReservationHelper
         foreach ($dates as $date) {
             $allotment = $room->allotments()->where('date', $date)->first();
 
-            if (!$allotment) {
+            if (! $allotment) {
                 continue;
             }
 
             $onRes = $room->roomReservations
                 ->filter(function ($roomReservation) use ($date) {
                     $reservation = $roomReservation->reservation;
-                    $checkIn = $this->dateParser($reservation->check_in);
-                    $checkOut = $this->dateParser($reservation->check_out);
+                    $checkIn     = $this->dateParser($reservation->check_in);
+                    $checkOut    = $this->dateParser($reservation->check_out);
 
                     $currentDate = $this->dateParser($date);
 
@@ -134,11 +135,11 @@ trait ReservationHelper
 
             if ($available >= $requiredAllotment) {
                 $availableAllotments->push([
-                    'date' => $date,
+                    'date'      => $date,
                     'allotment' => $allotment->allotment,
-                    'onRes' => $onRes,
+                    'onRes'     => $onRes,
                     'available' => $available,
-                    'required' => $requiredAllotment
+                    'required'  => $requiredAllotment,
                 ]);
             }
         }

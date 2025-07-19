@@ -11,12 +11,6 @@ export default {
         ecmaVersion: 2022,
         sourceType: 'module',
     },
-    extends: [
-        'eslint:recommended',
-        'plugin:react/recommended',
-        'plugin:react/jsx-runtime',
-        'plugin:react-hooks/recommended',
-    ],
     settings: {
         react: {
             version: 'detect',
@@ -24,37 +18,30 @@ export default {
     },
     env: {
         browser: true,
-        es2022: true,
+        amd: true,
         node: true,
     },
-    globals: {
-        // Inertia.js globals
-        route: 'readonly',
-        // Laravel globals
-        $page: 'readonly',
-        $props: 'readonly',
-        $inertia: 'readonly',
-        // Vite globals
-        import: 'readonly',
-        import_meta_env: 'readonly',
-        import_meta_glob: 'readonly',
-        // Global utilities
-        globalThis: 'readonly',
-    },
+    extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
+        'plugin:prettier/recommended',
+    ],
+    plugins: ['prettier'],
     rules: {
-        'react/prop-types': 'off',
-        'react/jsx-uses-react': 'off',
+        'react/jsx-first-prop-new-line': [2, 'multiline'],
+        'react/jsx-max-props-per-line': [2, { maximum: 1, when: 'multiline' }],
+        'react/jsx-indent-props': [2, 2],
+        'react/jsx-closing-bracket-location': [2, 'tag-aligned'],
+        'prettier/prettier': [
+            'error',
+            {},
+            {
+                usePrettierrc: true,
+            },
+        ],
         'react/react-in-jsx-scope': 'off',
-        'react/jsx-key': 'error',
-        'react/jsx-no-duplicate-props': 'error',
-        'react/jsx-no-undef': 'error',
-        'react/no-unescaped-entities': 'warn',
-        'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'warn',
-        // General rules
-        'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-        'no-console': 'warn',
-        'prefer-const': 'error',
-        'no-var': 'error',
+        'react/prop-types': 'off',
+        'no-console': 2,
     },
 }

@@ -8,7 +8,6 @@ use App\Http\Requests\Organizer\UpdateHotelRequest;
 use App\Models\Hotel;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
@@ -44,7 +43,7 @@ class CompanyController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error creating hotel: ' . $th->getMessage());
+            logger()->error('Error creating hotel: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create hotel',
@@ -75,7 +74,7 @@ class CompanyController extends Controller
         });
 
         return inertia('admins/hotels/edit', [
-            'hotel' => $hotel,
+            'hotel'                 => $hotel,
             'hotelOrganizerOptions' => $hotelOrganizerOptions,
         ]);
     }
@@ -88,7 +87,7 @@ class CompanyController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error updating hotel: ' . $th->getMessage());
+            logger()->error('Error updating hotel: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update hotel',
@@ -116,7 +115,7 @@ class CompanyController extends Controller
             $hotel->delete();
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error deleting hotel: ' . $th->getMessage());
+            logger()->error('Error deleting hotel: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete hotel',

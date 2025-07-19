@@ -17,6 +17,7 @@ class Role extends Model
     ];
 
     const HOTEL_ORGANIZER = 2;
+
     const ADMIN = 1;
 
     public function users()

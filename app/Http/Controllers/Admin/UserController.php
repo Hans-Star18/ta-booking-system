@@ -53,7 +53,7 @@ class UserController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error creating user: ' . $th->getMessage());
+            logger()->error('Error creating user: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create user',
@@ -77,7 +77,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return inertia('admins/users/edit', [
-            'user' => $user->load(['hotel']),
+            'user'  => $user->load(['hotel']),
             'roles' => $this->roles,
         ]);
     }
@@ -91,7 +91,7 @@ class UserController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating user: ' . $th->getMessage());
+            logger()->error('Error updating user: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update user',
@@ -109,12 +109,15 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-            $user->hotel()->update(['user_id' => null]);
+            $user->hotel()->update([
+                'is_active' => false,
+                'user_id'   => null,
+            ]);
             $user->delete();
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error deleting user: ' . $th->getMessage());
+            logger()->error('Error deleting user: '.$th->getMessage());
             DB::rollBack();
 
             return back()->with('alert', [
@@ -139,7 +142,7 @@ class UserController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error updating password: ' . $th->getMessage());
+            logger()->error('Error updating password: '.$th->getMessage());
             DB::rollBack();
 
             return back()->with('alert', [

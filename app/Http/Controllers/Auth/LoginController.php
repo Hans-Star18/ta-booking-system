@@ -18,16 +18,18 @@ class LoginController extends Controller
         $credentials = $request->safe()->only('email', 'password');
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             if ($request->user()->isOrganizer()) {
-                if (!$request->user()->hotel) {
+                if (! $request->user()->hotel) {
                     Auth::logout();
+
                     return back()->with('alert', [
                         'type'    => 'warning',
                         'message' => 'You are not authorized to access this page.',
                     ]);
                 }
 
-                if (!$request->user()->hotel->is_active) {
+                if (! $request->user()->hotel->is_active) {
                     Auth::logout();
+
                     return back()->with('alert', [
                         'type'    => 'warning',
                         'message' => 'Your hotel is not active, please contact the administrator',

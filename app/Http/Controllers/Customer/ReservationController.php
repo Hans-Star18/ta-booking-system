@@ -41,7 +41,7 @@ class ReservationController extends Controller
 
         $hotel->load(['rooms', 'rooms.photos', 'rooms.allotments']);
 
-        if (!$hotel->is_active) {
+        if (! $hotel->is_active) {
             return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
                 'message' => 'Hotel is not active, please contact the hotel owner',
                 'type'    => 'error',
@@ -60,7 +60,7 @@ class ReservationController extends Controller
         $hasCheckAvailability = false;
 
         try {
-            if (!$hotel->is_active) {
+            if (! $hotel->is_active) {
                 return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
                     'message' => 'Hotel is not active, please contact the hotel owner',
                     'type'    => 'error',
@@ -81,7 +81,7 @@ class ReservationController extends Controller
             }
         } catch (\Throwable $th) {
             $hasCheckAvailability = false;
-            logger()->error('Error checking availability: ' . $th->getMessage());
+            logger()->error('Error checking availability: '.$th->getMessage());
         }
 
         return inertia('customers/reservation', [
@@ -95,7 +95,7 @@ class ReservationController extends Controller
 
     public function detail(Hotel $hotel, Room $room, Request $request)
     {
-        if (!$hotel->is_active) {
+        if (! $hotel->is_active) {
             return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
                 'message' => 'Hotel is not active, please contact the hotel owner',
                 'type'    => 'error',
@@ -135,7 +135,7 @@ class ReservationController extends Controller
 
     public function confirm(Hotel $hotel, Request $request)
     {
-        if (!$hotel->is_active) {
+        if (! $hotel->is_active) {
             return to_route('customer.reservation.index', $hotel->uuid)->with('alert', [
                 'message' => 'Hotel is not active, please contact the hotel owner',
                 'type'    => 'error',
@@ -146,7 +146,7 @@ class ReservationController extends Controller
         $reservation = session()->get('reservation');
         if ($request->method() == 'POST') {
             $reservation['hotel']          = $hotel;
-            $reservation['room']           = $reservation['room'] ?? $request->room ?? null;
+            $reservation['room'] ??= $request->room ?? null;
             $reservation['selectedBeds']   = $request->selectedBeds;
             $reservation['needExtraBeds']  = $request->needExtraBeds;
             $reservation['totalExtraBed']  = $request->totalExtraBed;
@@ -174,7 +174,7 @@ class ReservationController extends Controller
                 ->with(['hotel', 'reservationCustomer', 'transaction'])
                 ->firstOrFail();
         } catch (\Throwable $th) {
-            logger()->error('Error finishing reservation: ' . $th->getMessage());
+            logger()->error('Error finishing reservation: '.$th->getMessage());
 
             return to_route('customer.reservation.index', $reservation->hotel->uuid)->with('alert', [
                 'message' => 'Reservation not found please try again',
@@ -221,10 +221,10 @@ class ReservationController extends Controller
             // session()->forget('reservation');
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing reservation: ' . $th->getMessage());
+            logger()->error('Error storing reservation: '.$th->getMessage());
 
             return back()->with('alert', [
-                'message' => 'Failed to create reservation: ' . $th->getMessage(),
+                'message' => 'Failed to create reservation: '.$th->getMessage(),
                 'type'    => 'error',
             ]);
         }
@@ -263,10 +263,10 @@ class ReservationController extends Controller
     {
         return [
             [
-                'id'       => 'payment-' . $reservation->reservation_number,
+                'id'       => 'payment-'.$reservation->reservation_number,
                 'price'    => $reservation->transaction->pay_now,
                 'quantity' => 1,
-                'name'     => 'Payment ' . $reservation->hotel->setting->dp_percentage . '%',
+                'name'     => 'Payment '.$reservation->hotel->setting->dp_percentage.'%',
             ],
         ];
     }

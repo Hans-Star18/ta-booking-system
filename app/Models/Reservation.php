@@ -18,7 +18,9 @@ class Reservation extends Model
     ];
 
     const PENDING = 'pending';
+
     const CONFIRMED = 'confirmed';
+
     const CANCELLED = 'cancelled';
 
     protected $casts = [

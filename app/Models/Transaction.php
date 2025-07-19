@@ -37,7 +37,7 @@ class Transaction extends Model
     public static function booted()
     {
         static::creating(function ($transaction) {
-            $transaction->invoice_number = 'INV-' . strtoupper(uniqid());
+            $transaction->invoice_number = 'INV-'.strtoupper(uniqid());
         });
     }
 

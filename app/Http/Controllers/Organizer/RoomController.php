@@ -68,7 +68,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing room: ' . $th->getMessage());
+            logger()->error('Error storing room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to store room',
@@ -93,14 +93,14 @@ class RoomController extends Controller
             ->get()
             ->flatMap(function ($roomReservation) {
                 $reservation = $roomReservation->reservation;
-                $dates = [];
+                $dates       = [];
 
                 for ($date = $reservation->check_in->copy(); $date->lt($reservation->check_out); $date->addDay()) {
                     $dates[] = [
-                        'date' => $date->format('Y-m-d'),
-                        'allotment' => $reservation->allotment,
+                        'date'           => $date->format('Y-m-d'),
+                        'allotment'      => $reservation->allotment,
                         'reservation_id' => $reservation->id,
-                        'status' => $reservation->status ?? 'pending'
+                        'status'         => $reservation->status ?? 'pending',
                     ];
                 }
 
@@ -109,36 +109,36 @@ class RoomController extends Controller
             ->groupBy('date')
             ->map(function ($dateGroup) {
                 return [
-                    'date' => $dateGroup->first()['date'],
+                    'date'            => $dateGroup->first()['date'],
                     'total_allotment' => $dateGroup->sum('allotment'),
-                    'reservations' => $dateGroup->map(function ($item) {
+                    'reservations'    => $dateGroup->map(function ($item) {
                         return [
                             'reservation_id' => $item['reservation_id'],
-                            'allotment' => $item['allotment'],
-                            'status' => $item['status']
+                            'allotment'      => $item['allotment'],
+                            'status'         => $item['status'],
                         ];
-                    })
+                    }),
                 ];
             })
             ->values();
 
         $allotments = $room->allotments->sortBy('date')->values()->map(function ($allotment) use ($onReservations) {
-            $date = $allotment->date;
+            $date            = $allotment->date;
             $reservationData = $onReservations->firstWhere('date', $date->format('Y-m-d'));
 
-            $onRes = $reservationData ? $reservationData['total_allotment'] : 0;
+            $onRes     = $reservationData ? $reservationData['total_allotment'] : 0;
             $available = max(0, $allotment->allotment - $onRes); // Pastikan tidak negatif
 
             // Debug: Log perhitungan untuk setiap tanggal
             logger()->info("Date: {$date->format('Y-m-d')}, Allotment: {$allotment->allotment}, OnRes: {$onRes}, Available: {$available}");
 
             return [
-                'id' => $allotment->id,
-                'date' => $allotment->date,
-                'allotment' => $allotment->allotment,
-                'onRes' => $onRes,
-                'available' => $available,
-                'reservations' => $reservationData ? $reservationData['reservations'] : []
+                'id'           => $allotment->id,
+                'date'         => $allotment->date,
+                'allotment'    => $allotment->allotment,
+                'onRes'        => $onRes,
+                'available'    => $available,
+                'reservations' => $reservationData ? $reservationData['reservations'] : [],
             ];
         })->toArray();
 
@@ -191,7 +191,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating room: ' . $th->getMessage());
+            logger()->error('Error updating room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update room',
@@ -215,7 +215,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting room: ' . $th->getMessage());
+            logger()->error('Error deleting room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete room',
@@ -260,7 +260,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating allotment: ' . $th->getMessage());
+            logger()->error('Error updating allotment: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update allotment',
@@ -311,7 +311,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating batch allotment: ' . $th->getMessage());
+            logger()->error('Error updating batch allotment: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update batch allotment',
@@ -355,7 +355,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing photo: ' . $th->getMessage());
+            logger()->error('Error storing photo: '.$th->getMessage());
 
             return response()->json([
                 'message' => 'Failed to store photo',
@@ -379,7 +379,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting photo: ' . $th->getMessage());
+            logger()->error('Error deleting photo: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete photo',
