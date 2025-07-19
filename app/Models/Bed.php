@@ -18,8 +18,25 @@ class Bed extends Model
         'capacity',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($bed) {
+            $bed->reservationRooms()->update([
+                'bed_id' => null,
+            ]);
+            $bed->rooms()->detach();
+        });
+    }
+
     public function rooms()
     {
-        return $this->belongsToMany(Room::class);
+        return $this->belongsToMany(Room::class, 'bed_configs');
+    }
+
+    public function reservationRooms()
+    {
+        return $this->hasMany(ReservationRoom::class);
     }
 }

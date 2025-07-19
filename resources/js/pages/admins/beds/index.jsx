@@ -3,17 +3,13 @@ import CompactGrid from '@/components/datatable/theme/compact-grid'
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import AdminLayout from '@/layouts/admin-layout'
-import {
-    EyeIcon,
-    PencilSquareIcon,
-    TrashIcon,
-} from '@heroicons/react/24/outline'
 import { Head, router, useForm } from '@inertiajs/react'
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import DataTable, { defaultThemes } from 'react-data-table-component'
+import DataTable from 'react-data-table-component'
 
-export default function Index({ hotels }) {
+export default function Index({ beds }) {
     const { delete: destroy, processing, errors } = useForm({})
 
     const columns = [
@@ -26,42 +22,33 @@ export default function Index({ hotels }) {
             name: 'Name',
             selector: (row) => row.name,
             sortable: true,
+            width: '150px',
         },
         {
-            name: 'Mobile',
-            selector: (row) => row.mobile,
+            name: 'Capacity',
+            selector: (row) => row.capacity,
+            sortable: true,
+            width: '130px',
         },
         {
-            name: 'Email',
-            selector: (row) => row.email,
-        },
-        {
-            name: 'Website',
-            selector: (row) => row.website,
-        },
-        {
-            name: 'Is Active',
-            cell: (row) => isActiveRender(row.is_active),
+            name: 'Description',
+            selector: (row) => row.description,
+            wrap: true,
+            sortable: true,
         },
         {
             name: 'Created At',
             selector: (row) => row.created_at,
             sortable: true,
+            width: '150px',
         },
         {
             name: 'Actions',
             cell: (row) => (
                 <div className="flex items-center gap-2">
                     <Anchor
-                        variant="primary"
-                        href={route('admin.companies.show', row.id)}
-                        className={'px-2 py-1'}
-                    >
-                        <EyeIcon className="size-5" />
-                    </Anchor>
-                    <Anchor
                         variant="success"
-                        href={route('admin.companies.edit', row.id)}
+                        href={route('admin.beds.edit', row.id)}
                         className={'px-2 py-1'}
                     >
                         <PencilSquareIcon className="size-5" />
@@ -76,7 +63,7 @@ export default function Index({ hotels }) {
                     </Button>
                 </div>
             ),
-            width: '150px',
+            width: '120px',
         },
     ]
 
@@ -84,40 +71,25 @@ export default function Index({ hotels }) {
 
     useEffect(() => {
         setData(
-            hotels.map((hotel) => ({
-                id: hotel.id,
-                uuid: hotel.uuid,
-                name: hotel.name,
-                mobile: hotel.mobile,
-                email: hotel.email,
-                website: hotel.website,
-                is_active: hotel.is_active,
-                created_at: moment(hotel.created_at).format('DD MMM YYYY'),
+            beds.map((bed) => ({
+                id: bed.id,
+                name: bed.name,
+                capacity: bed.capacity,
+                description: bed.description,
+                created_at: moment(bed.created_at).format('DD MMM YYYY'),
             }))
         )
-    }, [hotels])
+    }, [beds])
 
-    const isActiveRender = (isActive) => {
-        return isActive ? (
-            <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset">
-                Active
-            </span>
-        ) : (
-            <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-red-600/20 ring-inset">
-                Inactive
-            </span>
-        )
-    }
-
-    const handleDelete = (hotelId) => {
+    const handleDelete = (bedId) => {
         Confirm({
             action: 'delete',
             onConfirm: () => {
-                destroy(route('admin.companies.destroy', hotelId), {
+                destroy(route('admin.beds.destroy', bedId), {
                     preserveScroll: true,
                     onSuccess: () => {
                         router.reload({
-                            only: ['hotels'],
+                            only: ['beds'],
                         })
                     },
                 })
@@ -127,17 +99,17 @@ export default function Index({ hotels }) {
 
     return (
         <>
-            <Head title="Admin Hotels Management" />
+            <Head title="Admin Bed Management" />
 
             <AdminLayout>
                 <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
                     <div className="mb-4 flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">Hotels List</h1>
+                        <h1 className="text-2xl font-bold">Bed List</h1>
                         <Anchor
                             variant="primary"
-                            href={route('admin.companies.create')}
+                            href={route('admin.beds.create')}
                         >
-                            Add New Hotel
+                            Add New Bed
                         </Anchor>
                     </div>
 

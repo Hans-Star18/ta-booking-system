@@ -6,20 +6,18 @@ use Illuminate\Support\Str;
 
 trait HasSlug
 {
-    protected static function boot()
+    protected static function bootHasSlug()
     {
-        parent::boot();
-
         static::creating(function ($model) {
             $sourceSlug = $model->getSlugSource();
 
-            $model->slug = Str::slug($sourceSlug).'-'.Str::random(5);
+            $model->slug = $model->generateSlug($sourceSlug);
         });
 
         static::updating(function ($model) {
             $sourceSlug = $model->getSlugSource();
 
-            $model->slug = Str::slug($sourceSlug).'-'.Str::random(5);
+            $model->slug = $model->generateSlug($sourceSlug);
         });
     }
 
@@ -28,5 +26,10 @@ trait HasSlug
         $column = property_exists($this, 'slugable') ? $this->slugable : 'title';
 
         return $this->{$column};
+    }
+
+    public function generateSlug($sourceSlug)
+    {
+        return Str::slug($sourceSlug) . '-' . Str::random(5);
     }
 }

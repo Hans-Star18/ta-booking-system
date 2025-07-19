@@ -49,7 +49,9 @@ function AdminLayoutContent({ children }) {
                     } ${isMobileOpen ? 'ml-0' : ''}`}
                 >
                     <AdminHeader />
-                    <div className="container m-auto p-4">{children}</div>
+                    <div className="container m-auto max-w-[76rem] p-4">
+                        {children}
+                    </div>
                 </div>
             </div>
         </>

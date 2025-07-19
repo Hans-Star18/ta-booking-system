@@ -22,7 +22,7 @@ export default function Index({ users }) {
         {
             name: 'No',
             selector: (row, index) => index + 1,
-            width: '80px',
+            width: '60px',
         },
         {
             name: 'Name',

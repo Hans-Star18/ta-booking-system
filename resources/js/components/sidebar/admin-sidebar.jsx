@@ -37,8 +37,8 @@ export default function AdminSidebar() {
         {
             icon: <BedFrontIcon className="size-6" />,
             name: 'Beds',
-            href: '#',
-            routeActive: '#',
+            href: route('admin.beds.index'),
+            routeActive: 'admin.beds',
         },
         {
             icon: <HomeIcon className="size-6" />,

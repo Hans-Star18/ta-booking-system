@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('reservation_id')->constrained('reservations');
             $table->foreignId('room_id')->constrained('rooms');
-            $table->foreignId('bed_id')->constrained('beds');
+            $table->foreignId('bed_id')->nullable()->constrained('beds');
             $table->integer('extra_bed_count')->default(0);
             $table->float('extra_bed_price')->default(0);
             $table->integer('adult_guest')->default(1);
