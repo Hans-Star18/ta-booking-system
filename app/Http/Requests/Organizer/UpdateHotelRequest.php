@@ -29,10 +29,10 @@ class UpdateHotelRequest extends FormRequest
             'address'            => ['required', 'string'],
             'phone'              => ['required', 'string', 'max:20'],
             'mobile'             => ['required', 'string', 'max:20'],
-            'email'              => ['required', 'string', 'email', 'max:50', 'unique:hotels,email,'.$this->hotel->id],
+            'email'              => ['required', 'string', 'email', 'max:50', 'unique:hotels,email,' . $this->hotel->id],
             'website'            => ['required', 'string', 'max:100'],
             'term_and_condition' => ['required', 'string'],
-            'is_active'          => ['sometimes', 'required', 'boolean'],
+            'is_active'          => ['sometimes', 'boolean'],
             'user_id'            => ['sometimes', 'required', 'exists:users,id'],
         ];
     }

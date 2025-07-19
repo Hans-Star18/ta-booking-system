@@ -18,7 +18,7 @@ export default function Edit({ hotel, hotelOrganizerOptions }) {
         email: hotel.email,
         website: hotel.website,
         user_id: hotel.user_id,
-        is_active: hotel.is_active,
+        is_active: hotel.is_active ? true : false,
         term_and_condition: hotel.term_and_condition,
     })
 
@@ -174,7 +174,10 @@ export default function Edit({ hotel, hotelOrganizerOptions }) {
                                 ]}
                                 defaultValue={data.is_active}
                                 onChange={(e) =>
-                                    setData('is_active', e.target.value)
+                                    setData(
+                                        'is_active',
+                                        e.target.value === 'true'
+                                    )
                                 }
                                 className={
                                     errors.is_active && 'ring ring-red-500'
