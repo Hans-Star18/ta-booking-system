@@ -16,8 +16,17 @@ class Policy extends Model
         'slug',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($policy) {
+            $policy->rooms()->detach();
+        });
+    }
+
     public function rooms()
     {
-        return $this->belongsToMany(Room::class);
+        return $this->belongsToMany(Room::class, 'policy_configs');
     }
 }

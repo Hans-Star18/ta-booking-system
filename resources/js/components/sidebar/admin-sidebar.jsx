@@ -49,8 +49,8 @@ export default function AdminSidebar() {
         {
             icon: <ShieldCheckIcon className="size-6" />,
             name: 'Policies',
-            href: '#',
-            routeActive: '#',
+            href: route('admin.policies.index'),
+            routeActive: 'admin.policies',
         },
         {
             icon: <ArrowLeftStartOnRectangleIcon className="size-6" />,
