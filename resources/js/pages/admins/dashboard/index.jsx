@@ -11,12 +11,11 @@ import BedFrontIcon from '@/components/icons/bed-front-icon'
 import CountCard from './components/count-card'
 import { useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
-import PeriodIcon from '@/components/icons/period-icon'
 import PieChartLegend from './components/pie-chart-legend'
 
-export default function Index() {
+export default function Index({ userOverview, hotelOverview, itemCount }) {
     const [chartData, setChartData] = useState({
-        series: [44, 55, 41],
+        series: [itemCount.beds, itemCount.amenities, itemCount.policies],
         options: {
             chart: {
                 type: 'donut',
@@ -68,16 +67,16 @@ export default function Index() {
                         <OverviewCard
                             icon={<UsersIcon className="size-6" />}
                             title="Users"
-                            value={25}
-                            increase={10}
+                            value={userOverview.total}
+                            increase={userOverview.increase}
                             href={route('admin.users.index')}
                         />
 
                         <OverviewCard
                             icon={<BuildingOfficeIcon className="size-6" />}
                             title="Hotels"
-                            value={25}
-                            increase={10}
+                            value={hotelOverview.total}
+                            increase={hotelOverview.increase}
                             href={route('admin.companies.index')}
                         />
                     </div>
@@ -98,17 +97,17 @@ export default function Index() {
                                         <PieChartLegend
                                             color="#222ab4"
                                             title="Beds"
-                                            value={25}
+                                            value={itemCount.beds}
                                         />
                                         <PieChartLegend
                                             color="#7592ff"
                                             title="Amenities"
-                                            value={25}
+                                            value={itemCount.amenities}
                                         />
                                         <PieChartLegend
                                             color="#dde9ff"
                                             title="Policies"
-                                            value={25}
+                                            value={itemCount.policies}
                                         />
                                     </div>
                                 </div>
@@ -120,17 +119,17 @@ export default function Index() {
                         <CountCard
                             icon={<BedFrontIcon className="size-6" />}
                             title="Beds"
-                            value={25}
+                            value={itemCount.beds}
                         />
                         <CountCard
                             icon={<HomeIcon className="size-6" />}
                             title="Amenities"
-                            value={25}
+                            value={itemCount.amenities}
                         />
                         <CountCard
                             icon={<ShieldCheckIcon className="size-6" />}
                             title="Policies"
-                            value={25}
+                            value={itemCount.policies}
                         />
                     </div>
                 </div>
