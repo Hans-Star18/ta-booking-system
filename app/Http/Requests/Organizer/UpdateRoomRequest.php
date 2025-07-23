@@ -33,6 +33,7 @@ class UpdateRoomRequest extends FormRequest
             'amenity_config.*' => ['nullable', 'exists:amenities,id'],
             'policy_config'    => ['nullable', 'array'],
             'policy_config.*'  => ['nullable', 'exists:policies,id'],
+            'is_active'        => ['required', 'boolean'],
         ];
     }
 }

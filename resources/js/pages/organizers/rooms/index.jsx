@@ -1,5 +1,6 @@
 import Confirm from '@/components/alert/confirm'
 import Anchor from '@/components/form/anchor'
+import Badge from '@/components/form/badge'
 import Button from '@/components/form/button'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { CalendarDaysIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -41,9 +42,23 @@ export default function Index({ rooms }) {
                                 key={index}
                                 className="h-full rounded-sm border border-gray-300 p-4"
                             >
-                                <h2 className="mb-3 text-center text-lg font-bold underline">
-                                    {room.name}
-                                </h2>
+                                <div className="flex justify-between">
+                                    <h2 className="mb-3 text-lg font-bold underline">
+                                        {room.name}
+                                    </h2>
+
+                                    <div>
+                                        {room.is_active ? (
+                                            <Badge variant="success">
+                                                Active
+                                            </Badge>
+                                        ) : (
+                                            <Badge variant="danger">
+                                                Inactive
+                                            </Badge>
+                                        )}
+                                    </div>
+                                </div>
 
                                 <div className="mb-3 max-h-72 w-full overflow-hidden rounded-sm">
                                     <img

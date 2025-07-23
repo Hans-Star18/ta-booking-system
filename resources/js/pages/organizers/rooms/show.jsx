@@ -11,6 +11,7 @@ import AllotmentManagementCalendar from '@/components/calendar/allotment-managem
 import Anchor from '@/components/form/anchor'
 import Currency from '@/components/format/currency'
 import HTMLReactParser from 'html-react-parser'
+import Badge from '@/components/form/badge'
 
 export default function Show({ room, allotments }) {
     return (
@@ -144,6 +145,18 @@ export default function Show({ room, allotments }) {
                                 <div className="flex items-center gap-2 text-gray-600">
                                     <ChevronDoubleRightIcon className="size-4" />
                                     <Currency value={room.price} />
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <h2 className="text-lg font-bold">Status</h2>
+
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <ChevronDoubleRightIcon className="size-4" />
+                                    {room.is_active ? (
+                                        <Badge variant="success">Active</Badge>
+                                    ) : (
+                                        <Badge variant="danger">Inactive</Badge>
+                                    )}
                                 </div>
                             </div>
                         </div>

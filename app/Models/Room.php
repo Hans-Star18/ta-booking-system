@@ -18,9 +18,14 @@ class Room extends Model
         'max_occupancy',
         'price',
         'cover_image',
+        'is_active',
     ];
 
     protected $with = ['amenities', 'beds', 'photos', 'policies'];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     const FILE_PATH = 'rooms';
 
@@ -39,7 +44,7 @@ class Room extends Model
     public function coverImage(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Storage::url($value),
+            get: fn($value) => Storage::url($value),
         );
     }
 

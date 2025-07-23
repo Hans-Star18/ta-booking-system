@@ -5,6 +5,7 @@ import FileInput from '@/components/form/file-input'
 import { HelperText } from '@/components/form/helper-text'
 import Input from '@/components/form/input'
 import Label from '@/components/form/label'
+import Select from '@/components/form/select'
 import TextEditor from '@/components/form/text-editor'
 import ValidationFeedback from '@/components/form/validation-feedback'
 import OrganizerLayout from '@/layouts/organizer-layout'
@@ -31,6 +32,7 @@ export default function Edit({ room, beds, amenities, policies }) {
         bed_config: bedSelected,
         amenity_config: amenitySelected,
         policy_config: policySelected,
+        is_active: room.is_active,
         _method: 'PUT',
     })
 
@@ -176,6 +178,28 @@ export default function Edit({ room, beds, amenities, policies }) {
                                 className={errors.price && 'ring ring-red-500'}
                             />
                             <ValidationFeedback message={errors.price} />
+                        </div>
+                        <div className="col-span-2 mb-2 md:col-span-1">
+                            <Label htmlFor="is_active">Status</Label>
+                            <Select
+                                id="is_active"
+                                name="is_active"
+                                options={[
+                                    { label: 'Active', value: true },
+                                    { label: 'Inactive', value: false },
+                                ]}
+                                defaultValue={data.is_active}
+                                onChange={(e) =>
+                                    setData(
+                                        'is_active',
+                                        e.target.value === 'true'
+                                    )
+                                }
+                                className={
+                                    errors.is_active && 'ring ring-red-500'
+                                }
+                            />
+                            <ValidationFeedback message={errors.is_active} />
                         </div>
                         <div className="col-span-2 mb-3">
                             <Label htmlFor="description" required={true}>
