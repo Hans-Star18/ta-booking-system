@@ -45,6 +45,7 @@ export const SidebarProvider = ({ children }) => {
         <SidebarContext.Provider
             value={{
                 isExpanded: isMobile ? false : isExpanded,
+                isMobile,
                 isMobileOpen,
                 isHovered,
                 toggleSidebar,
