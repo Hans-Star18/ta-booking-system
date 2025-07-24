@@ -23,7 +23,7 @@
             data-client-key="{{ $midtransClientKey }}"></script>
     @endif
 
-    <title inertia>{{ config('app.name', 'Ta Booking System') }}</title>
+    <title inertia>{{ config('app.name', 'Hotelink') }}</title>
 
     @routes
     @viteReactRefresh
