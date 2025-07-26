@@ -48,7 +48,6 @@ export default function ReservationDetail({ reservation }) {
                                         'organizer.rooms.show',
                                         res?.room?.id
                                     )}
-                                    rel="noreferrer"
                                 >
                                     <ArrowTopRightOnSquareIcon className="ml-1 size-5 !text-gray-500 hover:!text-gray-800" />
                                 </a>

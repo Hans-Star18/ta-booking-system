@@ -1,3 +1,4 @@
+import Toast from '@/components/alert/toast'
 import Anchor from '@/components/form/anchor'
 import Button from '@/components/form/button'
 import { Checkbox } from '@/components/form/checkbox'
@@ -9,7 +10,7 @@ import TextEditor from '@/components/form/text-editor'
 import ValidationFeedback from '@/components/form/validation-feedback'
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, useForm, usePage } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
 
 export default function Add({ beds, amenities, policies }) {

@@ -112,7 +112,6 @@ export default function Home({ clients }) {
                                     href={client.url}
                                     target="_blank"
                                     className="flex-shrink-0 cursor-pointer text-lg font-medium whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-blue-600"
-                                    rel="noreferrer"
                                 >
                                     {client.name}
                                 </a>
