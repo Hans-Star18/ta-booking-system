@@ -14,25 +14,25 @@ class AdminController extends Controller
     public function index()
     {
         $userOverview = [
-            'total' => User::count(),
+            'total'    => User::count(),
             'increase' => $this->getUserIncrease(),
         ];
 
         $hotelOverview = [
-            'total' => Hotel::count(),
+            'total'    => Hotel::count(),
             'increase' => $this->getHotelIncrease(),
         ];
 
         $itemCount = [
-            'beds' => Bed::count(),
+            'beds'      => Bed::count(),
             'amenities' => Amenity::count(),
-            'policies' => Policy::count(),
+            'policies'  => Policy::count(),
         ];
 
         return inertia('admins/dashboard/index', [
-            'userOverview' => $userOverview,
+            'userOverview'  => $userOverview,
             'hotelOverview' => $hotelOverview,
-            'itemCount' => $itemCount,
+            'itemCount'     => $itemCount,
         ]);
     }
 
@@ -41,7 +41,7 @@ class AdminController extends Controller
         $rangeDays = 30;
 
         $startDate = now()->subDays($rangeDays);
-        $endDate = now();
+        $endDate   = now();
 
         $userCount = User::whereBetween('created_at', [$startDate, $endDate])->count();
 
@@ -53,7 +53,7 @@ class AdminController extends Controller
         $rangeDays = 30;
 
         $startDate = now()->subDays($rangeDays);
-        $endDate = now();
+        $endDate   = now();
 
         $hotelCount = Hotel::whereBetween('created_at', [$startDate, $endDate])->count();
 

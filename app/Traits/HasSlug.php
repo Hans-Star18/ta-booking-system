@@ -30,6 +30,6 @@ trait HasSlug
 
     public function generateSlug($sourceSlug)
     {
-        return Str::slug($sourceSlug) . '-' . Str::random(5);
+        return Str::slug($sourceSlug).'-'.Str::random(5);
     }
 }

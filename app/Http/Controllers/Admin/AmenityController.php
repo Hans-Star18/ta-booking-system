@@ -34,7 +34,7 @@ class AmenityController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            logger()->error('Error storing amenity: ' . $th->getMessage());
+            logger()->error('Error storing amenity: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to store amenity',
@@ -65,7 +65,7 @@ class AmenityController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            logger()->error('Error updating amenity: ' . $th->getMessage());
+            logger()->error('Error updating amenity: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update amenity',
@@ -89,7 +89,7 @@ class AmenityController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            logger()->error('Error deleting amenity: ' . $th->getMessage());
+            logger()->error('Error deleting amenity: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete amenity',

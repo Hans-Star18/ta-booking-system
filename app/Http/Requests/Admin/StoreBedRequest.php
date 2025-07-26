@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Traits\HasSlug;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBedRequest extends FormRequest

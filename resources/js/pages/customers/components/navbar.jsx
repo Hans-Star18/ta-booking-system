@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react'
 import { useSidebar } from '@/components/context/siderbar-context'
 import { useEffect } from 'react'
 import { BarsArrowDownIcon, BarsArrowUpIcon } from '@heroicons/react/24/outline'
+import { twMerge } from 'tailwind-merge'
 
 export default function Navbar({ appName }) {
     const { isMobileOpen, isMobile, toggleMobileSidebar } = useSidebar()
@@ -10,18 +11,32 @@ export default function Navbar({ appName }) {
         {
             label: 'Home',
             href: route('customer.home'),
+            className: 'md:px-0 md:hover:bg-transparent',
         },
         {
             label: 'About Us',
             href: '#about-us',
+            className: 'md:px-0 md:hover:bg-transparent',
         },
         {
             label: 'Features List',
             href: '#features',
+            className: 'md:px-0 md:hover:bg-transparent',
+        },
+        {
+            label: 'Clients',
+            href: '#clients',
+            className: 'md:px-0 md:hover:bg-transparent',
         },
         {
             label: 'Contact Us',
             href: '#contact-us',
+            className: 'md:px-0 md:hover:bg-transparent',
+        },
+        {
+            label: 'Login',
+            href: route('auth.show-login-form'),
+            className: 'bg-blue-600 text-white px-4 py-2 rounded-md',
         },
     ]
 
@@ -48,7 +63,7 @@ export default function Navbar({ appName }) {
                     <div className="flex space-x-3 md:order-2 md:space-x-0">
                         <button
                             type="button"
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none md:hidden"
+                            className="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-300 focus:ring-2 focus:ring-gray-200 focus:outline-none md:hidden"
                             onClick={toggleMobileSidebar}
                         >
                             {!isMobileOpen ? (
@@ -67,7 +82,10 @@ export default function Navbar({ appName }) {
                             <li key={item.label}>
                                 <Link
                                     href={item.href}
-                                    className="block rounded-sm px-3 py-2 text-slate-900 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"
+                                    className={twMerge(
+                                        'block rounded-sm px-3 py-2 text-slate-900 hover:bg-gray-100 md:hover:text-blue-700',
+                                        item.className
+                                    )}
                                 >
                                     {item.label}
                                 </Link>

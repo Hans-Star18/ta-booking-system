@@ -7,7 +7,7 @@ import Input from '@/components/form/input'
 import { Textarea } from '@/components/form/textarea'
 import Button from '@/components/form/button'
 
-export default function Home() {
+export default function Home({ clients }) {
     const { appName } = usePage().props
 
     return (
@@ -80,6 +80,30 @@ export default function Home() {
             >
                 <FeaturesList />
             </div>
+
+            <div
+                id="clients"
+                className="container flex justify-center bg-gray-100 px-6 py-20 md:px-24"
+            >
+                <div className="overflow-hidden rounded-md bg-gray-100 py-4">
+                    <h2 className="mb-4 text-center text-2xl font-bold text-slate-800">
+                        Clients
+                    </h2>
+                    <div className="animate-marquee flex space-x-8">
+                        {[...clients].map((client, index) => (
+                            <a
+                                key={`${client.name}-${index}`}
+                                href={client.url}
+                                target="_blank"
+                                className="flex-shrink-0 cursor-pointer text-lg font-medium whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-blue-600"
+                            >
+                                {client.name}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
             <div
                 id="contact-us"
                 className="container flex justify-center bg-white"

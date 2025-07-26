@@ -44,7 +44,7 @@ class Room extends Model
     public function coverImage(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => Storage::url($value),
+            get: fn ($value) => Storage::url($value),
         );
     }
 

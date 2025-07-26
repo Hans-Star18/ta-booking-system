@@ -33,7 +33,7 @@ class BedController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error add bed: ' . $th->getMessage());
+            logger()->error('Error add bed: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to add bed',
@@ -64,7 +64,7 @@ class BedController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            logger()->error('Error updating bed: ' . $th->getMessage());
+            logger()->error('Error updating bed: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update bed',
@@ -88,7 +88,7 @@ class BedController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            logger()->error('Error deleting bed: ' . $th->getMessage());
+            logger()->error('Error deleting bed: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete bed',

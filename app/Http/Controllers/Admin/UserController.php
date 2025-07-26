@@ -53,7 +53,7 @@ class UserController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error creating user: ' . $th->getMessage());
+            logger()->error('Error creating user: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create user',
@@ -91,7 +91,7 @@ class UserController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating user: ' . $th->getMessage());
+            logger()->error('Error updating user: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update user',
@@ -117,7 +117,7 @@ class UserController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error deleting user: ' . $th->getMessage());
+            logger()->error('Error deleting user: '.$th->getMessage());
             DB::rollBack();
 
             return back()->with('alert', [
@@ -142,7 +142,7 @@ class UserController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error updating password: ' . $th->getMessage());
+            logger()->error('Error updating password: '.$th->getMessage());
             DB::rollBack();
 
             return back()->with('alert', [

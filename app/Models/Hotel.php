@@ -67,4 +67,9 @@ class Hotel extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

@@ -153,7 +153,7 @@ export default function FeaturesList() {
     ]
 
     return (
-        <div className="mx-auto px-6 py-12 md:px-24">
+        <div className="mx-auto px-6 py-20 md:px-24">
             <div className="mb-4 text-center">
                 <h2 className="text-2xl font-bold text-slate-800">
                     Features List
