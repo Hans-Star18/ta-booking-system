@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cursomer\SendInquiryRequest;
+use App\Mail\InquiryMail;
 use App\Models\Hotel;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -20,5 +23,24 @@ class HomeController extends Controller
         return inertia('customers/home', [
             'clients' => $clients,
         ]);
+    }
+
+    public function sendInquiry(SendInquiryRequest $request)
+    {
+        try {
+            Mail::send(new InquiryMail($request->validated()));
+
+            return back()->with('alert', [
+                'type'    => 'success',
+                'message' => 'Inquiry sent successfully',
+            ]);
+        } catch (\Throwable $th) {
+            logger()->error('Error sending inquiry: '.$th->getMessage());
+
+            return back()->with('alert', [
+                'type'    => 'error',
+                'message' => 'Error sending inquiry, please try again later',
+            ]);
+        }
     }
 }

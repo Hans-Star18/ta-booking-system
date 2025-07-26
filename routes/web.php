@@ -59,6 +59,7 @@ Route::group(['as' => 'auth.'], function () {
 
 Route::group(['as' => 'customer.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::post('/send-inquiry', [HomeController::class, 'sendInquiry'])->name('send-inquiry');
     Route::get('/check-promotion', [CheckPromotionCodeController::class, 'check'])->name('promotion-code.check');
     Route::get('/transaction/check', [TransactionController::class, 'check'])->name('transaction.check');
 
