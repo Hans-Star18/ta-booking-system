@@ -216,6 +216,7 @@ export default function TransactionCheck({ reservation = null }) {
                                             reservation.transaction.redirect_url
                                         }
                                         className="w-fit rounded-sm bg-green-500 px-4 py-2 text-sm text-white shadow-xs transition hover:bg-green-600"
+                                        rel="noreferrer"
                                     >
                                         Continue to Payment
                                     </a>

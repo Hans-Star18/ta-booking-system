@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Modal } from 'react-responsive-modal'
 import 'react-responsive-modal/styles.css'
 import Button from '@/components/form/button'
@@ -23,7 +23,6 @@ export default function RoomCard({
     roomPolicies,
 }) {
     const [open, setOpen] = useState(false)
-    const [includedBreakfast, setIncludedBreakfast] = useState(false)
 
     const onOpenModal = () => setOpen(true)
     const onCloseModal = () => setOpen(false)

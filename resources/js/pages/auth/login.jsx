@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react'
+import { useState } from 'react'
 import AuthLayout from '@/layouts/auth-layout'
 import { Head, Link, useForm } from '@inertiajs/react'
 import Label from '@/components/form/label'
@@ -186,8 +186,8 @@ export default function Login() {
                                                 )}
                                                 className="mt-4 block w-full text-center text-sm text-gray-500 hover:text-blue-500"
                                             >
-                                                Don't have an account? request
-                                                demo account
+                                                Don&apos;t have an account?
+                                                request demo account
                                             </Link>
                                         </div>
                                     </div>

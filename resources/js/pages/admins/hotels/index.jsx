@@ -11,7 +11,7 @@ import {
 import { Head, router, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import DataTable, { defaultThemes } from 'react-data-table-component'
+import DataTable from 'react-data-table-component'
 
 export default function Index({ hotels }) {
     const { delete: destroy, processing, errors } = useForm({})

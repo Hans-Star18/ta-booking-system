@@ -10,5 +10,5 @@ export default function PeriodIcon({ className }) {
                 d="M32 416a64 64 0 1 1 128 0A64 64 0 1 1 32 416z"
             />
         </svg>
-    );
+    )
 }

@@ -123,6 +123,7 @@ export default function ReservationFinish({ reservation = null }) {
                                     reservation.reservation_number,
                             })}
                             target="_blank"
+                            rel="noreferrer"
                         >
                             View Transaction Details
                         </a>

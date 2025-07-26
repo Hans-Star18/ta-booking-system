@@ -65,6 +65,7 @@ export default function Index({ hotel }) {
                                 href={formatWebsiteUrl(hotel.website)}
                                 target="_blank"
                                 className="text-lg font-bold underline"
+                                rel="noreferrer"
                             >
                                 {hotel.website}
                             </a>
