@@ -24,7 +24,7 @@ export default function Select({
                 id={id}
                 name={name}
                 placeholder={placeholder}
-                defaultValue={defaultValue}
+                value={defaultValue}
                 onChange={onChange}
                 onClick={() => setIsOpen(!isOpen)}
                 disabled={disabled}
