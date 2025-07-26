@@ -20,7 +20,6 @@ export default function Edit({ user, roles }) {
     })
 
     const {
-        data: dataPassword,
         setData: setDataPassword,
         errors: errorsPassword,
         put: putPassword,

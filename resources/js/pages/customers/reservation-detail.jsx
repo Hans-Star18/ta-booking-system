@@ -19,7 +19,7 @@ export default function ReservationDetail({ reservation, policies }) {
     const hotel = reservation.hotel
     const room = reservation.room
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing } = useForm({
         selectedBeds: [],
         needExtraBeds: [],
         totalExtraBed: [],
@@ -28,7 +28,7 @@ export default function ReservationDetail({ reservation, policies }) {
         totalPrice: 0,
     })
 
-    const [includedBreakfast, setIncludedBreakfast] = useState(false)
+    const [_, setIncludedBreakfast] = useState(false)
     const [roomRates, setRoomRates] = useState([])
     const [roomCount, setRoomCount] = useState(1)
     const [adultGuestOptions, setAdultGuestOptions] = useState([

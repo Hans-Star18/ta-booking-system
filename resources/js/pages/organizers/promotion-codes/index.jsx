@@ -6,10 +6,10 @@ import OrganizerLayout from '@/layouts/organizer-layout'
 import { Head, useForm } from '@inertiajs/react'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import DataTable, { defaultThemes } from 'react-data-table-component'
+import DataTable from 'react-data-table-component'
 
 export default function Index({ promotionCodes }) {
-    const { delete: destroy, processing, errors } = useForm({})
+    const { delete: destroy, processing } = useForm({})
 
     const columns = [
         {

@@ -14,7 +14,7 @@ import ReactApexChart from 'react-apexcharts'
 import PieChartLegend from './components/pie-chart-legend'
 
 export default function Index({ userOverview, hotelOverview, itemCount }) {
-    const [chartData, setChartData] = useState({
+    const [chartData, _] = useState({
         series: [itemCount.beds, itemCount.amenities, itemCount.policies],
         options: {
             chart: {

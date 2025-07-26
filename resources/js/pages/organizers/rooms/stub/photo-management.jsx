@@ -42,12 +42,12 @@ export default function PhotoManagement({ room }) {
                         setUploadProgress(progress)
                     })
 
-                    this.on('success', function (file, response) {
+                    this.on('success', function () {
                         setUploadProgress(0)
                         router.reload({ only: ['room'] })
                     })
 
-                    this.on('error', function (file, errorMessage) {
+                    this.on('error', function () {
                         setUploadProgress(0)
                     })
                 },

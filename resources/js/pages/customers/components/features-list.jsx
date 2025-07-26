@@ -14,8 +14,6 @@ import {
     PencilIcon,
     CheckCircleIcon,
     CurrencyDollarIcon,
-    ServerIcon,
-    WifiIcon,
     UsersIcon,
 } from '@heroicons/react/24/outline'
 

@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react'
+import { useState } from 'react'
 import AuthLayout from '@/layouts/auth-layout'
 import { Head, Link, useForm } from '@inertiajs/react'
 import Label from '@/components/form/label'
@@ -29,7 +29,7 @@ export default function Login() {
                     password: '',
                 })
             },
-            onError: (errors) => {},
+            onError: () => {},
             preserveScroll: true,
         })
     }

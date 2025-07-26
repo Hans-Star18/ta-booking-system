@@ -8,7 +8,7 @@ import Button from '@/components/form/button'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 
 export default function Index({ setting }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { setData, put, processing, errors } = useForm({
         midtrans_client_key: setting.midtrans_client_key,
         midtrans_server_key: setting.midtrans_server_key,
         dp_percentage: setting.dp_percentage,

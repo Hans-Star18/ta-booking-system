@@ -35,7 +35,7 @@ export default function CopyInput({
             setTimeout(() => {
                 setIsCopied(false)
             }, 2000)
-        } catch (err) {
+        } catch {
             alert('Error copying text to clipboard')
         }
     }

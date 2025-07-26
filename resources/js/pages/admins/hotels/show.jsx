@@ -8,7 +8,7 @@ import { useState } from 'react'
 import Anchor from '@/components/form/anchor'
 
 export default function Show({ hotel }) {
-    const [data, setData] = useState({
+    const [data, _] = useState({
         name: hotel.name,
         address: hotel.address,
         phone: hotel.phone,

@@ -9,7 +9,7 @@ import Currency from '@/components/format/currency'
 import { useState } from 'react'
 
 export default function Show({ reservation }) {
-    const [transaction, setTransaction] = useState(reservation?.transaction)
+    const [transaction, _] = useState(reservation?.transaction)
 
     return (
         <>

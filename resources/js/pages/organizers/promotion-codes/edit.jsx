@@ -22,7 +22,7 @@ export default function Edit({ promotionCode }) {
         e.preventDefault()
         put(route('organizer.promotion-codes.update', promotionCode.id), {
             preserveScroll: true,
-            onSuccess: (response) => {
+            onSuccess: () => {
                 router.reload({ only: ['promotionCodes'] })
             },
         })

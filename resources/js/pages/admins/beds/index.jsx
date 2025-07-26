@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
 
 export default function Index({ beds }) {
-    const { delete: destroy, processing, errors } = useForm({})
+    const { delete: destroy, processing } = useForm({})
 
     const columns = [
         {
