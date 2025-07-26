@@ -6,6 +6,25 @@ import { BarsArrowDownIcon, BarsArrowUpIcon } from '@heroicons/react/24/outline'
 export default function Navbar({ appName }) {
     const { isMobileOpen, isMobile, toggleMobileSidebar } = useSidebar()
 
+    const items = [
+        {
+            label: 'Home',
+            href: route('customer.home'),
+        },
+        {
+            label: 'About Us',
+            href: '#about-us',
+        },
+        {
+            label: 'Features List',
+            href: '#features',
+        },
+        {
+            label: 'Contact Us',
+            href: '#contact-us',
+        },
+    ]
+
     useEffect(() => {
         if (isMobileOpen) {
             document.body.style.overflow = 'hidden'
@@ -44,38 +63,16 @@ export default function Navbar({ appName }) {
                     className={`w-full items-center justify-between md:order-1 md:flex md:w-auto ${isMobile ? 'overflow-hidden transition-all duration-300 ease-in-out' : ''} ${isMobile ? (isMobileOpen ? 'flex max-h-96 opacity-100' : 'pointer-events-none hidden max-h-0 opacity-0') : 'flex'}`}
                 >
                     <ul className="mt-4 flex w-full flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 font-medium md:mt-0 md:flex-row md:space-x-16 md:border-0 md:bg-white md:p-0">
-                        <li>
-                            <Link
-                                href={route('customer.home')}
-                                className="block rounded-sm bg-blue-700 px-3 py-2 text-white md:bg-transparent md:p-0 md:text-blue-700"
-                            >
-                                Home
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="#about-us"
-                                className="block rounded-sm px-3 py-2 text-slate-900 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"
-                            >
-                                About Us
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="#features"
-                                className="block rounded-sm px-3 py-2 text-slate-900 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"
-                            >
-                                Features List
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="#contact-us"
-                                className="block rounded-sm px-3 py-2 text-slate-900 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"
-                            >
-                                Contact Us
-                            </Link>
-                        </li>
+                        {items.map((item) => (
+                            <li key={item.label}>
+                                <Link
+                                    href={item.href}
+                                    className="block rounded-sm px-3 py-2 text-slate-900 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"
+                                >
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>

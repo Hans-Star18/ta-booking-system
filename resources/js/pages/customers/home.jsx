@@ -84,7 +84,7 @@ export default function Home() {
                 id="contact-us"
                 className="container flex justify-center bg-white"
             >
-                <div className="w-full max-w-2xl py-12">
+                <div className="w-full max-w-2xl px-6 py-12 md:px-24">
                     <h2 className="mb-4 text-2xl font-bold text-slate-800">
                         Contact Us
                     </h2>
