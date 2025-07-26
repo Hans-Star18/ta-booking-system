@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Customer\CheckPromotionCodeController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\ReservationController;
@@ -55,6 +56,9 @@ Route::group(['middleware' => ['auth']], function () {
 Route::group(['as' => 'auth.'], function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('show-login-form')->middleware('guest');
     Route::post('/login', [LoginController::class, 'login'])->name('login');
+
+    Route::get('/request-demo-account', [RegisterController::class, 'requestDemoAccount'])->name('request-demo-account');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register');
 });
 
 Route::group(['as' => 'customer.'], function () {
