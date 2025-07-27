@@ -21,7 +21,7 @@ export default function AuthLayout({ children }) {
                     id={alert._id}
                 />
             )}
-            <div className="flex h-screen w-full flex-col justify-center p-6">
+            <div className="flex min-h-screen w-full flex-col justify-center p-6">
                 {children}
             </div>
         </>

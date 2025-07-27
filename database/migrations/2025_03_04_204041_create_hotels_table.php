@@ -16,12 +16,12 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->uuid('uuid')->unique();
             $table->string('name', 100);
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('phone', 20);
-            $table->string('mobile', 20);
-            $table->string('email', 50);
-            $table->string('website', 100);
-            $table->text('term_and_condition');
+            $table->string('mobile', 20)->nullable();
+            $table->string('email', 50)->nullable();
+            $table->string('website', 100)->nullable();
+            $table->text('term_and_condition')->nullable();
             $table->timestamps();
         });
     }

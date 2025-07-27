@@ -18,10 +18,12 @@ class Hotel extends Model
         'term_and_condition',
         'uuid',
         'is_active',
+        'approved_at',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active'   => 'boolean',
+        'approved_at' => 'datetime',
     ];
 
     protected $with = [

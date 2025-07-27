@@ -123,4 +123,8 @@ return [
         'store'  => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'contact' => [
+        'email' => env('CONTACT_ADMIN_MAIL', 'support@link2pay.com'),
+        'phone' => env('CONTACT_ADMIN_PHONE', '628000000000'),
+    ],
 ];

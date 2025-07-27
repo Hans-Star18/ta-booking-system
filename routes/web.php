@@ -20,6 +20,10 @@ use App\Http\Controllers\Organizer\RoomController;
 use App\Http\Controllers\Organizer\SettingController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/testtttt', function () {
+    return view('mails.approval-mail');
+});
+
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['as' => 'organizer.', 'prefix' => 'manage', 'middleware' => 'isOrganizerLogin'], function () {
         Route::get('/', [OrganizerController::class, 'index'])->name('dashboard');

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('hotels', function (Blueprint $table) {
             $table->boolean('is_active')->default(true);
+            $table->timestamp('approved_at')->nullable();
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('hotels', function (Blueprint $table) {
             $table->dropColumn('is_active');
+            $table->dropColumn('approved_at');
         });
     }
 };
