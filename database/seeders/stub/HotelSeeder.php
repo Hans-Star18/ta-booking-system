@@ -24,6 +24,8 @@ class HotelSeeder extends Seeder
                 'email'              => 'info@california.com',
                 'website'            => 'www.california.com',
                 'term_and_condition' => $this->getTermAndConditions(),
+                'is_active'          => true,
+                'approved_at'        => now(),
             ],
         ];
 

@@ -1,13 +1,8 @@
-import { useState } from 'react'
 import AuthLayout from '@/layouts/auth-layout'
 import { Head, Link, useForm } from '@inertiajs/react'
 import Label from '@/components/form/label'
 import Input from '@/components/form/input'
-import {
-    ArrowPathIcon,
-    EyeIcon,
-    EyeSlashIcon,
-} from '@heroicons/react/24/outline'
+import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import Button from '@/components/form/button'
 import ValidationFeedback from '@/components/form/validation-feedback'
 import { Textarea } from '@/components/form/textarea'
