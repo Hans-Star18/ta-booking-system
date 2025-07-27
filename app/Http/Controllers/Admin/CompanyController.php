@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreHotelRequest;
 use App\Http\Requests\Organizer\UpdateHotelRequest;
+use App\Mail\ApprovalMail;
 use App\Models\Hotel;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class CompanyController extends Controller
 {
@@ -43,7 +45,7 @@ class CompanyController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error creating hotel: '.$th->getMessage());
+            logger()->error('Error creating hotel: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create hotel',
@@ -85,9 +87,16 @@ class CompanyController extends Controller
         try {
             $hotel->update($request->validated());
 
+            if ($hotel->is_active && ! $hotel->approved_at) {
+                $user = $hotel->user;
+                Mail::send(new ApprovalMail($user, $hotel));
+                $hotel->approved_at = now();
+                $hotel->save();
+            }
+
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error updating hotel: '.$th->getMessage());
+            logger()->error('Error updating hotel: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update hotel',
@@ -115,7 +124,7 @@ class CompanyController extends Controller
             $hotel->delete();
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error deleting hotel: '.$th->getMessage());
+            logger()->error('Error deleting hotel: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete hotel',
