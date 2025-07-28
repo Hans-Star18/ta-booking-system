@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import Dropdown from '@/components/form/dropdown'
-import { usePage, useForm } from '@inertiajs/react'
+import { usePage, useForm, Link } from '@inertiajs/react'
 import {
     ArrowLeftStartOnRectangleIcon,
     ChevronDownIcon,
+    UserIcon,
 } from '@heroicons/react/24/outline'
 
 export default function UserDropdown() {
@@ -23,7 +24,7 @@ export default function UserDropdown() {
         <div className="relative">
             <button
                 onClick={toggleDropdown}
-                className="dropdown-toggle flex items-center text-gray-700"
+                className="dropdown-toggle flex cursor-pointer items-center text-gray-700"
             >
                 <span className="mr-3 h-11 w-11 overflow-hidden rounded-full">
                     <img src="/image/avatar.jpg" alt="User" />
@@ -53,6 +54,15 @@ export default function UserDropdown() {
                     </span>
                 </div>
 
+                {auth.isOrganizer && (
+                    <Link
+                        href={route('profile')}
+                        className="group text-theme-sm mt-3 flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                    >
+                        <UserIcon className="size-6" />
+                        Profile
+                    </Link>
+                )}
                 <form
                     action={route('logout')}
                     method="POST"

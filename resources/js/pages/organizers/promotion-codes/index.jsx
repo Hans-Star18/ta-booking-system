@@ -64,6 +64,7 @@ export default function Index({ promotionCodes }) {
                     </Button>
                 </div>
             ),
+            width: '180px',
         },
     ]
 

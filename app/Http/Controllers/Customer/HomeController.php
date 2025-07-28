@@ -31,7 +31,7 @@ class HomeController extends Controller
             try {
                 Mail::send(new InquiryMail($request->validated()));
             } catch (\Throwable $th) {
-                logger()->error('Error sending inquiry email: ' . $th->getMessage());
+                logger()->error('Error sending inquiry email: '.$th->getMessage());
             }
 
             return back()->with('alert', [
@@ -39,7 +39,7 @@ class HomeController extends Controller
                 'message' => 'Inquiry sent successfully',
             ]);
         } catch (\Throwable $th) {
-            logger()->error('Error sending inquiry: ' . $th->getMessage());
+            logger()->error('Error sending inquiry: '.$th->getMessage());
 
             return back()->with('alert', [
                 'type'    => 'error',

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Customer\CheckPromotionCodeController;
 use App\Http\Controllers\Customer\HomeController;
@@ -20,11 +21,11 @@ use App\Http\Controllers\Organizer\RoomController;
 use App\Http\Controllers\Organizer\SettingController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/testtttt', function () {
-    return view('mails.approval-mail');
-});
-
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+
     Route::group(['as' => 'organizer.', 'prefix' => 'manage', 'middleware' => 'isOrganizerLogin'], function () {
         Route::get('/', [OrganizerController::class, 'index'])->name('dashboard');
         Route::resource('reservations', OrganizerController::class)->only(['show', 'edit', 'update']);

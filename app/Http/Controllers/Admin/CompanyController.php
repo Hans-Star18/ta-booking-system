@@ -45,7 +45,7 @@ class CompanyController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error creating hotel: ' . $th->getMessage());
+            logger()->error('Error creating hotel: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create hotel',
@@ -92,7 +92,7 @@ class CompanyController extends Controller
                 try {
                     Mail::send(new ApprovalMail($user, $hotel));
                 } catch (\Throwable $th) {
-                    logger()->error('Error sending approval email: ' . $th->getMessage());
+                    logger()->error('Error sending approval email: '.$th->getMessage());
                 }
                 $hotel->approved_at = now();
                 $hotel->save();
@@ -100,7 +100,7 @@ class CompanyController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error updating hotel: ' . $th->getMessage());
+            logger()->error('Error updating hotel: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update hotel',
@@ -128,7 +128,7 @@ class CompanyController extends Controller
             $hotel->delete();
             DB::commit();
         } catch (\Throwable $th) {
-            logger()->error('Error deleting hotel: ' . $th->getMessage());
+            logger()->error('Error deleting hotel: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete hotel',

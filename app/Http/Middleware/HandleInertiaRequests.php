@@ -37,9 +37,10 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => [
-                'user'       => $request->user(),
-                'isLoggedIn' => $request->user() !== null,
-                'hotel'      => $request->user()?->hotel,
+                'user'        => $request->user(),
+                'isLoggedIn'  => $request->user() !== null,
+                'hotel'       => $request->user()?->hotel,
+                'isOrganizer' => $request->user()?->isOrganizer(),
             ],
             'route' => [
                 'currentUrl' => $request->url(),
