@@ -89,7 +89,11 @@ class CompanyController extends Controller
 
             if ($hotel->is_active && ! $hotel->approved_at) {
                 $user = $hotel->user;
-                Mail::send(new ApprovalMail($user, $hotel));
+                try {
+                    Mail::send(new ApprovalMail($user, $hotel));
+                } catch (\Throwable $th) {
+                    logger()->error('Error sending approval email: ' . $th->getMessage());
+                }
                 $hotel->approved_at = now();
                 $hotel->save();
             }

@@ -28,14 +28,18 @@ class HomeController extends Controller
     public function sendInquiry(SendInquiryRequest $request)
     {
         try {
-            Mail::send(new InquiryMail($request->validated()));
+            try {
+                Mail::send(new InquiryMail($request->validated()));
+            } catch (\Throwable $th) {
+                logger()->error('Error sending inquiry email: ' . $th->getMessage());
+            }
 
             return back()->with('alert', [
                 'type'    => 'success',
                 'message' => 'Inquiry sent successfully',
             ]);
         } catch (\Throwable $th) {
-            logger()->error('Error sending inquiry: '.$th->getMessage());
+            logger()->error('Error sending inquiry: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'type'    => 'error',
