@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
                 'isOrganizer' => $request->user()?->isOrganizer(),
             ],
             'route' => [
-                'currentUrl' => $request->url(),
+                'currentUrl' => url()->current(),
             ],
             'flash' => [
                 'success' => $request->session()->get('success'),
