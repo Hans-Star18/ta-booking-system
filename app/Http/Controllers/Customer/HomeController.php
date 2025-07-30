@@ -14,23 +14,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        try {
-            $connection = DB::connection('mysql');
-            $pdo        = $connection->getPdo();
-            dd("Connection successful!\n");
-
-            // Test query
-            $result = DB::select('SELECT VERSION() as version');
-            dd('MySQL Version: ' . $result[0]->version . "\n");
-
-            // Cek SSL status
-            $ssl = DB::select("SHOW STATUS LIKE 'Ssl_cipher'");
-            dd('SSL Cipher: ' . $ssl[0]->Value . "\n");
-        } catch (Exception $e) {
-            dd('Error: ' . $e->getMessage() . "\n");
-            dd('Code: ' . $e->getCode() . "\n");
-        }
-
         $hotels  = Hotel::active()->get();
         $clients = $hotels->map(function ($hotel) {
             return [
