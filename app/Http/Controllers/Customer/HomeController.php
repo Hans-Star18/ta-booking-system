@@ -21,14 +21,14 @@ class HomeController extends Controller
 
             // Test query
             $result = DB::select('SELECT VERSION() as version');
-            dd('MySQL Version: '.$result[0]->version."\n");
+            dd('MySQL Version: ' . $result[0]->version . "\n");
 
             // Cek SSL status
             $ssl = DB::select("SHOW STATUS LIKE 'Ssl_cipher'");
-            dd('SSL Cipher: '.$ssl[0]->Value."\n");
+            dd('SSL Cipher: ' . $ssl[0]->Value . "\n");
         } catch (Exception $e) {
-            dd('Error: '.$e->getMessage()."\n");
-            dd('Code: '.$e->getCode()."\n");
+            dd('Error: ' . $e->getMessage() . "\n");
+            dd('Code: ' . $e->getCode() . "\n");
         }
 
         $hotels  = Hotel::active()->get();
@@ -50,7 +50,7 @@ class HomeController extends Controller
             try {
                 Mail::send(new InquiryMail($request->validated()));
             } catch (\Throwable $th) {
-                logger()->error('Error sending inquiry email: '.$th->getMessage());
+                logger()->error('Error sending inquiry email: ' . $th->getMessage());
             }
 
             return back()->with('alert', [
@@ -58,7 +58,7 @@ class HomeController extends Controller
                 'message' => 'Inquiry sent successfully',
             ]);
         } catch (\Throwable $th) {
-            logger()->error('Error sending inquiry: '.$th->getMessage());
+            logger()->error('Error sending inquiry: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'type'    => 'error',
