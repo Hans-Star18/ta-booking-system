@@ -19,27 +19,7 @@ use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\PromotionCodeController;
 use App\Http\Controllers\Organizer\RoomController;
 use App\Http\Controllers\Organizer\SettingController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    try {
-        $connection = DB::connection('mysql');
-        $pdo = $connection->getPdo();
-        echo "Connection successful!\n";
-
-        // Test query
-        $result = DB::select('SELECT VERSION() as version');
-        echo "MySQL Version: " . $result[0]->version . "\n";
-
-        // Cek SSL status
-        $ssl = DB::select("SHOW STATUS LIKE 'Ssl_cipher'");
-        echo "SSL Cipher: " . $ssl[0]->Value . "\n";
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage() . "\n";
-        echo "Code: " . $e->getCode() . "\n";
-    }
-});
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
