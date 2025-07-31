@@ -65,7 +65,16 @@ jobs:
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
     - name: Deploy files to VPS
-      run: |        
+      run: |
+        # Create backup of current deployment (if user owns the directory)
+        ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
+          if [ -d '/var/www/html/link2pay' ]; then
+            rm -rf /var/www/html/link2pay_backup 2>/dev/null || true
+            cp -r /var/www/html/link2pay /var/www/html/link2pay_backup 2>/dev/null || true
+          fi
+          mkdir -p /var/www/html/link2pay
+        "
+        
         # Deploy using rsync
         rsync -avz --delete \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
