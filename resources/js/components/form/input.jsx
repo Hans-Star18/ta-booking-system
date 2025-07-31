@@ -6,7 +6,6 @@ export default function Input({
     name,
     placeholder = '',
     defaultValue = '',
-    value,
     className = '',
     onChange,
     min,
@@ -15,15 +14,13 @@ export default function Input({
     readOnly = false,
     disabled = false,
 }) {
-    const inputValue = value !== undefined ? value : defaultValue
-
     return (
         <input
             id={id}
             type={type}
             name={name}
             placeholder={placeholder}
-            value={inputValue}
+            defaultValue={defaultValue}
             onChange={onChange}
             min={min}
             max={max}

@@ -25,8 +25,8 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'midtrans_client_key' => ['required', 'string', 'max:255'],
-            'midtrans_server_key' => ['required', 'string', 'max:255'],
+            'midtrans_client_key' => ['nullable', 'string', 'max:255', 'required_with:midtrans_server_key'],
+            'midtrans_server_key' => ['nullable', 'string', 'max:255', 'required_with:midtrans_client_key'],
             'dp_percentage'       => ['required', 'numeric', 'min:0', 'max:100'],
             'tax_percentage'      => ['required', 'numeric', 'min:0', 'max:100'],
             'extra_bed_price'     => ['required', 'numeric', 'min:0'],
