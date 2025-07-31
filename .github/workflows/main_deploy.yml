@@ -1,4 +1,4 @@
-name: Build and deploy Laravel to Production VPS - link2pay
+name: Build and deploy Laravel to Production VPS - link2pay (v2)
 on:
   push:
     branches:
