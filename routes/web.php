@@ -21,8 +21,6 @@ use App\Http\Controllers\Organizer\RoomController;
 use App\Http\Controllers\Organizer\SettingController;
 use Illuminate\Support\Facades\Route;
 
-// 
-
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
