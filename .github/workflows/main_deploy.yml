@@ -32,7 +32,7 @@ jobs:
       run: npm run build
 
     - name: Zip artifact for deployment
-      run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*" ".github/*"
+      run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*" ".github/*" "vite.config.js" "diagram.drawio" "eslint.config.js" "phpunit.xml" "README.md" "prettier.config.js" "pint.json" ".gitignore" ".gitattributes" ".editorconfig"
 
     - name: Upload artifact for deployment
       uses: actions/upload-artifact@v4
