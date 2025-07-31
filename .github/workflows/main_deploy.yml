@@ -43,7 +43,7 @@ jobs:
         run: npm run build
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*"
+        run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*" ".github/*"
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
@@ -66,21 +66,68 @@ jobs:
       - name: Unzip artifact
         run: unzip -o release.zip
 
-      - name: Deploy via SSH to VPS
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SOURCE: "."  # folder yang sudah di-unzip
-          REMOTE_HOST: ${{ secrets.VPS_HOST }}
-          REMOTE_USER: ${{ secrets.VPS_USER }}
-          TARGET: "/var/www/html/link2pay"
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Run Laravel Artisan commands on VPS
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+      - name: Test SSH Connection
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "echo 'SSH connection successful'"
+
+      - name: Deploy files to VPS
+        run: |
+          # Create backup of current deployment
+          ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
+            if [ -d '/var/www/html/link2pay' ]; then
+              sudo rm -rf /var/www/html/link2pay_backup
+              sudo cp -r /var/www/html/link2pay /var/www/html/link2pay_backup
+            fi
+            sudo mkdir -p /var/www/html/link2pay
+          "
+          
+          # Deploy using rsync
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='storage/logs' \
+            --exclude='.env' \
+            ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/link2pay/
+
+      - name: Run Laravel setup commands on VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
             cd /var/www/html/link2pay
+            
+            # Set proper ownership and permissions
+            sudo chown -R www-data:www-data /var/www/html/link2pay
+            sudo chmod -R 755 /var/www/html/link2pay
+            sudo chmod -R 775 /var/www/html/link2pay/storage
+            sudo chmod -R 775 /var/www/html/link2pay/bootstrap/cache
+            
+            # Create .env from .env.example if not exists
+            if [ ! -f '.env' ]; then
+              sudo cp .env.example .env
+              sudo chown www-data:www-data .env
+            fi
+            
+            # Run Laravel commands
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
             php artisan optimize
+            
+            # Restart services if needed
+            sudo systemctl reload nginx
+            sudo systemctl reload php8.2-fpm
+          "
+
+      - name: Cleanup SSH key
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
