@@ -57,21 +57,54 @@ jobs:
     - name: Unzip artifact
       run: unzip -o release.zip
 
-    - name: Synchronize Files To Server
-      uses: easingthemes/ssh-deploy@v2.1.5
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SOURCE: "."
-        REMOTE_HOST: ${{ secrets.VPS_HOST }}
-        REMOTE_USER: ${{ secrets.VPS_USER }}
-        TARGET: "/var/www/html/link2pay"
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Run Remote/Artisan Commands
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
+    - name: Deploy files to VPS
+      run: |
+        # Create backup of current deployment (if user owns the directory)
+        ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
+          if [ -d '/var/www/html/link2pay' ]; then
+            rm -rf /var/www/html/link2pay_backup 2>/dev/null || true
+            cp -r /var/www/html/link2pay /var/www/html/link2pay_backup 2>/dev/null || true
+          fi
+          mkdir -p /var/www/html/link2pay
+        "
+        
+        # Deploy using rsync
+        rsync -avz --delete \
+          -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+          --exclude='.git' \
+          --exclude='.github' \
+          --exclude='node_modules' \
+          --exclude='tests' \
+          --exclude='storage/logs' \
+          --exclude='.env' \
+          ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/link2pay/
+
+    - name: Run Laravel setup commands on VPS
+      run: |
+        ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
           cd /var/www/html/link2pay
+          
+          # Create .env from .env.example if not exists
+          if [ ! -f '.env' ]; then
+            cp .env.example .env 2>/dev/null || true
+          fi
+          
+          # Run Laravel commands (without sudo)
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
           php artisan optimize
+        "
+
+    - name: Cleanup SSH key & zip file
+      if: always()
+      run: |
+        rm -f release.zip
+        rm -f ~/.ssh/deploy_key
