@@ -1,51 +1,86 @@
-name: Deploy Laravel Application to Production Vps Server - link2pay
+name: Build and deploy Laravel to Production VPS - link2pay
+
 on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 8.2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
 
-    - name: Install Composer Dependencies
-      run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
+      - name: Check if composer.json exists
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: 'composer.json'
 
-    - name: Install Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Install Composer Dependencies if exists
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
 
-    - name: Install NPM Dependencies
-      run: npm install
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-    - name: Build NPM Assets
-      run: npm run build
+      - name: Install NPM Dependencies
+        run: npm install
 
-    - name: Synchronize Files To Server
-      uses: easingthemes/ssh-deploy@v2.1.5
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SOURCE: "."
-        REMOTE_HOST: ${{ secrets.VPS_HOST }}
-        REMOTE_USER: ${{ secrets.VPS_USER }}
-        TARGET: "/var/www/html/link2pay"
+      - name: Build Frontend Assets
+        run: npm run build
 
-    - name: Run Remote/Artisan Commands
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd /var/www/html/link2pay
-          php artisan optimize
+      - name: Zip artifact for deployment
+        run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*"
+
+      - name: Upload artifact for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: laravel-app
+          path: release.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: laravel-app
+
+      - name: Unzip artifact
+        run: unzip -o release.zip
+
+      - name: Deploy via SSH to VPS
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SOURCE: "."  # folder yang sudah di-unzip
+          REMOTE_HOST: ${{ secrets.VPS_HOST }}
+          REMOTE_USER: ${{ secrets.VPS_USER }}
+          TARGET: "/var/www/html/link2pay"
+
+      - name: Run Laravel Artisan commands on VPS
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/html/link2pay
+            php artisan optimize
