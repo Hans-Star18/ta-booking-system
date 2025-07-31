@@ -79,13 +79,13 @@ jobs:
 
       - name: Deploy files to VPS
         run: |
-          # Create backup of current deployment
+          # Create backup of current deployment (if user owns the directory)
           ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
             if [ -d '/var/www/html/link2pay' ]; then
-              sudo rm -rf /var/www/html/link2pay_backup
-              sudo cp -r /var/www/html/link2pay /var/www/html/link2pay_backup
+              rm -rf /var/www/html/link2pay_backup 2>/dev/null || true
+              cp -r /var/www/html/link2pay /var/www/html/link2pay_backup 2>/dev/null || true
             fi
-            sudo mkdir -p /var/www/html/link2pay
+            mkdir -p /var/www/html/link2pay
           "
           
           # Deploy using rsync
@@ -104,27 +104,16 @@ jobs:
           ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
             cd /var/www/html/link2pay
             
-            # Set proper ownership and permissions
-            sudo chown -R www-data:www-data /var/www/html/link2pay
-            sudo chmod -R 755 /var/www/html/link2pay
-            sudo chmod -R 775 /var/www/html/link2pay/storage
-            sudo chmod -R 775 /var/www/html/link2pay/bootstrap/cache
-            
             # Create .env from .env.example if not exists
             if [ ! -f '.env' ]; then
-              sudo cp .env.example .env
-              sudo chown www-data:www-data .env
+              cp .env.example .env 2>/dev/null || true
             fi
             
-            # Run Laravel commands
+            # Run Laravel commands (without sudo)
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
             php artisan optimize
-            
-            # Restart services if needed
-            sudo systemctl reload nginx
-            sudo systemctl reload php8.2-fpm
           "
 
       - name: Cleanup SSH key
