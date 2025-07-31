@@ -45,10 +45,6 @@ jobs:
     needs: build
 
     steps:
-    - name: Remove specific folders before deployment
-      run: |
-        rm -rf app bootstrap config lang database resources routes tests vendor
-
     - name: Download artifact from build job
       uses: actions/download-artifact@v4
       with:
@@ -82,7 +78,7 @@ jobs:
           --exclude='.github' \
           --exclude='node_modules' \
           --exclude='tests' \
-          --exclude='storage/logs' \
+          --exclude='storage' \
           --exclude='.env' \
           ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/link2pay/
 
@@ -95,6 +91,9 @@ jobs:
           if [ ! -f '.env' ]; then
             cp .env.example .env 2>/dev/null || true
           fi
+
+          # Delete zip file
+          rm -f release.zip
           
           # Run Laravel commands (without sudo)
           php artisan config:cache
@@ -106,5 +105,4 @@ jobs:
     - name: Cleanup SSH key & zip file
       if: always()
       run: |
-        rm -f release.zip
         rm -f ~/.ssh/deploy_key
