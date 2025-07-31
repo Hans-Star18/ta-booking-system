@@ -30,6 +30,11 @@ jobs:
 
     - name: Build NPM Assets
       run: npm run build
+      env:
+        VITE_APP_URL: ${{ secrets.APP_URL }}
+        VITE_APP_NAME: "Link2Pay"
+        APP_URL: ${{ secrets.APP_URL }}
+        APP_NAME: "Link2Pay"
 
     - name: Zip artifact for deployment
       run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*" ".github/*" "diagram.drawio" "README.md" "prettier.config.js" "pint.json" ".editorconfig"
@@ -60,9 +65,8 @@ jobs:
         chmod 600 ~/.ssh/deploy_key
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Deploy files to VPS
+    - name: Create backup of current deployment
       run: |
-        # Create backup of current deployment (if user owns the directory)
         ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
           if [ -d '/var/www/html/link2pay' ]; then
             rm -rf /var/www/html/link2pay_backup 2>/dev/null || true
@@ -70,8 +74,9 @@ jobs:
           fi
           mkdir -p /var/www/html/link2pay
         "
-        
-        # Deploy using rsync
+
+    - name: Deploy files to VPS (rsync)
+      run: |
         rsync -avz --delete \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
           --exclude='.git' \
@@ -87,19 +92,20 @@ jobs:
         ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
           cd /var/www/html/link2pay
           
-          # Create .env from .env.example if not exists
-          if [ ! -f '.env' ]; then
-            cp .env.example .env 2>/dev/null || true
-          fi
-
           # Delete zip file
           rm -f release.zip
-          
-          # Run Laravel commands (without sudo)
+
+          # Run migrations
+          php artisan migrate --force
+
+          # Run Laravel optimizations
+          php artisan optimize:clear
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
-          php artisan optimize
+
+          # Link storage
+          php artisan storage:link
         "
 
     - name: Cleanup SSH key & zip file
