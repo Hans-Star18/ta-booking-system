@@ -2,7 +2,7 @@ name: Build and deploy Laravel to Production VPS - link2pay
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
