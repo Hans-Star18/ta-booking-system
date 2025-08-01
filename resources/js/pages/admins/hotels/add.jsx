@@ -10,33 +10,33 @@ import { Head, useForm } from '@inertiajs/react'
 import TextEditor from '@/components/form/text-editor'
 
 export default function Add({ hotelOrganizerOptions }) {
-    const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        address: '',
-        phone: '',
-        mobile: '',
-        email: '',
-        website: '',
-        user_id: '',
-        is_active: true,
-        term_and_condition: '',
+    const { data, setData, put, processing, errors } = useForm({
+        name: hotel.name,
+        address: hotel.address,
+        phone: hotel.phone,
+        mobile: hotel.mobile,
+        email: hotel.email,
+        website: hotel.website,
+        user_id: hotel.user_id,
+        is_active: hotel.is_active ? true : false,
+        term_and_condition: hotel.term_and_condition,
     })
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        post(route('admin.companies.store'), {
+        put(route('admin.companies.update', hotel.id), {
             preserveScroll: true,
         })
     }
 
     return (
         <>
-            <Head title="Admin Add Hotel" />
+            <Head title="Admin Hotel Detail" />
 
             <AdminLayout>
                 <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
                     <div className="mb-4 flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">Add Hotel</h1>
+                        <h1 className="text-2xl font-bold">Hotel Detail</h1>
                     </div>
 
                     <form
@@ -152,7 +152,6 @@ export default function Add({ hotelOrganizerOptions }) {
                                 name="user_id"
                                 options={hotelOrganizerOptions}
                                 defaultValue={data.user_id}
-                                placeholder="Select Hotel Organizer"
                                 onChange={(e) =>
                                     setData('user_id', e.target.value)
                                 }
@@ -175,7 +174,10 @@ export default function Add({ hotelOrganizerOptions }) {
                                 ]}
                                 defaultValue={data.is_active}
                                 onChange={(e) =>
-                                    setData('is_active', e.target.value)
+                                    setData(
+                                        'is_active',
+                                        e.target.value === 'true'
+                                    )
                                 }
                                 className={
                                     errors.is_active && 'ring ring-red-500'
@@ -217,7 +219,7 @@ export default function Add({ hotelOrganizerOptions }) {
                                 {processing && (
                                     <ArrowPathIcon className="size-5 animate-spin" />
                                 )}
-                                Add Hotel
+                                Update Hotel
                             </Button>
                         </div>
                     </form>
