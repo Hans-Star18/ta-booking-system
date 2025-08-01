@@ -175,7 +175,10 @@ export default function Add({ hotelOrganizerOptions }) {
                                 ]}
                                 defaultValue={data.is_active}
                                 onChange={(e) =>
-                                    setData('is_active', e.target.value)
+                                    setData(
+                                        'is_active',
+                                        e.target.value === 'true'
+                                    )
                                 }
                                 className={
                                     errors.is_active && 'ring ring-red-500'
