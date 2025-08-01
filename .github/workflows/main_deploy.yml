@@ -77,7 +77,7 @@ jobs:
 
     - name: Deploy files to VPS (rsync)
       run: |
-        rsync -avz --delete \
+        rsync -rlDvz --delete \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
           --exclude='.git' \
           --exclude='.github' \
