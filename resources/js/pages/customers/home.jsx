@@ -9,6 +9,7 @@ import Button from '@/components/form/button'
 import ValidationFeedback from '@/components/form/validation-feedback'
 import LoadAlert from '@/components/alert/load-alert'
 import Toast from '@/components/alert/toast'
+import { BuildingOfficeIcon } from '@heroicons/react/24/outline'
 
 export default function Home({ clients }) {
     const { appName } = usePage().props
@@ -91,25 +92,29 @@ export default function Home({ clients }) {
                     <FeaturesList />
                 </div>
 
-                <div
-                    id="clients"
-                    className="flex justify-center bg-gray-100 px-6 py-20 md:px-24"
-                >
+                <div id="clients" className="bg-gray-100 px-2 py-20 md:px-24">
                     <div className="overflow-hidden rounded-md bg-gray-100 py-4">
                         <h2 className="mb-4 text-center text-2xl font-bold text-slate-800">
                             Clients
                         </h2>
-                        <div className="animate-marquee flex w-md space-x-8">
-                            {[...clients].map((client, index) => (
-                                <a
-                                    key={`${client.name}-${index}`}
-                                    href={client.url}
-                                    target="_blank"
-                                    className="flex-shrink-0 cursor-pointer text-lg font-medium whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-blue-600"
-                                >
-                                    {client.name}
-                                </a>
-                            ))}
+                        <div className="px-6">
+                            <div className="flex flex-wrap justify-around gap-4 md:gap-8">
+                                {[...clients].map((client, index) => (
+                                    <a
+                                        key={`${client.name}-${index}`}
+                                        href={client.url}
+                                        target="_blank"
+                                        className="group flex-grow-0 basis-1/2 transition-all duration-300 hover:scale-105 md:basis-1/4"
+                                    >
+                                        <div className="flex items-center gap-2 rounded-md border border-gray-200 p-2 shadow-sm group-hover:shadow-md">
+                                            <BuildingOfficeIcon className="h-6 w-6 text-gray-600" />
+                                            <span className="text-sm text-gray-500">
+                                                {client.name}
+                                            </span>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
