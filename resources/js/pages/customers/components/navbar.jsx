@@ -34,8 +34,8 @@ export default function Navbar({ appName }) {
             className: 'md:px-0 md:hover:bg-transparent',
         },
         {
-            label: 'Login',
-            href: route('auth.show-login-form'),
+            label: 'Register/ Demo',
+            href: route('auth.request-demo-account'),
             className: 'bg-blue-600 text-white px-4 py-2 rounded-md',
         },
     ]
