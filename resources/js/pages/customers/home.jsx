@@ -46,10 +46,7 @@ export default function Home({ clients }) {
                         </h1>
                     </div>
                 </div>
-                <div
-                    id="about-us"
-                    className="container flex justify-center bg-white"
-                >
+                <div id="about-us" className="flex justify-center bg-white">
                     <div className="grid grid-cols-1 items-stretch gap-4 px-6 py-12 md:grid-cols-2 md:px-24">
                         <div className="flex flex-col justify-center text-gray-600">
                             <h2 className="mb-4 text-2xl font-bold text-slate-800">
@@ -90,22 +87,19 @@ export default function Home({ clients }) {
                         </div>
                     </div>
                 </div>
-                <div
-                    id="features"
-                    className="container flex justify-center bg-white"
-                >
+                <div id="features" className="flex justify-center bg-white">
                     <FeaturesList />
                 </div>
 
                 <div
                     id="clients"
-                    className="container flex justify-center bg-gray-100 px-6 py-20 md:px-24"
+                    className="flex justify-center bg-gray-100 px-6 py-20 md:px-24"
                 >
                     <div className="overflow-hidden rounded-md bg-gray-100 py-4">
                         <h2 className="mb-4 text-center text-2xl font-bold text-slate-800">
                             Clients
                         </h2>
-                        <div className="animate-marquee flex space-x-8">
+                        <div className="animate-marquee flex w-md space-x-8">
                             {[...clients].map((client, index) => (
                                 <a
                                     key={`${client.name}-${index}`}
@@ -120,10 +114,7 @@ export default function Home({ clients }) {
                     </div>
                 </div>
 
-                <div
-                    id="contact-us"
-                    className="container flex justify-center bg-white"
-                >
+                <div id="contact-us" className="flex justify-center bg-white">
                     <div className="w-full max-w-2xl px-6 py-12 md:px-24">
                         <h2 className="mb-4 text-2xl font-bold text-slate-800">
                             Contact Us
