@@ -98,12 +98,7 @@ export default function Edit({ promotionCode }) {
                                 <Flatpickr
                                     value={data.valid_until}
                                     onChange={(selectedDates) => {
-                                        setData(
-                                            'valid_until',
-                                            selectedDates[0]
-                                                .toISOString()
-                                                .split('T')[0]
-                                        )
+                                        setData('valid_until', selectedDates[0])
                                     }}
                                     options={{
                                         disableMobile: 'true',
