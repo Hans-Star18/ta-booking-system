@@ -30,7 +30,14 @@ class StoreHotelRequest extends FormRequest
             'website'            => ['required', 'string', 'max:100'],
             'term_and_condition' => ['required', 'string'],
             'is_active'          => ['required', 'boolean'],
-            'user_id'            => ['required', 'exists:users,id'],
+            'user_id'            => ['required', 'exists:users,id', 'unique:hotels,user_id'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'user_id.unique' => 'The user has already been assigned to a hotel.',
         ];
     }
 }
