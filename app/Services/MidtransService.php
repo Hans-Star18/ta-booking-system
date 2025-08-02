@@ -78,9 +78,9 @@ class MidtransService
 
             return Snap::createTransaction($params);
         } catch (Exception $e) {
-            logger()->error('Failed to generate snap token: ' . $e->getMessage());
+            logger()->error('Failed to generate snap token: '.$e->getMessage());
 
-            throw new Exception('Failed to generate snap token: ' . $e->getMessage());
+            throw new Exception('Failed to generate snap token: '.$e->getMessage());
         }
     }
 
@@ -90,7 +90,10 @@ class MidtransService
             $reservation = Reservation::where('reservation_number', $requestPost->order_id)->firstOrFail();
             $serverKey   = $reservation->hotel?->setting?->midtrans_server_key;
 
-            $request = new Notification();
+            $serverKey ??= config('midtrans.serverKey');
+            Config::$serverKey    = $serverKey;
+
+            $request = new Notification;
 
             $reservationNumber = $request->order_id;
             $statusCode        = $request->status_code;
@@ -98,7 +101,7 @@ class MidtransService
             $signatureKey      = $request->signature_key;
 
             if (! $this->isValidSignature($reservationNumber, $statusCode, $grossAmount, $signatureKey, $serverKey)) {
-                logger()->error('Invalid signature for reservation number: ' . $reservationNumber);
+                logger()->error('Invalid signature for reservation number: '.$reservationNumber);
                 throw new Exception('Invalid signature');
             }
 
@@ -117,7 +120,7 @@ class MidtransService
                 ]);
             }
         } catch (ModelNotFoundException $e) {
-            logger()->error('Reservation not found for number: ' . $reservationNumber);
+            logger()->error('Reservation not found for number: '.$reservationNumber);
 
             return response()->json(
                 [
@@ -127,7 +130,7 @@ class MidtransService
                 Response::HTTP_NOT_FOUND
             );
         } catch (\Throwable $th) {
-            logger()->error('Error handling Midtrans notification: ' . $th->getMessage());
+            logger()->error('Error handling Midtrans notification: '.$th->getMessage());
 
             return response()->json(
                 [
@@ -154,7 +157,7 @@ class MidtransService
         string $signatureKey,
         string $serverKey
     ) {
-        $stringToHash = $reservationNumber . $statusCode . $grossAmount . $serverKey;
+        $stringToHash = $reservationNumber.$statusCode.$grossAmount.$serverKey;
 
         $calculatedSignature = hash('sha512', $stringToHash);
 
