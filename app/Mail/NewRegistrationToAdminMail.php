@@ -28,7 +28,7 @@ class NewRegistrationToAdminMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: env('MAIL_FROM_ADDRESS', 'no-reply@link2pay.com'),
+            from: env('MAIL_FROM_ADDRESS'),
             subject: 'New Registration Mail',
             to: [
                 'agussuardiasa1231@gmail.com',
