@@ -1,7 +1,7 @@
 import LoadAlert from '@/components/alert/load-alert'
 import Toast from '@/components/alert/toast'
 import Button from '@/components/form/button'
-import CustomerHeader from '@/components/header/customer-header'
+// import CustomerHeader from '@/components/header/customer-header'
 import Stepper from '@/components/stepper'
 import {
     DevicePhoneMobileIcon,
