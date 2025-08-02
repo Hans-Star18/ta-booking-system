@@ -28,7 +28,7 @@ class NewRegistrationToCustMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: env('MAIL_FROM_ADDRESS', 'no-reply@link2pay.com'),
+            from: env('MAIL_FROM_ADDRESS'),
             subject: 'Registration Mail',
             to: [
                 $this->user['email'],

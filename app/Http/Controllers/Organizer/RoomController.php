@@ -67,8 +67,9 @@ class RoomController extends Controller
 
             $room = Room::create($validated);
 
-            $room->amenities()->attach($request->amenities);
-            $room->beds()->attach($request->beds);
+            $room->amenities()->attach($request->amenity_config);
+            $room->beds()->attach($request->bed_config);
+            $room->policies()->attach($request->policy_config);
 
             DB::commit();
         } catch (\Throwable $th) {
