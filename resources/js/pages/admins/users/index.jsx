@@ -84,16 +84,20 @@ export default function Index({ users }) {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        setData(
-            users.map((user) => ({
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role.name,
-                hotel: user.hotel,
-                created_at: moment(user.created_at).format('DD MMM YYYY'),
-            }))
-        )
+        if (users && Array.isArray(users)) {
+            setData(
+                users.map((user) => ({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role.name,
+                    hotel: user.hotel,
+                    created_at: moment(user.created_at).format('DD MMM YYYY'),
+                }))
+            )
+        } else {
+            setData([])
+        }
     }, [users])
 
     const renderRole = (role) => {
@@ -160,6 +164,7 @@ export default function Index({ users }) {
                             highlightOnHover
                             pointerOnHover
                             pagination
+                            noDataComponent="No users found."
                         />
                     </div>
                 </div>

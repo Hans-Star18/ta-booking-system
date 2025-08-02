@@ -57,13 +57,17 @@ export default function Index({ policies }) {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        setData(
-            policies.map((policy) => ({
-                id: policy.id,
-                name: policy.name,
-                created_at: moment(policy.created_at).format('DD MMM YYYY'),
-            }))
-        )
+        if (policies && Array.isArray(policies)) {
+            setData(
+                policies.map((policy) => ({
+                    id: policy.id,
+                    name: policy.name,
+                    created_at: moment(policy.created_at).format('DD MMM YYYY'),
+                }))
+            )
+        } else {
+            setData([])
+        }
     }, [policies])
 
     const handleDelete = (policyId) => {
@@ -106,6 +110,7 @@ export default function Index({ policies }) {
                             highlightOnHover
                             pointerOnHover
                             pagination
+                            noDataComponent="No policies found."
                         />
                     </div>
                 </div>
