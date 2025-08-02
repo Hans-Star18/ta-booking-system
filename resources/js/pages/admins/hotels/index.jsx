@@ -83,18 +83,22 @@ export default function Index({ hotels }) {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        setData(
-            hotels.map((hotel) => ({
-                id: hotel.id,
-                uuid: hotel.uuid,
-                name: hotel.name,
-                mobile: hotel.mobile,
-                email: hotel.email,
-                website: hotel.website,
-                is_active: hotel.is_active,
-                created_at: moment(hotel.created_at).format('DD MMM YYYY'),
-            }))
-        )
+        if (hotels && Array.isArray(hotels)) {
+            setData(
+                hotels.map((hotel) => ({
+                    id: hotel.id,
+                    uuid: hotel.uuid,
+                    name: hotel.name,
+                    mobile: hotel.mobile,
+                    email: hotel.email,
+                    website: hotel.website,
+                    is_active: hotel.is_active,
+                    created_at: moment(hotel.created_at).format('DD MMM YYYY'),
+                }))
+            )
+        } else {
+            setData([])
+        }
     }, [hotels])
 
     const isActiveRender = (isActive) => {
@@ -149,6 +153,7 @@ export default function Index({ hotels }) {
                             highlightOnHover
                             pointerOnHover
                             pagination
+                            noDataComponent="No hotels found."
                         />
                     </div>
                 </div>

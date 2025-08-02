@@ -71,17 +71,21 @@ export default function Index({ promotionCodes }) {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        setData(
-            promotionCodes.map((promotionCode) => ({
-                id: promotionCode.id,
-                code: promotionCode.code,
-                discount: `${promotionCode.discount}%`,
-                status: handleStatusRender(promotionCode.is_active),
-                valid_until: moment(promotionCode.valid_until).format(
-                    'DD MMM YYYY'
-                ),
-            }))
-        )
+        if (promotionCodes && Array.isArray(promotionCodes)) {
+            setData(
+                promotionCodes.map((promotionCode) => ({
+                    id: promotionCode.id,
+                    code: promotionCode.code,
+                    discount: `${promotionCode.discount}%`,
+                    status: handleStatusRender(promotionCode.is_active),
+                    valid_until: moment(promotionCode.valid_until).format(
+                        'DD MMM YYYY'
+                    ),
+                }))
+            )
+        } else {
+            setData([])
+        }
     }, [promotionCodes])
 
     const handleStatusRender = (status) => {
@@ -136,6 +140,7 @@ export default function Index({ promotionCodes }) {
                             highlightOnHover
                             pointerOnHover
                             pagination
+                            noDataComponent="No promotion codes found."
                         />
                     </div>
                 </div>

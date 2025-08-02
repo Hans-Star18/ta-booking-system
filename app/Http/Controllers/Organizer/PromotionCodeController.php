@@ -10,12 +10,17 @@ use Illuminate\Support\Facades\DB;
 
 class PromotionCodeController extends Controller
 {
+    protected $hotel;
+
+    public function __construct()
+    {
+        $this->hotel = auth()->guard('web')->user()->hotel;
+    }
+
     public function index()
     {
-        $promotionCodes = PromotionCode::all();
-
         return inertia('organizers/promotion-codes/index', [
-            'promotionCodes' => $promotionCodes,
+            'promotionCodes' => $this->hotel->promotionCodes,
         ]);
     }
 
@@ -33,7 +38,7 @@ class PromotionCodeController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error creating promotion code: '.$e->getMessage());
+            logger()->error('Error creating promotion code: ' . $e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create promotion code',
@@ -52,6 +57,13 @@ class PromotionCodeController extends Controller
      */
     public function edit(PromotionCode $promotionCode)
     {
+        if ($promotionCode->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Promotion code not found',
+                'type'    => 'error',
+            ]);
+        }
+
         return inertia('organizers/promotion-codes/edit', [
             'promotionCode' => $promotionCode,
         ]);
@@ -62,6 +74,13 @@ class PromotionCodeController extends Controller
      */
     public function update(UpdatePromotionCodeRequest $request, PromotionCode $promotionCode)
     {
+        if ($promotionCode->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Promotion code not found',
+                'type'    => 'error',
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             $promotionCode->update($request->all());
@@ -69,7 +88,7 @@ class PromotionCodeController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating promotion code: '.$e->getMessage());
+            logger()->error('Error updating promotion code: ' . $e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update promotion code',
@@ -88,6 +107,13 @@ class PromotionCodeController extends Controller
      */
     public function destroy(PromotionCode $promotionCode)
     {
+        if ($promotionCode->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Promotion code not found',
+                'type'    => 'error',
+            ]);
+        }
+
         $promotionCode->delete();
 
         return back()->with('alert', [

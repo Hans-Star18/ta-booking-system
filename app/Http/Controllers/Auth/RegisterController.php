@@ -40,19 +40,24 @@ class RegisterController extends Controller
                 'is_active' => false,
                 'user_id'   => $user->id,
             ]);
+            $hotel->setting()->create([
+                'dp_percentage'       => 50,
+                'tax_percentage'      => 10,
+                'extra_bed_price'     => 60000,
+            ]);
 
             try {
                 Mail::send(new NewRegistrationToAdminMail($user, $hotel, $password));
                 Mail::send(new NewRegistrationToCustMail($user, $hotel, $password));
             } catch (\Throwable $th) {
-                logger()->error('Error sending new registration emails: '.$th->getMessage());
+                logger()->error('Error sending new registration emails: ' . $th->getMessage());
             }
 
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            logger()->error('Error registering demo account: '.$th->getMessage());
+            logger()->error('Error registering demo account: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to register demo account',

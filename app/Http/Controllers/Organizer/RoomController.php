@@ -22,12 +22,17 @@ class RoomController extends Controller
 {
     use WithUploadFile;
 
+    protected $hotel;
+
+    public function __construct()
+    {
+        $this->hotel = auth()->guard('web')->user()->hotel;
+    }
+
     public function index()
     {
-        $rooms = Room::all();
-
         return inertia('organizers/rooms/index', [
-            'rooms' => $rooms,
+            'rooms' => $this->hotel->rooms,
         ]);
     }
 
@@ -68,7 +73,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing room: '.$th->getMessage());
+            logger()->error('Error storing room: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to store room',
@@ -84,6 +89,13 @@ class RoomController extends Controller
 
     public function show(Room $room)
     {
+        if ($room->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Room not found',
+                'type'    => 'error',
+            ]);
+        }
+
         $onReservations = $room->roomReservations()
             ->with(['reservation.transaction'])
             ->whereHas('reservation', function ($query) {
@@ -150,6 +162,13 @@ class RoomController extends Controller
 
     public function edit(Room $room)
     {
+        if ($room->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Room not found',
+                'type'    => 'error',
+            ]);
+        }
+
         $beds      = Bed::all();
         $amenities = Amenity::all();
         $policies  = Policy::all();
@@ -164,6 +183,13 @@ class RoomController extends Controller
 
     public function update(Room $room, UpdateRoomRequest $request)
     {
+        if ($room->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Room not found',
+                'type'    => 'error',
+            ]);
+        }
+
         $validated             = $request->safe()->only(['name', 'max_occupancy', 'description', 'price', 'is_active']);
         $validated['hotel_id'] = $request->user()->hotel->id;
 
@@ -191,7 +217,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating room: '.$th->getMessage());
+            logger()->error('Error updating room: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update room',
@@ -207,6 +233,13 @@ class RoomController extends Controller
 
     public function destroy(Room $room)
     {
+        if ($room->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Room not found',
+                'type'    => 'error',
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             if ($room->roomReservations->isNotEmpty()) {
@@ -222,7 +255,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting room: '.$th->getMessage());
+            logger()->error('Error deleting room: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete room',
@@ -238,6 +271,13 @@ class RoomController extends Controller
 
     public function allotment(Room $room, Request $request)
     {
+        if ($room->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Room not found',
+                'type'    => 'error',
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             $date = Carbon::parse($request->date)->timezone('Asia/Makassar');
@@ -267,7 +307,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating allotment: '.$th->getMessage());
+            logger()->error('Error updating allotment: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update allotment',
@@ -283,6 +323,13 @@ class RoomController extends Controller
 
     public function batchAllotment(Room $room, UpdateBatchAllotmentRequest $request)
     {
+        if ($room->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Room not found',
+                'type'    => 'error',
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             $startDate = Carbon::parse($request->start_date)->timezone('Asia/Makassar');
@@ -318,7 +365,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating batch allotment: '.$th->getMessage());
+            logger()->error('Error updating batch allotment: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update batch allotment',
@@ -341,6 +388,13 @@ class RoomController extends Controller
 
     public function storePhoto(Room $room, Request $request)
     {
+        if ($room->hotel_id !== $this->hotel->id) {
+            return back()->with('alert', [
+                'message' => 'Room not found',
+                'type'    => 'error',
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             $validated = $request->validate([
@@ -362,7 +416,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing photo: '.$th->getMessage());
+            logger()->error('Error storing photo: ' . $th->getMessage());
 
             return response()->json([
                 'message' => 'Failed to store photo',
@@ -386,7 +440,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting photo: '.$th->getMessage());
+            logger()->error('Error deleting photo: ' . $th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete photo',

@@ -57,13 +57,19 @@ export default function Index({ amenities }) {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        setData(
-            amenities.map((amenity) => ({
-                id: amenity.id,
-                name: amenity.name,
-                created_at: moment(amenity.created_at).format('DD MMM YYYY'),
-            }))
-        )
+        if (amenities && Array.isArray(amenities)) {
+            setData(
+                amenities.map((amenity) => ({
+                    id: amenity.id,
+                    name: amenity.name,
+                    created_at: moment(amenity.created_at).format(
+                        'DD MMM YYYY'
+                    ),
+                }))
+            )
+        } else {
+            setData([])
+        }
     }, [amenities])
 
     const handleDelete = (amenityId) => {
@@ -106,6 +112,7 @@ export default function Index({ amenities }) {
                             highlightOnHover
                             pointerOnHover
                             pagination
+                            noDataComponent="No amenities found."
                         />
                     </div>
                 </div>

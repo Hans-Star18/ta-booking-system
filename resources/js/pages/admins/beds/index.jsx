@@ -70,15 +70,19 @@ export default function Index({ beds }) {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        setData(
-            beds.map((bed) => ({
-                id: bed.id,
-                name: bed.name,
-                capacity: bed.capacity,
-                description: bed.description,
-                created_at: moment(bed.created_at).format('DD MMM YYYY'),
-            }))
-        )
+        if (beds && Array.isArray(beds)) {
+            setData(
+                beds.map((bed) => ({
+                    id: bed.id,
+                    name: bed.name,
+                    capacity: bed.capacity,
+                    description: bed.description,
+                    created_at: moment(bed.created_at).format('DD MMM YYYY'),
+                }))
+            )
+        } else {
+            setData([])
+        }
     }, [beds])
 
     const handleDelete = (bedId) => {
@@ -121,6 +125,7 @@ export default function Index({ beds }) {
                             highlightOnHover
                             pointerOnHover
                             pagination
+                            noDataComponent="No beds found."
                         />
                     </div>
                 </div>
