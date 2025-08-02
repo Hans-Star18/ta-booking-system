@@ -11,6 +11,7 @@ import {
     MapPinIcon,
     PhoneIcon,
 } from '@heroicons/react/24/outline'
+import { Link } from '@inertiajs/react'
 import HTMLReactParser from 'html-react-parser'
 import { useState } from 'react'
 import Modal from 'react-responsive-modal'
@@ -37,7 +38,16 @@ export default function CustomerLayout({ children, currenStep = 1, hotel }) {
                         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                             <div className="flex-1">
                                 <h1 className="mb-4 text-3xl font-bold text-gray-900">
-                                    {hotel.name}
+                                    <Link
+                                        href={route(
+                                            'customer.reservation.index',
+                                            {
+                                                hotel: hotel.uuid,
+                                            }
+                                        )}
+                                    >
+                                        {hotel.name}
+                                    </Link>
                                 </h1>
 
                                 <div className="grid grid-cols-1 gap-4 text-sm text-gray-600 md:grid-cols-2">
