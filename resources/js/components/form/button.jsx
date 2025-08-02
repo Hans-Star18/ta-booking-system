@@ -13,6 +13,8 @@ export default function Button({
         secondary: 'bg-gray-500 hover:bg-gray-600 text-white',
         success: 'bg-green-500 hover:bg-green-600 text-white',
         danger: 'bg-red-500 hover:bg-red-600 text-white',
+        outline:
+            'bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-50',
     }
 
     let baseClasses =

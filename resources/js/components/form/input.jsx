@@ -42,6 +42,10 @@ export default function Input({
                         e.preventDefault()
                     }
                 }
+
+                if (e.key === 'Enter') {
+                    e.preventDefault()
+                }
             }}
             className={twMerge(
                 'h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:border-blue-300 focus:ring-3 focus:ring-blue-500/20 focus:outline-none',
