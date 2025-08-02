@@ -3,12 +3,10 @@
 namespace App\Http\Requests\Organizer;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateHotelRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         /** @var \App\Models\User $user */
@@ -26,14 +24,14 @@ class UpdateHotelRequest extends FormRequest
     {
         return [
             'name'               => ['required', 'string', 'max:100'],
-            'address'            => ['required', 'string'],
+            'address'            => [Rule::requiredIf(!$this->user()->isAdmin()), 'string'],
             'phone'              => ['required', 'string', 'max:20'],
-            'mobile'             => ['required', 'string', 'max:20'],
-            'email'              => ['required', 'string', 'email', 'max:50', 'unique:hotels,email,'.$this->hotel->id],
-            'website'            => ['required', 'string', 'max:100'],
-            'term_and_condition' => ['required', 'string'],
+            'mobile'             => [Rule::requiredIf(!$this->user()->isAdmin()), 'string', 'max:20'],
+            'email'              => [Rule::requiredIf(!$this->user()->isAdmin()), 'string', 'email', 'max:50', 'unique:hotels,email,' . $this->hotel->id],
+            'website'            => [Rule::requiredIf(!$this->user()->isAdmin()), 'string', 'max:100'],
+            'term_and_condition' => [Rule::requiredIf(!$this->user()->isAdmin()), 'string'],
             'is_active'          => ['sometimes', 'boolean'],
-            'user_id'            => ['sometimes', 'required', 'exists:users,id', 'unique:hotels,user_id,'.$this->hotel->id],
+            'user_id'            => ['sometimes', 'required', 'exists:users,id', 'unique:hotels,user_id,' . $this->hotel->id],
         ];
     }
 
