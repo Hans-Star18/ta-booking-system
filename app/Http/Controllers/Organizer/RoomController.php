@@ -74,7 +74,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing room: ' . $th->getMessage());
+            logger()->error('Error storing room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to store room',
@@ -218,7 +218,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating room: ' . $th->getMessage());
+            logger()->error('Error updating room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update room',
@@ -256,7 +256,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting room: ' . $th->getMessage());
+            logger()->error('Error deleting room: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete room',
@@ -308,7 +308,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating allotment: ' . $th->getMessage());
+            logger()->error('Error updating allotment: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update allotment',
@@ -366,7 +366,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating batch allotment: ' . $th->getMessage());
+            logger()->error('Error updating batch allotment: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update batch allotment',
@@ -417,7 +417,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing photo: ' . $th->getMessage());
+            logger()->error('Error storing photo: '.$th->getMessage());
 
             return response()->json([
                 'message' => 'Failed to store photo',
@@ -441,7 +441,7 @@ class RoomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting photo: ' . $th->getMessage());
+            logger()->error('Error deleting photo: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete photo',

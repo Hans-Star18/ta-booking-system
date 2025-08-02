@@ -24,14 +24,14 @@ class UpdateHotelRequest extends FormRequest
     {
         return [
             'name'               => ['required', 'string', 'max:100'],
-            'address'            => [Rule::requiredIf(!$this->user()->isAdmin()), 'nullable', 'string'],
+            'address'            => [Rule::requiredIf(! $this->user()->isAdmin()), 'nullable', 'string'],
             'phone'              => ['required', 'string', 'max:20'],
-            'mobile'             => [Rule::requiredIf(!$this->user()->isAdmin()), 'nullable', 'string', 'max:20'],
-            'email'              => [Rule::requiredIf(!$this->user()->isAdmin()), 'nullable', 'string', 'email', 'max:50', 'unique:hotels,email,' . $this->hotel->id],
-            'website'            => [Rule::requiredIf(!$this->user()->isAdmin()), 'nullable', 'string', 'max:100'],
+            'mobile'             => [Rule::requiredIf(! $this->user()->isAdmin()), 'nullable', 'string', 'max:20'],
+            'email'              => [Rule::requiredIf(! $this->user()->isAdmin()), 'nullable', 'string', 'email', 'max:50', 'unique:hotels,email,'.$this->hotel->id],
+            'website'            => [Rule::requiredIf(! $this->user()->isAdmin()), 'nullable', 'string', 'max:100'],
             'term_and_condition' => ['nullable', 'string'],
             'is_active'          => ['sometimes', 'boolean'],
-            'user_id'            => ['sometimes', 'required', 'exists:users,id', 'unique:hotels,user_id,' . $this->hotel->id],
+            'user_id'            => ['sometimes', 'required', 'exists:users,id', 'unique:hotels,user_id,'.$this->hotel->id],
         ];
     }
 

@@ -38,7 +38,7 @@ class PromotionCodeController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error creating promotion code: ' . $e->getMessage());
+            logger()->error('Error creating promotion code: '.$e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to create promotion code',
@@ -88,7 +88,7 @@ class PromotionCodeController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating promotion code: ' . $e->getMessage());
+            logger()->error('Error updating promotion code: '.$e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update promotion code',
