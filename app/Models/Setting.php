@@ -15,6 +15,10 @@ class Setting extends Model
         'extra_bed_price',
     ];
 
+    protected $hidden = [
+        'midtrans_server_key',
+    ];
+
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);
