@@ -14,6 +14,10 @@ class SettingController extends Controller
         $hotel   = auth()->guard('web')->user()->hotel;
         $setting = $hotel->setting;
 
+        $setting->makeVisible([
+            'midtrans_server_key',
+        ]);
+
         return inertia('organizers/settings/index', [
             'hotel'   => $hotel,
             'setting' => $setting,
@@ -22,6 +26,10 @@ class SettingController extends Controller
 
     public function edit(Setting $setting)
     {
+        $setting->makeVisible([
+            'midtrans_server_key',
+        ]);
+
         return inertia('organizers/settings/edit', [
             'setting' => $setting,
         ]);
@@ -29,6 +37,10 @@ class SettingController extends Controller
 
     public function update(UpdateSettingRequest $request, Setting $setting)
     {
+        $setting->makeVisible([
+            'midtrans_server_key',
+        ]);
+
         DB::beginTransaction();
         try {
             $setting->update($request->validated());
@@ -36,7 +48,7 @@ class SettingController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error('Error updating setting: '.$e->getMessage());
+            logger()->error('Error updating setting: ' . $e->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update setting',

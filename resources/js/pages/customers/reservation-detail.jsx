@@ -227,7 +227,7 @@ export default function ReservationDetail({ reservation, policies }) {
                                     </p>
                                     <hr className="mb-2 text-gray-300 md:my-2" />
 
-                                    <div className="md:px-4">
+                                    <div className="flex gap-2 md:px-4">
                                         <PolicyList
                                             policies={policies}
                                             roomPolicies={room.policies}

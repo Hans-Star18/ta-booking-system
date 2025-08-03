@@ -27,9 +27,19 @@ class ReservationController extends Controller
         $this->policies = Policy::all();
     }
 
+    /**
+     * Set midtrans client key in session
+     */
+    private function setMidtransClientKey(Hotel $hotel): void
+    {
+        session()->put('midtrans_client_key', $hotel?->setting?->midtrans_client_key ?? config('midtrans.clientKey'));
+    }
+
     public function index(Hotel $hotel, Request $request)
     {
         $action = $request->get('action', null);
+        $this->setMidtransClientKey($hotel);
+
         if ($action == 'cancel') {
             session()->forget('reservation');
 
@@ -58,6 +68,7 @@ class ReservationController extends Controller
     public function checkAvailability(CheckAvaibilityRequest $request, Hotel $hotel)
     {
         $hasCheckAvailability = false;
+        $this->setMidtransClientKey($hotel);
 
         try {
             if (! $hotel->is_active) {
@@ -81,7 +92,7 @@ class ReservationController extends Controller
             }
         } catch (\Throwable $th) {
             $hasCheckAvailability = false;
-            logger()->error('Error checking availability: '.$th->getMessage());
+            logger()->error('Error checking availability: ' . $th->getMessage());
         }
 
         return inertia('customers/reservation', [
@@ -95,6 +106,8 @@ class ReservationController extends Controller
 
     public function detail(Hotel $hotel, Room $room, Request $request)
     {
+        $this->setMidtransClientKey($hotel);
+
         if (! $hotel->is_active) {
             return to_route('customer.home')->with('alert', [
                 'message' => 'Hotel is not active, please contact the hotel owner',
@@ -142,7 +155,7 @@ class ReservationController extends Controller
             ]);
         }
 
-        session()->put('hotel', $hotel);
+        $this->setMidtransClientKey($hotel);
         $reservation = session()->get('reservation');
         if ($request->method() == 'POST') {
             $reservation['hotel']          = $hotel;
@@ -168,13 +181,16 @@ class ReservationController extends Controller
 
     public function finish(Request $request)
     {
+        $reservation = Reservation::where('reservation_number', $request->get('order_id', null))
+            ->with(['hotel', 'reservationCustomer', 'transaction'])
+            ->firstOrFail();
+
+        $this->setMidtransClientKey($reservation->hotel);
+
         try {
             session()->forget('reservation');
-            $reservation = Reservation::where('reservation_number', $request->get('order_id', null))
-                ->with(['hotel', 'reservationCustomer', 'transaction'])
-                ->firstOrFail();
         } catch (\Throwable $th) {
-            logger()->error('Error finishing reservation: '.$th->getMessage());
+            logger()->error('Error finishing reservation: ' . $th->getMessage());
 
             return to_route('customer.reservation.index', $reservation->hotel->uuid)->with('alert', [
                 'message' => 'Reservation not found please try again',
@@ -221,10 +237,10 @@ class ReservationController extends Controller
             // session()->forget('reservation');
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error storing reservation: '.$th->getMessage());
+            logger()->error('Error storing reservation: ' . $th->getMessage());
 
             return back()->with('alert', [
-                'message' => 'Failed to create reservation: '.$th->getMessage(),
+                'message' => 'Failed to create reservation: ' . $th->getMessage(),
                 'type'    => 'error',
             ]);
         }
@@ -263,10 +279,10 @@ class ReservationController extends Controller
     {
         return [
             [
-                'id'       => 'payment-'.$reservation->reservation_number,
+                'id'       => 'payment-' . $reservation->reservation_number,
                 'price'    => $reservation->transaction->pay_now,
                 'quantity' => 1,
-                'name'     => 'Payment '.$reservation->hotel->setting->dp_percentage.'%',
+                'name'     => 'Payment ' . $reservation->hotel->setting->dp_percentage . '%',
             ],
         ];
     }

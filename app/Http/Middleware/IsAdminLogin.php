@@ -17,6 +17,10 @@ class IsAdminLogin
     public function handle(Request $request, Closure $next): Response
     {
         if (! $request->user()?->isAdmin()) {
+            if ($request->user()?->isOrganizer()) {
+                return to_route('organizer.dashboard');
+            }
+
             if ($request->user()) {
                 Auth::logout();
                 $request->session()->invalidate();
