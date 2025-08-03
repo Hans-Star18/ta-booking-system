@@ -78,9 +78,9 @@ class MidtransService
 
             return Snap::createTransaction($params);
         } catch (Exception $e) {
-            logger()->error('Failed to generate snap token: '.$e->getMessage());
+            logger()->error('Failed to generate snap token: ' . $e->getMessage());
 
-            throw new Exception('Failed to generate snap token: '.$e->getMessage());
+            throw new Exception('Failed to generate snap token: ' . $e->getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ class MidtransService
             $signatureKey      = $request->signature_key;
 
             if (! $this->isValidSignature($reservationNumber, $statusCode, $grossAmount, $signatureKey, $serverKey)) {
-                logger()->error('Invalid signature for reservation number: '.$reservationNumber);
+                logger()->error('Invalid signature for reservation number: ' . $reservationNumber);
                 throw new Exception('Invalid signature');
             }
 
@@ -116,11 +116,11 @@ class MidtransService
 
             if (in_array($request->transaction_status, ['capture', 'settlement', 'success'])) {
                 $reservation->update([
-                    'status' => 'paid',
+                    'status' => Reservation::CONFIRMED,
                 ]);
             }
         } catch (ModelNotFoundException $e) {
-            logger()->error('Reservation not found for number: '.$reservationNumber);
+            logger()->error('Reservation not found for number: ' . $reservationNumber);
 
             return response()->json(
                 [
@@ -130,7 +130,7 @@ class MidtransService
                 Response::HTTP_NOT_FOUND
             );
         } catch (\Throwable $th) {
-            logger()->error('Error handling Midtrans notification: '.$th->getMessage());
+            logger()->error('Error handling Midtrans notification: ' . $th->getMessage());
 
             return response()->json(
                 [
@@ -157,7 +157,7 @@ class MidtransService
         string $signatureKey,
         string $serverKey
     ) {
-        $stringToHash = $reservationNumber.$statusCode.$grossAmount.$serverKey;
+        $stringToHash = $reservationNumber . $statusCode . $grossAmount . $serverKey;
 
         $calculatedSignature = hash('sha512', $stringToHash);
 
