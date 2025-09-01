@@ -17,10 +17,10 @@ class PolicySeeder extends Seeder
                 'name' => 'Refundable',
             ],
             [
-                'name' => 'Smoking',
+                'name' => 'Deposit required',
             ],
             [
-                'name' => 'Pet',
+                'name' => 'Prepaid',
             ],
         ];
 

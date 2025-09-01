@@ -23,6 +23,14 @@ class PromotionCodeSeeder extends Seeder
                 'valid_until' => now()->addDays(30),
                 'is_active'   => true,
             ]);
+
+            PromotionCode::create([
+                'hotel_id'    => 2,
+                'code'        => Str::upper(Str::random(5)),
+                'discount'    => rand(1, 100),
+                'valid_until' => now()->addDays(30),
+                'is_active'   => true,
+            ]);
         }
     }
 }
