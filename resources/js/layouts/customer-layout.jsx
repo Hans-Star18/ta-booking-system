@@ -114,7 +114,7 @@ export default function CustomerLayout({ children, currenStep = 1, hotel }) {
                     Terms & Conditions
                 </h2>
                 <div className="text-sm text-gray-600">
-                    {HTMLReactParser(hotel.terms_and_condition ?? 'N/A')}
+                    {HTMLReactParser(hotel.term_and_condition ?? 'N/A')}
                 </div>
             </Modal>
         </>
