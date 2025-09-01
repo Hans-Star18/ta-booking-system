@@ -37,7 +37,7 @@ jobs:
         APP_NAME: "Link2Pay"
 
     - name: Zip artifact for deployment
-      run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*" ".github/*" "diagram.drawio" "README.md" "prettier.config.js" "pint.json" ".editorconfig"
+      run: zip -r release.zip . -x ".env" ".git/*" "node_modules/*" "tests/*" "storage/logs/*" ".github/*" "diagram.drawio" "README.md" "prettier.config.js" "pint.json" ".editorconfig" "antarmuka/*"
 
     - name: Upload artifact for deployment
       uses: actions/upload-artifact@v4
