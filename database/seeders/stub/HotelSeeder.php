@@ -8,9 +8,6 @@ use Illuminate\Support\Str;
 
 class HotelSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $hotels = [
@@ -23,6 +20,19 @@ class HotelSeeder extends Seeder
                 'mobile'             => '081234567890',
                 'email'              => 'info@california.com',
                 'website'            => 'www.california.com',
+                'term_and_condition' => $this->getTermAndConditions(),
+                'is_active'          => true,
+                'approved_at'        => now(),
+            ],
+            [
+                'user_id'            => 3,
+                'uuid'               => Str::uuid(),
+                'name'               => 'Hotel Montana',
+                'address'            => 'Jl. Jimbaran No. 99, Jimbaran, Bali',
+                'phone'              => '0361-123456',
+                'mobile'             => '081234567890',
+                'email'              => 'info@montana.com',
+                'website'            => 'www.montana.com',
                 'term_and_condition' => $this->getTermAndConditions(),
                 'is_active'          => true,
                 'approved_at'        => now(),

@@ -19,6 +19,12 @@ class SettingSeeder extends Seeder
                 'tax_percentage'  => 10,
                 'extra_bed_price' => 100000,
             ],
+            [
+                'hotel_id'        => 2,
+                'dp_percentage'   => 50,
+                'tax_percentage'  => 10,
+                'extra_bed_price' => 100000,
+            ],
         ];
 
         foreach ($settings as $setting) {
