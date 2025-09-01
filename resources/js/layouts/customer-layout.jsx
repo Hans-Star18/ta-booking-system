@@ -30,8 +30,6 @@ export default function CustomerLayout({ children, currenStep = 1, hotel }) {
                 />
             )}
 
-            {/* <CustomerHeader hotel={hotel} /> */}
-
             <div className="px-6 lg:px-10">
                 <div className="container m-auto pt-10 md:max-w-7xl">
                     <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -114,7 +112,7 @@ export default function CustomerLayout({ children, currenStep = 1, hotel }) {
                     Terms & Conditions
                 </h2>
                 <div className="text-sm text-gray-600">
-                    {HTMLReactParser(hotel.terms_and_conditions ?? 'N/A')}
+                    {HTMLReactParser(hotel.terms_and_condition ?? 'N/A')}
                 </div>
             </Modal>
         </>
