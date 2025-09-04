@@ -19,6 +19,7 @@ use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\PromotionCodeController;
 use App\Http\Controllers\Organizer\RoomController;
 use App\Http\Controllers\Organizer\SettingController;
+use App\Http\Controllers\Organizer\ReservationController as OrganizerReservation;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -28,7 +29,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['as' => 'organizer.', 'prefix' => 'manage', 'middleware' => 'isOrganizerLogin'], function () {
         Route::get('/', [OrganizerController::class, 'index'])->name('dashboard');
-        Route::resource('reservations', OrganizerController::class)->only(['show', 'edit', 'update']);
+        Route::resource('reservations', OrganizerReservation::class)->only(['show', 'edit', 'update', 'index']);
 
         Route::resource('rooms', RoomController::class);
         Route::post('rooms/{room}/allotment', [RoomController::class, 'allotment'])->name('rooms.allotment');
