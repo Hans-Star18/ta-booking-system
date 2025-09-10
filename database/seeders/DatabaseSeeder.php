@@ -7,6 +7,7 @@ use Database\Seeders\stub\BedSeeder;
 use Database\Seeders\stub\HotelSeeder;
 use Database\Seeders\stub\PolicySeeder;
 use Database\Seeders\stub\PromotionCodeSeeder;
+use Database\Seeders\stub\ReservationSeeder;
 use Database\Seeders\stub\RoleSeeder;
 use Database\Seeders\stub\RoomSeeder;
 use Database\Seeders\stub\SettingSeeder;
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             RoomSeeder::class,
             PromotionCodeSeeder::class,
             SettingSeeder::class,
+            ReservationSeeder::class,
         ]);
     }
 }
