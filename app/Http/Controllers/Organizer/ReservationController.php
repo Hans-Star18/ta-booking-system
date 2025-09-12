@@ -9,13 +9,23 @@ use Illuminate\Support\Facades\DB;
 
 class ReservationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $hotel        = auth()->guard('web')->user()->hotel;
+        $reservationStatus = $request->get('reservation_status', null);
+        $transactionStatus = $request->get('transaction_status', null);
         $reservations = $hotel->reservations()
             ->whereHas('transaction')
             ->with(['transaction'])
             ->orderByDesc('created_at')
+            ->when($reservationStatus, function ($query) use ($reservationStatus) {
+                $query->where('status', $reservationStatus);
+            })
+            ->when($transactionStatus, function ($query) use ($transactionStatus) {
+                $query->whereHas('transaction', function ($query) use ($transactionStatus) {
+                    $query->where('payment_status', $transactionStatus);
+                });
+            })
             ->get();
 
         return inertia('organizers/reservations/index', [

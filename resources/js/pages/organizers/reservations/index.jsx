@@ -8,6 +8,7 @@ import Currency from '@/components/format/currency'
 import { formatDateTime } from '@/utils/format'
 import ReservationStatusBadge from '@/components/reservation-status-badge'
 import TransactionStatusBadge from '@/components/transaction-status-badge'
+import { FilterSection } from './components/filter-section'
 
 const columns = [
     {
@@ -51,7 +52,7 @@ const columns = [
     {
         name: 'Actions',
         cell: (row) => (
-            <div className="flex flex-col items-end gap-2 md:flex-row">
+            <div className="flex items-end gap-2">
                 <Anchor
                     variant="primary"
                     href={route('organizer.reservations.show', row.id)}
@@ -95,8 +96,12 @@ export default function Index({ reservations }) {
 
             <OrganizerLayout>
                 <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
-                    <div className="mb-4 flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">Reservation</h1>
+                    <div className="mb-4 items-center justify-between md:flex">
+                        <h1 className="mb-2 text-2xl font-bold md:mb-0">
+                            Reservation
+                        </h1>
+
+                        <FilterSection />
                     </div>
 
                     <div className="max-w-[1200px] overflow-x-auto">
