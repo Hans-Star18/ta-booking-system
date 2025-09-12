@@ -20,7 +20,6 @@ class OrganizerController extends Controller
         $endDate = $this->dateParser($request->get('end_date'));
 
         $reservations = $this->getFilteredReservations($hotel, $period, $startDate, $endDate);
-
         $chartData = $this->generateChartData($reservations, $period, $startDate, $endDate);
 
         return inertia('organizers/dashboard/index', [
@@ -69,10 +68,8 @@ class OrganizerController extends Controller
 
     private function generateChartData($reservations, $period, $startDate = null, $endDate = null)
     {
-        // Generate categories first
         $categories = $this->generateCategories($period, $startDate, $endDate);
 
-        // Group data
         $groupedData = $this->groupDataByPeriod($reservations, $period);
 
         $statuses = ['confirmed', 'pending', 'cancelled'];
@@ -123,7 +120,6 @@ class OrganizerController extends Controller
         foreach ($categories as $category) {
             $count = 0;
 
-            // Convert category back to date key for lookup
             $dateKey = $this->categoryToDateKey($category, $period);
 
             if ($dateKey && isset($groupedData[$dateKey])) {
@@ -156,7 +152,8 @@ class OrganizerController extends Controller
                     return null;
             }
         } catch (\Exception $e) {
-            // Log error if needed
+            logger()->error('Error converting category to date key: ' . $e->getMessage());
+
             return null;
         }
     }
