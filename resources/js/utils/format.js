@@ -16,7 +16,7 @@ export const formatEmailUrl = (email) => {
 
 export const formatDate = (date) => {
     if (!date) return ''
-    return new Date(date).toLocaleDateString('id-ID', {
+    return new Date(date).toLocaleDateString('en-Us', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',

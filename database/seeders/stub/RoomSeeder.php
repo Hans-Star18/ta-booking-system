@@ -141,6 +141,17 @@ class RoomSeeder extends Seeder
                     'policy_id' => $policy->id,
                 ]);
             }
+
+            $startDate = $rm->created_at->copy()->subMonth();
+            $endDate   = $rm->created_at->copy()->addMonth();
+
+            for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+                $rm->allotments()->create([
+                    'room_id'   => $rm->id,
+                    'date'      => $date->format('Y-m-d'),
+                    'allotment' => 10,
+                ]);
+            }
         }
     }
 }

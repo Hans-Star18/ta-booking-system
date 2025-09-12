@@ -25,7 +25,7 @@ export default function Show({ reservation }) {
                         <div className="flex gap-2">
                             <Anchor
                                 variant="secondary"
-                                href={route('organizer.dashboard')}
+                                href={route('organizer.reservations.index')}
                                 className="flex items-center gap-1"
                             >
                                 <ArrowLeftIcon className="size-4" />

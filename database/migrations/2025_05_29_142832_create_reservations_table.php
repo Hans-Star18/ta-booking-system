@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('check_out')->nullable();
             $table->integer('allotment')->default(1);
             $table->integer('total_nights')->default(1);
-            $table->json('reservation_data');
+            $table->json('reservation_data')->nullable();
             $table->timestamps();
         });
     }

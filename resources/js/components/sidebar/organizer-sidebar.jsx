@@ -1,6 +1,7 @@
 import { Link, usePage, useForm } from '@inertiajs/react'
 import {
     ArrowLeftStartOnRectangleIcon,
+    ArrowsRightLeftIcon,
     BuildingLibraryIcon,
     BuildingOfficeIcon,
     Cog8ToothIcon,
@@ -19,7 +20,13 @@ export default function OrganizerSidebar() {
             icon: <Squares2X2Icon className="size-6" />,
             name: 'Dashboard',
             href: route('organizer.dashboard'),
-            routeActive: ['organizer.dashboard', 'organizer.reservations'],
+            routeActive: ['organizer.dashboard'],
+        },
+        {
+            icon: <ArrowsRightLeftIcon className="size-6" />,
+            name: 'Reservation',
+            href: route('organizer.reservations.index'),
+            routeActive: ['organizer.reservations'],
         },
         {
             icon: <BuildingLibraryIcon className="size-6" />,
