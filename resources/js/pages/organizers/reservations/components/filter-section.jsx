@@ -1,5 +1,6 @@
 import Button from '@/components/form/button'
 import Select from '@/components/form/select'
+import ExcelIcon from '@/components/icons/excel-icon'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { router } from '@inertiajs/react'
 import { useState } from 'react'
@@ -74,6 +75,19 @@ export function FilterSection() {
                     <ArrowPathIcon className="size-5" />
                 </Button>
             )}
+            <Button
+                variant="success"
+                className={`px-3 py-2`}
+                onClick={(e) => {
+                    e.preventDefault()
+                    window.open(
+                        route('organizer.reservations.export.excel'),
+                        '_blank'
+                    )
+                }}
+            >
+                <ExcelIcon className="size-5" />
+            </Button>
         </div>
     )
 }

@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['as' => 'organizer.', 'prefix' => 'manage', 'middleware' => 'isOrganizerLogin'], function () {
         Route::get('/', [OrganizerController::class, 'index'])->name('dashboard');
         Route::resource('reservations', OrganizerReservation::class)->only(['show', 'edit', 'update', 'index']);
+        Route::get('reservations/export/excel', [OrganizerReservation::class, 'excelExport'])->name('reservations.export.excel');
 
         Route::resource('rooms', RoomController::class);
         Route::post('rooms/{room}/allotment', [RoomController::class, 'allotment'])->name('rooms.allotment');

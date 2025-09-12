@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Organizer;
 
+use App\Exports\ReservationsExport;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class ReservationController extends Controller
 {
@@ -80,5 +83,13 @@ class ReservationController extends Controller
             'message' => 'Reservation updated successfully',
             'type'    => 'success',
         ]);
+    }
+
+    public function excelExport()
+    {
+        $extension = 'xlsx';
+        $filename = 'reservations' . '-' . Str::random(10) . '.' . $extension;
+
+        return Excel::download(new ReservationsExport, $filename);
     }
 }
