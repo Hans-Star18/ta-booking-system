@@ -37,8 +37,8 @@ class OrganizerController extends Controller
         switch ($period) {
             case 'week':
                 $query->whereBetween('created_at', [
-                    now()->startOfWeek(),
-                    now()->endOfWeek()
+                    now()->startOfWeek()->subDays(7),
+                    now()->startOfWeek()
                 ]);
                 break;
 
@@ -69,9 +69,7 @@ class OrganizerController extends Controller
     private function generateChartData($reservations, $period, $startDate = null, $endDate = null)
     {
         $categories = $this->generateCategories($period, $startDate, $endDate);
-
         $groupedData = $this->groupDataByPeriod($reservations, $period);
-
         $statuses = ['confirmed', 'pending', 'cancelled'];
 
         $series = [];
@@ -116,12 +114,9 @@ class OrganizerController extends Controller
     private function getDataForStatus($groupedData, $status, $period, $categories)
     {
         $data = [];
-
         foreach ($categories as $category) {
             $count = 0;
-
             $dateKey = $this->categoryToDateKey($category, $period);
-
             if ($dateKey && isset($groupedData[$dateKey])) {
                 $count = $groupedData[$dateKey]->where('status', $status)->count();
             }
@@ -161,7 +156,6 @@ class OrganizerController extends Controller
     private function generateCategories($period, $startDate = null, $endDate = null)
     {
         $categories = [];
-
         switch ($period) {
             case 'week':
                 for ($i = 6; $i >= 0; $i--) {
