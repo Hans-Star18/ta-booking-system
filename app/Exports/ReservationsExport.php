@@ -12,15 +12,15 @@ class ReservationsExport implements FromCollection, WithHeadings, WithStyles
 {
     public function collection()
     {
-        $user = auth()->guard('web')->user();
-        $hotel = $user->hotel;
+        $user         = auth()->guard('web')->user();
+        $hotel        = $user->hotel;
         $reservations = $hotel->reservations()->get();
-        $index = 1;
+        $index        = 1;
 
         return $reservations->map(function ($reservation) use (&$index) {
             return collect([
                 $index++,
-                $reservation->reservationCustomer->first_name . ' ' . $reservation->reservationCustomer->last_name,
+                $reservation->reservationCustomer->first_name.' '.$reservation->reservationCustomer->last_name,
                 $reservation->reservationCustomer->email,
                 $reservation->reservation_number,
                 $reservation->status,
@@ -49,7 +49,7 @@ class ReservationsExport implements FromCollection, WithHeadings, WithStyles
             'Discount',
             'Total',
             'Deposit',
-            'Remaining Payment'
+            'Remaining Payment',
         ];
     }
 

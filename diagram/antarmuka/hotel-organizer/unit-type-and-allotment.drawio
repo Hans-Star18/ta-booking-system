@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="ZLZHAy0-JbVVMohAVQLD" name="Page-1">
-        <mxGraphModel dx="1039" dy="543" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="1039" dy="776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -32,19 +32,19 @@
                     <mxGeometry x="76.25" y="100" width="103.75" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="11" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Unit Type &amp;amp; Allotment&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="76.25" y="140" width="103.75" height="30" as="geometry"/>
+                    <mxGeometry x="77.5" y="180" width="103.75" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="12" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Promotion Code&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="75" y="180" width="103.75" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="13" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;General Setting&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="76.25" y="260" width="103.75" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="14" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Hotel Setting&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="76.25" y="220" width="103.75" height="30" as="geometry"/>
                 </mxCell>
+                <mxCell id="13" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;General Setting&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="77.5" y="300" width="103.75" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Hotel Setting&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="77.5" y="260" width="103.75" height="30" as="geometry"/>
+                </mxCell>
                 <mxCell id="15" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Logout&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="75.63" y="300" width="103.75" height="30" as="geometry"/>
+                    <mxGeometry x="76.88" y="340" width="103.75" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="16" value="" style="rounded=1;whiteSpace=wrap;html=1;rotation=0;imageAspect=1;arcSize=5;" parent="1" vertex="1">
                     <mxGeometry x="205" y="100" width="565" height="170" as="geometry"/>
@@ -99,6 +99,9 @@
                 </mxCell>
                 <mxCell id="64" value="&lt;font&gt;Delete&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=7;" parent="1" vertex="1">
                     <mxGeometry x="695" y="229.5" width="40" height="15" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Unit Type &amp;amp; Allotment&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="77.5" y="140" width="103.75" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

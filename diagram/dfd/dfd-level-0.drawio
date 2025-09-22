@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="NsdAzAzA97Gr1-mYg51P" name="Page-1">
-        <mxGraphModel dx="990" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1039" dy="776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -1061,13 +1061,13 @@
                         <mxPoint x="8" y="-1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="223" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;exitX=0.008;exitY=0.593;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="7" target="203">
+                <mxCell id="223" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;exitX=0.008;exitY=0.593;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="7" target="203" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="180" y="890" as="sourcePoint"/>
                         <mxPoint x="350" y="890" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="224" value="Konfirmasi reservasi" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="223">
+                <mxCell id="224" value="Konfirmasi reservasi" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="223" vertex="1" connectable="0">
                     <mxGeometry x="-0.4021" y="1" relative="1" as="geometry">
                         <mxPoint x="-39" y="-1" as="offset"/>
                     </mxGeometry>

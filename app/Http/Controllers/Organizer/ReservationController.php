@@ -7,17 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReservationController extends Controller
 {
     public function index(Request $request)
     {
-        $hotel        = auth()->guard('web')->user()->hotel;
+        $hotel             = auth()->guard('web')->user()->hotel;
         $reservationStatus = $request->get('reservation_status', null);
         $transactionStatus = $request->get('transaction_status', null);
-        $reservations = $hotel->reservations()
+        $reservations      = $hotel->reservations()
             ->whereHas('transaction')
             ->with(['transaction'])
             ->orderByDesc('created_at')
@@ -71,7 +71,7 @@ class ReservationController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating reservation: ' . $th->getMessage());
+            logger()->error('Error updating reservation: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update reservation',
@@ -88,7 +88,7 @@ class ReservationController extends Controller
     public function excelExport()
     {
         $extension = 'xlsx';
-        $filename = 'reservations' . '-' . Str::random(10) . '.' . $extension;
+        $filename  = 'reservations'.'-'.Str::random(10).'.'.$extension;
 
         return Excel::download(new ReservationsExport, $filename);
     }

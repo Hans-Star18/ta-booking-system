@@ -37,7 +37,7 @@ trait ReservationHelper
                 return $isAvailable;
             });
         } catch (\Throwable $th) {
-            logger()->error('Error checking availability: ' . $th->getMessage());
+            logger()->error('Error checking availability: '.$th->getMessage());
 
             return null;
         }
@@ -64,7 +64,7 @@ trait ReservationHelper
 
             return $availableAllotments;
         } catch (\Throwable $th) {
-            logger()->error('Error checking availability: ' . $th->getMessage());
+            logger()->error('Error checking availability: '.$th->getMessage());
 
             return null;
         }
@@ -75,7 +75,7 @@ trait ReservationHelper
         try {
             return Carbon::parse($date)->timezone('Asia/Makassar')->startOfDay();
         } catch (\Throwable $th) {
-            logger()->error('Error parsing date: ' . $th->getMessage());
+            logger()->error('Error parsing date: '.$th->getMessage());
 
             return null;
         }
@@ -92,7 +92,7 @@ trait ReservationHelper
                 $dates->push($date->format('Y-m-d'));
             }
         } catch (\Throwable $th) {
-            logger()->error('Error collecting dates: ' . $th->getMessage());
+            logger()->error('Error collecting dates: '.$th->getMessage());
 
             return collect();
         }

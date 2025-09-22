@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="c55P3ctVK4u0qjwBiOBQ" name="Page-1">
-        <mxGraphModel dx="1039" dy="776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1222" dy="913" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -38,34 +38,34 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="8" value="P.3.1&lt;div&gt;Kelola data&lt;/div&gt;&lt;div&gt;user&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;perimeter=ellipsePerimeter;" parent="1" vertex="1">
-                    <mxGeometry x="375" y="160" width="100" height="100" as="geometry"/>
+                    <mxGeometry x="375" y="240" width="100" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="9" value="P.3.2&lt;div&gt;Kelola data&lt;/div&gt;&lt;div&gt;hotel&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;perimeter=ellipsePerimeter;" parent="1" vertex="1">
-                    <mxGeometry x="375" y="320" width="100" height="100" as="geometry"/>
+                    <mxGeometry x="375" y="360" width="100" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="10" value="P.3.5&lt;div&gt;Kelola data&lt;/div&gt;&lt;div&gt;kebijakan&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;perimeter=ellipsePerimeter;" parent="1" vertex="1">
-                    <mxGeometry x="375" y="800" width="100" height="100" as="geometry"/>
+                    <mxGeometry x="375" y="720" width="100" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="11" value="P.3.3&lt;div&gt;Kelola data&lt;/div&gt;&lt;div&gt;tempat tidur&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;perimeter=ellipsePerimeter;" parent="1" vertex="1">
                     <mxGeometry x="375" y="480" width="100" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="13" value="P.3.4&lt;div&gt;Kelola data&lt;/div&gt;&lt;div&gt;fasilitas&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;perimeter=ellipsePerimeter;" parent="1" vertex="1">
-                    <mxGeometry x="375" y="640" width="100" height="100" as="geometry"/>
+                    <mxGeometry x="375" y="605" width="100" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="Users" style="html=1;dashed=0;whiteSpace=wrap;shape=partialRectangle;right=0;left=0;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="195" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="620" y="277.5" width="100" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="16" value="Policies" style="html=1;dashed=0;whiteSpace=wrap;shape=partialRectangle;right=0;left=0;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="835" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="610" y="752.5" width="100" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="17" value="Amenities" style="html=1;dashed=0;whiteSpace=wrap;shape=partialRectangle;right=0;left=0;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="675" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="610" y="642.5" width="100" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" value="Beds" style="html=1;dashed=0;whiteSpace=wrap;shape=partialRectangle;right=0;left=0;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="515" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="610" y="517.5" width="100" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="19" value="Hotels" style="html=1;dashed=0;whiteSpace=wrap;shape=partialRectangle;right=0;left=0;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="355" width="100" height="30" as="geometry"/>
+                    <mxGeometry x="610" y="397.5" width="100" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="20" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;entryX=0.994;entryY=0.577;entryDx=0;entryDy=0;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryPerimeter=0;" parent="1" source="16" target="10" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -133,12 +133,12 @@
                         <mxPoint x="15" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="26" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" target="57" edge="1">
+                <mxCell id="26" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" target="57" edge="1" source="9">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="375" y="374.0000000000001" as="sourcePoint"/>
                         <mxPoint x="215" y="314" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="215" y="374"/>
+                            <mxPoint x="215" y="410"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -147,12 +147,12 @@
                         <mxPoint x="30" y="1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="28" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;entryX=0.704;entryY=0.995;entryDx=0;entryDy=0;exitX=0.011;exitY=0.401;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" parent="1" target="52" edge="1">
+                <mxCell id="28" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;entryX=0.704;entryY=0.995;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryPerimeter=0;" parent="1" target="52" edge="1" source="10">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="376.1" y="844.1000000000001" as="sourcePoint"/>
                         <mxPoint x="175" y="559" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="170" y="844"/>
+                            <mxPoint x="170" y="770"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -177,7 +177,7 @@
                         <mxPoint x="182" y="556" as="sourcePoint"/>
                         <mxPoint x="52.81000000000006" y="910.6" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="180" y="830"/>
+                            <mxPoint x="180" y="750"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -186,18 +186,18 @@
                         <mxPoint x="15" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="31" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;entryX=0.009;entryY=0.396;entryDx=0;entryDy=0;exitX=0.84;exitY=1.013;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" parent="1" source="57" target="9" edge="1">
+                <mxCell id="31" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;entryX=0.015;entryY=0.308;entryDx=0;entryDy=0;exitX=0.84;exitY=1.013;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" parent="1" source="57" target="9" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="367.19000000000017" y="350.0000000000001" as="sourcePoint"/>
                         <mxPoint x="180.0000000000001" y="350.6" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="224" y="360"/>
+                            <mxPoint x="224" y="390"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="59" value="Update hotel (miliknya)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="31" vertex="1" connectable="0">
                     <mxGeometry x="-0.1254" relative="1" as="geometry">
-                        <mxPoint x="28" as="offset"/>
+                        <mxPoint x="20" as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="32" value="" style="endArrow=classic;html=1;rounded=0;curved=0;jumpStyle=arc;exitX=0.904;exitY=0.006;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.082;entryY=0.766;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="52" target="9" edge="1">
@@ -205,7 +205,7 @@
                         <mxPoint x="277.19000000000017" y="355.0000000000001" as="sourcePoint"/>
                         <mxPoint x="190" y="330" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="190" y="397"/>
+                            <mxPoint x="190" y="437"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -219,7 +219,7 @@
                         <mxPoint x="317.19000000000017" y="770.0000000000001" as="sourcePoint"/>
                         <mxPoint x="130.0000000000001" y="770.6" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="190" y="694"/>
+                            <mxPoint x="190" y="659"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -244,7 +244,7 @@
                         <mxPoint x="283.60000000000014" y="689.5000000000001" as="sourcePoint"/>
                         <mxPoint x="96.41000000000008" y="690.1" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="200" y="680"/>
+                            <mxPoint x="200" y="645"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -258,7 +258,7 @@
                         <mxPoint x="120" y="170" as="sourcePoint"/>
                         <mxPoint x="-39.999999999999886" y="420.6" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="125" y="190"/>
+                            <mxPoint x="125" y="270"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -283,7 +283,7 @@
                         <mxPoint x="397.19000000000017" y="209.7000000000001" as="sourcePoint"/>
                         <mxPoint x="210.0000000000001" y="210.3" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="215" y="210"/>
+                            <mxPoint x="215" y="290"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -297,7 +297,7 @@
                         <mxPoint x="110" y="500" as="sourcePoint"/>
                         <mxPoint x="110" y="130" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="115" y="175"/>
+                            <mxPoint x="115" y="250"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -311,7 +311,7 @@
                         <mxPoint x="375.9" y="223.40000000000003" as="sourcePoint"/>
                         <mxPoint x="229.10000000000002" y="262.65000000000003" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="230" y="223"/>
+                            <mxPoint x="230" y="303"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -325,7 +325,7 @@
                         <mxPoint x="317" y="440" as="sourcePoint"/>
                         <mxPoint x="130.0000000000001" y="410.6" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="200" y="410"/>
+                            <mxPoint x="200" y="450"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -338,7 +338,7 @@
                     <mxGeometry x="100" y="505" width="100" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="57" value="Hotel&lt;div&gt;Organizer&lt;/div&gt;" style="html=1;dashed=0;whiteSpace=wrap;" parent="1" vertex="1">
-                    <mxGeometry x="140" y="260" width="100" height="50" as="geometry"/>
+                    <mxGeometry x="140" y="320" width="100" height="50" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

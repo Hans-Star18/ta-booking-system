@@ -98,12 +98,12 @@ class ReservationSeeder extends Seeder
 
     protected function createReservationNumber()
     {
-        return 'RES-' . Str::upper(Str::random(10)) . '-' . date('Ymd');
+        return 'RES-'.Str::upper(Str::random(10)).'-'.date('Ymd');
     }
 
     protected function createInvoiceNumber()
     {
-        return 'INV-' . strtoupper(uniqid());
+        return 'INV-'.strtoupper(uniqid());
     }
 
     protected function getExtraBed(int $guest, int $bedCapacity)

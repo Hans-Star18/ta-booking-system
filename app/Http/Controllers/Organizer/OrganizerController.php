@@ -15,15 +15,15 @@ class OrganizerController extends Controller
     {
         $hotel = auth()->guard('web')->user()->hotel;
 
-        $period = $request->get('period', 'week');
+        $period    = $request->get('period', 'week');
         $startDate = $this->dateParser($request->get('start_date'));
-        $endDate = $this->dateParser($request->get('end_date'));
+        $endDate   = $this->dateParser($request->get('end_date'));
 
         $reservations = $this->getFilteredReservations($hotel, $period, $startDate, $endDate);
-        $chartData = $this->generateChartData($reservations, $period, $startDate, $endDate);
+        $chartData    = $this->generateChartData($reservations, $period, $startDate, $endDate);
 
         return inertia('organizers/dashboard/index', [
-            'period' => $period,
+            'period'               => $period,
             'chartDataReservation' => $chartData,
         ]);
     }
@@ -38,21 +38,21 @@ class OrganizerController extends Controller
             case 'week':
                 $query->whereBetween('created_at', [
                     now()->startOfWeek()->subDays(7),
-                    now()->startOfWeek()
+                    now()->startOfWeek(),
                 ]);
                 break;
 
             case 'month':
                 $query->whereBetween('created_at', [
                     now()->startOfMonth(),
-                    now()->endOfMonth()
+                    now()->endOfMonth(),
                 ]);
                 break;
 
             case 'year':
                 $query->whereBetween('created_at', [
                     now()->startOfYear(),
-                    now()->endOfYear()
+                    now()->endOfYear(),
                 ]);
                 break;
 
@@ -68,24 +68,24 @@ class OrganizerController extends Controller
 
     private function generateChartData($reservations, $period, $startDate = null, $endDate = null)
     {
-        $categories = $this->generateCategories($period, $startDate, $endDate);
+        $categories  = $this->generateCategories($period, $startDate, $endDate);
         $groupedData = $this->groupDataByPeriod($reservations, $period);
-        $statuses = ['confirmed', 'pending', 'cancelled'];
+        $statuses    = ['confirmed', 'pending', 'cancelled'];
 
         $series = [];
         foreach ($statuses as $status) {
             $series[] = [
                 'name' => ucfirst($status),
-                'data' => $this->getDataForStatus($groupedData, $status, $period, $categories)
+                'data' => $this->getDataForStatus($groupedData, $status, $period, $categories),
             ];
         }
 
         return [
             'series' => $series,
-            'xaxis' => [
-                'type' => 'category',
-                'categories' => $categories
-            ]
+            'xaxis'  => [
+                'type'       => 'category',
+                'categories' => $categories,
+            ],
         ];
     }
 
@@ -95,19 +95,18 @@ class OrganizerController extends Controller
             case 'week':
             case 'month':
             case 'custom':
-                return $reservations->groupBy(function ($item) {
-                    return $item->created_at->format('Y-m-d');
-                });
+                return $reservations->groupBy(fn ($item) =>
+                    $item->created_at->format('Y-m-d')
+                );
 
             case 'year':
-                return $reservations->groupBy(function ($item) {
-                    return $item->created_at->format('Y-m');
-                });
+                return $reservations->groupBy(fn ($item) =>
+                    $item->created_at->format('Y-m')
+                );
 
             default:
-                return $reservations->groupBy(function ($item) {
-                    return $item->created_at->format('Y-m-d');
-                });
+                return $reservations->groupBy(fn ($item) => $item->created_at->format('Y-m-d')
+                );
         }
     }
 
@@ -115,7 +114,7 @@ class OrganizerController extends Controller
     {
         $data = [];
         foreach ($categories as $category) {
-            $count = 0;
+            $count   = 0;
             $dateKey = $this->categoryToDateKey($category, $period);
             if ($dateKey && isset($groupedData[$dateKey])) {
                 $count = $groupedData[$dateKey]->where('status', $status)->count();
@@ -136,18 +135,20 @@ class OrganizerController extends Controller
                 case 'custom':
                     // Convert "06 Sep 25" back to "2025-09-06"
                     $date = Carbon::createFromFormat('d M y', $category);
+
                     return $date->format('Y-m-d');
 
                 case 'year':
                     // Convert "Sep 25" back to "2025-09"
                     $date = Carbon::createFromFormat('M y', $category);
+
                     return $date->format('Y-m');
 
                 default:
                     return null;
             }
         } catch (\Exception $e) {
-            logger()->error('Error converting category to date key: ' . $e->getMessage());
+            logger()->error('Error converting category to date key: '.$e->getMessage());
 
             return null;
         }
@@ -165,7 +166,7 @@ class OrganizerController extends Controller
 
             case 'month':
                 $startOfMonth = now()->startOfMonth();
-                $endOfMonth = now()->endOfMonth();
+                $endOfMonth   = now()->endOfMonth();
 
                 for ($date = $startOfMonth->copy(); $date <= $endOfMonth; $date->addDay()) {
                     $categories[] = $date->format('d M y');

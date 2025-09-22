@@ -52,8 +52,8 @@ export default function AllotmentManagementCalendar({ room, allotments }) {
         setOpenBatchUpdateAllotmentModal(false)
 
     useEffect(() => {
-        const startDate = new Date(new Date().getFullYear() - 3, 0, 1)
-        const endDate = new Date(new Date().getFullYear() + 3, 11, 31)
+        const startDate = new Date(new Date().getFullYear() - 10, 0, 1)
+        const endDate = new Date(new Date().getFullYear() + 10, 11, 31)
 
         const defaultEvents = generateDefaultEvents(startDate, endDate)
         const specificEvents = (allotments || []).map((a) => {

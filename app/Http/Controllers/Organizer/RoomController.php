@@ -353,7 +353,13 @@ class RoomController extends Controller
 
                 $existing = $room->allotments()->where('date', $dateString)->first();
 
-                if ($existing && (blank($allotment) || $allotment == 0)) {
+                if (empty($existing)) {
+                    $room->allotments()->create([
+                        'date'      => $dateString,
+                        'room_id'   => $room->id,
+                        'allotment' => $allotment,
+                    ]);
+                } elseif ($existing && (blank($allotment) || $allotment == 0)) {
                     $existing->delete();
                 } elseif (! blank($allotment) && $allotment > 0) {
                     $room->allotments()->updateOrCreate(

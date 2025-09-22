@@ -52,9 +52,6 @@ class PromotionCodeController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(PromotionCode $promotionCode)
     {
         if ($promotionCode->hotel_id !== $this->hotel->id) {
@@ -69,9 +66,6 @@ class PromotionCodeController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePromotionCodeRequest $request, PromotionCode $promotionCode)
     {
         if ($promotionCode->hotel_id !== $this->hotel->id) {
@@ -102,9 +96,6 @@ class PromotionCodeController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(PromotionCode $promotionCode)
     {
         if ($promotionCode->hotel_id !== $this->hotel->id) {
