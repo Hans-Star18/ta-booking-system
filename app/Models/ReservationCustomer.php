@@ -19,8 +19,17 @@ class ReservationCustomer extends Model
         'request',
     ];
 
+    protected $appends = [
+        'full_name',
+    ];
+
     public function reservation()
     {
         return $this->belongsTo(Reservation::class);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

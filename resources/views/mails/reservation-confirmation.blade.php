@@ -197,7 +197,7 @@
                         <div class="info-row">
                             <span class="info-label">Customer Name</span>
                             <span class="info-colon">:</span>
-                            <span class="info-value">{{ $reservation->reservationCustomer->name }}</span>
+                            <span class="info-value">{{ $reservation->reservationCustomer->fullName }}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Email</span>
@@ -269,8 +269,8 @@
                 </div>
             </div>
 
-            <div style="width: 100%; padding: 20px 10px; display: flex; justify-content: center;">
-                <a href="{{ route('customer.transaction.check', $reservation->reservation_number) }}" style="color: white; text-decoration: none; padding: 10px; background-color: #007bff; border-radius: 5px;">
+            <div style="width: 100%; padding: 0px 10px; display: flex; justify-content: center;">
+                <a href="{{ route('customer.transaction.check', ['reservation_number' => $reservation->reservation_number]) }}" style="color: white; text-decoration: none; padding: 10px; background-color: #007bff; border-radius: 5px;">
                     View Detail Reservation
                 </a>
             </div>

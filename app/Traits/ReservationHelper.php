@@ -29,13 +29,14 @@ trait ReservationHelper
                         ->whereHas('transaction');
                 },
             ]);
-
+            // dd($hotel->rooms->count());
             $hotel->rooms = $hotel->rooms->filter(function ($room) use ($dates, $allotment) {
                 $availableAllotments = $this->calculateAvailableAllotments($room, $dates, $allotment);
                 $isAvailable         = ! blank($availableAllotments);
 
                 return $isAvailable;
             });
+
         } catch (\Throwable $th) {
             logger()->error('Error checking availability: '.$th->getMessage());
 
@@ -110,39 +111,46 @@ trait ReservationHelper
 
     protected function calculateAvailableAllotments(Room $room, Collection $dates, int $requiredAllotment): Collection
     {
-        $availableAllotments = collect();
+        try {
+            $availableAllotments = collect();
 
-        foreach ($dates as $date) {
-            $allotment = $room->allotments()->where('date', $date)->first();
+            foreach ($dates as $date) {
+                $allotment = $room->allotments()->where('date', $date)->first();
+                if (! $allotment) {
+                    continue;
+                }
 
-            if (! $allotment) {
-                continue;
+                $onRes = $room->roomReservations
+                    ->filter(function ($roomReservation) use ($date) {
+                        $reservation = $roomReservation->reservation;
+                        if($reservation) {
+                            $checkIn     = $this->dateParser($reservation->check_in);
+                            $checkOut    = $this->dateParser($reservation->check_out);
+                            $currentDate = $this->dateParser($date);
+
+                            return $currentDate->gte($checkIn) && $currentDate->lt($checkOut);
+                        }
+                    })
+                    ->sum('reservation.allotment');
+
+                $available = max(0, $allotment->allotment - $onRes);
+
+                if ($available >= $requiredAllotment) {
+                    $availableAllotments->push([
+                        'date'      => $date,
+                        'allotment' => $allotment->allotment,
+                        'onRes'     => $onRes,
+                        'available' => $available,
+                        'required'  => $requiredAllotment,
+                    ]);
+                }
             }
+        } catch (\Exception $e) {
+            logger()->error('Error calculating available allotments: '.$e->getMessage());
 
-            $onRes = $room->roomReservations
-                ->filter(function ($roomReservation) use ($date) {
-                    $reservation = $roomReservation->reservation;
-                    $checkIn     = $this->dateParser($reservation->check_in);
-                    $checkOut    = $this->dateParser($reservation->check_out);
-
-                    $currentDate = $this->dateParser($date);
-
-                    return $currentDate->gte($checkIn) && $currentDate->lt($checkOut);
-                })
-                ->sum('reservation.allotment');
-
-            $available = max(0, $allotment->allotment - $onRes);
-
-            if ($available >= $requiredAllotment) {
-                $availableAllotments->push([
-                    'date'      => $date,
-                    'allotment' => $allotment->allotment,
-                    'onRes'     => $onRes,
-                    'available' => $available,
-                    'required'  => $requiredAllotment,
-                ]);
-            }
+            return collect();
         }
+
 
         return $availableAllotments;
     }
