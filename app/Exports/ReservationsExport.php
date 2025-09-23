@@ -17,22 +17,38 @@ class ReservationsExport implements FromCollection, WithHeadings, WithStyles
         $reservations = $hotel->reservations()->get();
         $index        = 1;
 
-        return $reservations->map(function ($reservation) use (&$index) {
-            return collect([
-                $index++,
-                $reservation->reservationCustomer->first_name.' '.$reservation->reservationCustomer->last_name,
-                $reservation->reservationCustomer->email,
-                $reservation->reservation_number,
-                $reservation->status,
-                $reservation->transaction->payment_status,
-                Number::currency($reservation->transaction->subtotal, in: 'IDR', locale: 'id', precision: 0),
-                Number::currency($reservation->transaction->tax_amount, in: 'IDR', locale: 'id', precision: 0),
-                Number::currency($reservation->transaction->discount ?? 0, in: 'IDR', locale: 'id', precision: 0),
-                Number::currency($reservation->transaction->total_price, in: 'IDR', locale: 'id', precision: 0),
-                Number::currency($reservation->transaction->pay_now, in: 'IDR', locale: 'id', precision: 0),
-                Number::currency($reservation->transaction->balance_to_be_paid, in: 'IDR', locale: 'id', precision: 0),
-            ]);
-        });
+        // return $reservations->map(function ($reservation) use (&$index) {
+        //     return collect([
+        //         $index++,
+        //         $reservation->reservationCustomer->first_name.' '.$reservation->reservationCustomer->last_name,
+        //         $reservation->reservationCustomer->email,
+        //         $reservation->reservation_number,
+        //         $reservation->status,
+        //         $reservation->transaction->payment_status,
+        //         Number::currency($reservation->transaction->subtotal, in: 'IDR', locale: 'id', precision: 0),
+        //         Number::currency($reservation->transaction->tax_amount, in: 'IDR', locale: 'id', precision: 0),
+        //         Number::currency($reservation->transaction->discount ?? 0, in: 'IDR', locale: 'id', precision: 0),
+        //         Number::currency($reservation->transaction->total_price, in: 'IDR', locale: 'id', precision: 0),
+        //         Number::currency($reservation->transaction->pay_now, in: 'IDR', locale: 'id', precision: 0),
+        //         Number::currency($reservation->transaction->balance_to_be_paid, in: 'IDR', locale: 'id', precision: 0),
+        //     ]);
+        // });
+        //
+        return $reservations->map(fn($reservation) => collect([
+            $index++,
+            $reservation->reservationCustomer->first_name.' '.$reservation->reservationCustomer->last_name,
+            $reservation->reservationCustomer->email,
+            $reservation->reservation_number,
+            $reservation->status,
+            $reservation->transaction->payment_status,
+            Number::currency($reservation->transaction->subtotal, in: 'IDR', locale: 'id', precision: 0),
+            Number::currency($reservation->transaction->tax_amount, in: 'IDR', locale: 'id', precision: 0),
+            Number::currency($reservation->transaction->discount ?? 0, in: 'IDR', locale: 'id', precision: 0),
+            Number::currency($reservation->transaction->total_price, in: 'IDR', locale: 'id', precision: 0),
+            Number::currency($reservation->transaction->pay_now, in: 'IDR', locale: 'id', precision: 0),
+            Number::currency($reservation->transaction->balance_to_be_paid, in: 'IDR', locale: 'id', precision: 0),
+        ]));
+
     }
 
     public function headings(): array

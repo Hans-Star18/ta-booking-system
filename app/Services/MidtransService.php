@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Mail\ReservationConfirmationMail;
 use App\Models\Reservation;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Midtrans\Config;
 use Midtrans\Notification;
 use Midtrans\Snap;
@@ -109,10 +111,15 @@ class MidtransService
             $transaction->update([
                 'transaction_id' => $request->transaction_id,
                 'payment_type'   => $request->payment_type,
-                'transaction_id' => $request->transaction_id,
                 'payment_status' => $request->transaction_status,
             ]);
             $transaction->save();
+
+            try {
+                Mail::send(new ReservationConfirmationMail($reservation));
+            } catch (\Throwable $th) {
+                logger()->error('Error sending reservation confirmation email: '.$th->getMessage());
+            }
 
             if (in_array($request->transaction_status, ['capture', 'settlement', 'success'])) {
                 $reservation->update([

@@ -3,31 +3,30 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ApprovalMail extends Mailable
+class ReservationConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $hotel;
+    public $reservation;
 
-    public function __construct($user, $hotel)
+    public function __construct($reservation)
     {
-        $this->user  = $user;
-        $this->hotel = $hotel;
+        $this->reservation  = $reservation;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
             from: env('MAIL_FROM_ADDRESS'),
-            subject: 'Hotel Approved Mail',
+            subject: 'Reservation Confirmation',
             to: [
-                $this->user['email'],
+                $this->reservation->reservationCustomer->email,
             ],
             bcc: [
                 'agussuardiasa1231@gmail.com',
@@ -38,10 +37,9 @@ class ApprovalMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.approval-mail',
+            view: 'mails.reservation-confirmation',
             with: [
-                'user'  => $this->user,
-                'hotel' => $this->hotel,
+                'reservation' => $this->reservation,
             ],
         );
     }
