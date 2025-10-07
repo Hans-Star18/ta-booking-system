@@ -13,13 +13,13 @@ class PromotionCodeSeeder extends Seeder
      */
     public function run(): void
     {
-        $promotionQuantities = 10;
+        $promotions = [10, 15, 20, 25, 30, 35, 40, 50];
 
-        for ($i = 0; $i < $promotionQuantities; $i++) {
+        foreach ($promotions as $promotionQuantity) {
             PromotionCode::create([
                 'hotel_id'    => 1,
                 'code'        => Str::upper(Str::random(5)),
-                'discount'    => rand(1, 100),
+                'discount'    => $promotionQuantity,
                 'valid_until' => now()->addDays(30),
                 'is_active'   => true,
             ]);
@@ -27,7 +27,7 @@ class PromotionCodeSeeder extends Seeder
             PromotionCode::create([
                 'hotel_id'    => 2,
                 'code'        => Str::upper(Str::random(5)),
-                'discount'    => rand(1, 100),
+                'discount'    => $promotionQuantity,
                 'valid_until' => now()->addDays(30),
                 'is_active'   => true,
             ]);

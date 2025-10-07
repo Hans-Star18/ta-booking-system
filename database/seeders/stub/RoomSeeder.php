@@ -11,14 +11,12 @@ use App\Models\PolicyConfig;
 use App\Models\Room;
 use Database\Seeders\Traits\CreateImage;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class RoomSeeder extends Seeder
 {
     use CreateImage;
 
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $beds      = Bed::all();
@@ -32,8 +30,8 @@ class RoomSeeder extends Seeder
                 'description' => "<p>This spacious room features a luxurious king-size bed, perfect for a restful night's sleep. Large windows allow natural light to flood the space, offering a stunning view of the surrounding landscape. Whether you're relaxing indoors or admiring the scenery, the room combines comfort and beauty to create an unforgettable stay.</p>
 ",
                 'max_occupancy' => 5,
-                'price'         => 250000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'price'         => 300000,
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'deluxe-room.jpg'),
             ],
             [
                 'hotel_id'    => 1,
@@ -42,16 +40,16 @@ class RoomSeeder extends Seeder
 ",
                 'max_occupancy' => 4,
                 'price'         => 250000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'standard-room.jpg'),
             ],
             [
                 'hotel_id'    => 1,
-                'name'        => 'Suite',
+                'name'        => 'Suite Room',
                 'description' => "<p>This luxurious suite offers a separate living area and a private balcony, providing a comfortable and stylish space for travelers to unwind and enjoy their stay. Whether you're working or relaxing, the room ensures a comfortable and convenient experience.</p>
 ",
                 'max_occupancy' => 4,
-                'price'         => 300000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'price'         => 500000,
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'suite-room.jpg'),
             ],
             [
                 'hotel_id'    => 1,
@@ -60,7 +58,7 @@ class RoomSeeder extends Seeder
 ',
                 'max_occupancy' => 6,
                 'price'         => 500000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'family-room.jpg'),
             ],
             [
                 'hotel_id'    => 1,
@@ -69,7 +67,7 @@ class RoomSeeder extends Seeder
 ",
                 'max_occupancy' => 1,
                 'price'         => 200000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'single-room.jpg'),
             ],
             [
                 'hotel_id'    => 2,
@@ -78,7 +76,7 @@ class RoomSeeder extends Seeder
 ",
                 'max_occupancy' => 5,
                 'price'         => 300000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'deluxe-room.jpg'),
             ],
             [
                 'hotel_id'    => 2,
@@ -87,16 +85,16 @@ class RoomSeeder extends Seeder
 ",
                 'max_occupancy' => 4,
                 'price'         => 300000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'standard-room.jpg'),
             ],
             [
                 'hotel_id'    => 2,
-                'name'        => 'Suite',
+                'name'        => 'Suite Room',
                 'description' => "<p>This luxurious suite offers a separate living area and a private balcony, providing a comfortable and stylish space for travelers to unwind and enjoy their stay. Whether you're working or relaxing, the room ensures a comfortable and convenient experience.</p>
 ",
                 'max_occupancy' => 4,
-                'price'         => 300000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'price'         => 400000,
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'suite-room.jpg'),
             ],
             [
                 'hotel_id'    => 2,
@@ -105,7 +103,7 @@ class RoomSeeder extends Seeder
 ',
                 'max_occupancy' => 6,
                 'price'         => 600000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'family-room.jpg'),
             ],
             [
                 'hotel_id'    => 2,
@@ -114,18 +112,46 @@ class RoomSeeder extends Seeder
 ",
                 'max_occupancy' => 1,
                 'price'         => 300000,
-                'cover_image'   => $this->createImage(Room::FILE_PATH),
+                'cover_image'   => $this->createImage(Room::FILE_PATH, 'single-room.jpg'),
+            ],
+        ];
+
+        $roomBeds = [
+            'Deluxe Room' => [
+                'double-bed',
+                'queen-bed',
+                'king-bed'
+            ],
+            'Single Room' => [
+                'single-bed',
+            ],
+            'Family Room' => [
+                'double-bed',
+                'queen-bed',
+                'king-bed'
+            ],
+            'Standard Room' => [
+                'double-bed',
+                'queen-bed'
+            ],
+            'Suite Room' => [
+                'double-bed',
+                'queen-bed',
+                'king-bed'
             ],
         ];
 
         foreach ($rooms as $room) {
             $rm = Room::create($room);
+            $allowedBedSlugs = $roomBeds[$room['name']] ?? [];
 
             foreach ($beds as $bed) {
-                BedConfig::create([
-                    'room_id' => $rm->id,
-                    'bed_id'  => $bed->id,
-                ]);
+                if (in_array(Str::slug($bed->name), $allowedBedSlugs, true)) {
+                    BedConfig::firstOrCreate([
+                        'room_id' => $rm->id,
+                        'bed_id'  => $bed->id,
+                    ]);
+                }
             }
 
             foreach ($amenities as $amenity) {
@@ -136,6 +162,9 @@ class RoomSeeder extends Seeder
             }
 
             foreach ($policies as $policy) {
+                if (Str::slug($policy->name) === 'prepaid') {
+                    continue;
+                }
                 PolicyConfig::create([
                     'room_id'   => $rm->id,
                     'policy_id' => $policy->id,

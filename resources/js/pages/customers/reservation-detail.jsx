@@ -10,6 +10,7 @@ import Currency from '@/components/format/currency'
 import BasicAlert from '@/components/alert/basic-alert'
 import Anchor from '@/components/form/anchor'
 import PolicyList from '@/components/policy-list'
+import Popover from '@/components/popover'
 
 export default function ReservationDetail({ reservation, policies }) {
     if (!reservation) {
@@ -366,10 +367,16 @@ export default function ReservationDetail({ reservation, policies }) {
                                                     />
                                                     <Label
                                                         htmlFor={`${bed.slug}-${index}`}
-                                                        className="ms-2 mb-0 text-sm text-gray-900"
+                                                        className="ms-2 mb-0 w-full text-sm text-gray-900"
                                                     >
-                                                        {bed.name} (
-                                                        {bed.capacity}{' '}
+                                                        <Popover
+                                                            trigger={bed.name}
+                                                            content={
+                                                                bed.description
+                                                            }
+                                                            className="inline"
+                                                        />{' '}
+                                                        ({bed.capacity}{' '}
                                                         {bed.capacity > 1
                                                             ? 'Persons'
                                                             : 'Person'}

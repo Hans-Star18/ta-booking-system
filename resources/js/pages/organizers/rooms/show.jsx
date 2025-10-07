@@ -12,6 +12,7 @@ import Anchor from '@/components/form/anchor'
 import Currency from '@/components/format/currency'
 import HTMLReactParser from 'html-react-parser'
 import Badge from '@/components/form/badge'
+import Popover from '@/components/popover'
 
 export default function Show({ room, allotments }) {
     return (
@@ -102,7 +103,10 @@ export default function Show({ room, allotments }) {
                                             key={bed.id}
                                         >
                                             <CheckIcon className="size-4 font-bold" />{' '}
-                                            {bed.name}
+                                            <Popover
+                                                trigger={bed.name}
+                                                content={bed.description}
+                                            />
                                         </div>
                                     ))}
                                 </div>

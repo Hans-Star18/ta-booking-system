@@ -6,6 +6,7 @@ import ImageSlider from '@/components/image-slider'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import Currency from '@/components/format/currency'
 import PolicyList from '@/components/policy-list'
+import Popover from './popover'
 
 export default function RoomCard({
     roomImage,
@@ -129,7 +130,10 @@ export default function RoomCard({
                                         key={bed.id}
                                     >
                                         <CheckIcon className="size-3 font-bold" />{' '}
-                                        {bed.name}
+                                        <Popover
+                                            trigger={bed.name}
+                                            content={bed.description}
+                                        />
                                     </div>
                                 ))}
                             </div>
