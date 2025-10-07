@@ -15,7 +15,7 @@ class OrganizerController extends Controller
     {
         $hotel = auth()->guard('web')->user()->hotel;
 
-        $period    = $request->get('period', 'week');
+        $period    = $request->get('period', 'year');
         $startDate = $this->dateParser($request->get('start_date'));
         $endDate   = $this->dateParser($request->get('end_date'));
 
@@ -95,17 +95,20 @@ class OrganizerController extends Controller
             case 'week':
             case 'month':
             case 'custom':
-                return $reservations->groupBy(fn ($item) =>
+                return $reservations->groupBy(
+                    fn($item) =>
                     $item->created_at->format('Y-m-d')
                 );
 
             case 'year':
-                return $reservations->groupBy(fn ($item) =>
+                return $reservations->groupBy(
+                    fn($item) =>
                     $item->created_at->format('Y-m')
                 );
 
             default:
-                return $reservations->groupBy(fn ($item) => $item->created_at->format('Y-m-d')
+                return $reservations->groupBy(
+                    fn($item) => $item->created_at->format('Y-m-d')
                 );
         }
     }
@@ -148,7 +151,7 @@ class OrganizerController extends Controller
                     return null;
             }
         } catch (\Exception $e) {
-            logger()->error('Error converting category to date key: '.$e->getMessage());
+            logger()->error('Error converting category to date key: ' . $e->getMessage());
 
             return null;
         }
