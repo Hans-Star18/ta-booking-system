@@ -181,6 +181,8 @@ class RoomSeeder extends Seeder
                     'allotment' => 10,
                 ]);
             }
+
+            logger()->info('Room created: ' . $rm->name);
         }
     }
 }

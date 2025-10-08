@@ -71,6 +71,7 @@ return [
             'level'                => env('LOG_LEVEL', 'debug'),
             'days'                 => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
+            'permissions'          => env('LOG_FILE_PERMISSIONS', 0664),
         ],
 
         'slack' => [
@@ -89,7 +90,7 @@ return [
             'handler_with' => [
                 'host'             => env('PAPERTRAIL_URL'),
                 'port'             => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],
