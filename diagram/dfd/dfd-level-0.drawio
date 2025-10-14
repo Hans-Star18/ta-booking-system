@@ -7,16 +7,16 @@
                 <mxCell id="2" value="P.1.0&lt;div&gt;Login&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
                     <mxGeometry x="340" y="80" width="140" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="3" value="P.3.0&lt;div&gt;Data Master&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
+                <mxCell id="3" value="P.3.0&lt;div&gt;Kelola&lt;/div&gt;&lt;div&gt;Data Master&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
                     <mxGeometry x="340" y="440" width="140" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="P.4.0&lt;div&gt;Data&amp;nbsp;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;Pengaturan&lt;/span&gt;&lt;/div&gt;&lt;div&gt;dan Kamar&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
+                <mxCell id="4" value="P.4.0&lt;div&gt;Kelola&lt;/div&gt;&lt;div&gt;Data&amp;nbsp;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;Pengaturan&lt;/span&gt;&lt;/div&gt;&lt;div&gt;dan Kamar&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
                     <mxGeometry x="340" y="640" width="140" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="P.5.0&lt;div&gt;Data&lt;/div&gt;&lt;div&gt;Kode Promo&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
+                <mxCell id="5" value="P.5.0&lt;div&gt;Kelola Data&lt;/div&gt;&lt;div&gt;Kode Promo&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
                     <mxGeometry x="490" y="10" width="140" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="P.6.0&lt;div&gt;Reservasi&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
+                <mxCell id="7" value="P.6.0&lt;div&gt;Kelola&lt;/div&gt;&lt;div&gt;Reservasi&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
                     <mxGeometry x="340" y="810" width="140" height="140" as="geometry"/>
                 </mxCell>
                 <mxCell id="8" value="P.7.0&lt;div&gt;Pembayaran&lt;/div&gt;" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" parent="1" vertex="1">
