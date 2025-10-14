@@ -13,7 +13,7 @@ trait CreateImage
         try {
             // $image    = collect(File::files(database_path('seeders/image/')))->first();
             $basePath = database_path('seeders/image');
-            $filePath = $basePath . '/' . $filename;
+            $filePath = $basePath.'/'.$filename;
 
             if ($filename && File::exists($filePath)) {
                 $image = new \SplFileInfo($filePath);

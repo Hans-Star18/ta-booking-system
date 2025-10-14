@@ -33,7 +33,7 @@ class PolicyController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error add policy: ' . $th->getMessage());
+            logger()->error('Error add policy: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to add policy',
@@ -63,7 +63,7 @@ class PolicyController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error updating policy: ' . $th->getMessage());
+            logger()->error('Error updating policy: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to update policy',
@@ -86,7 +86,7 @@ class PolicyController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            logger()->error('Error deleting policy: ' . $th->getMessage());
+            logger()->error('Error deleting policy: '.$th->getMessage());
 
             return back()->with('alert', [
                 'message' => 'Failed to delete policy',

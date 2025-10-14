@@ -123,7 +123,7 @@ trait ReservationHelper
                 $onRes = $room->roomReservations
                     ->filter(function ($roomReservation) use ($date) {
                         $reservation = $roomReservation->reservation;
-                        if($reservation) {
+                        if ($reservation) {
                             $checkIn     = $this->dateParser($reservation->check_in);
                             $checkOut    = $this->dateParser($reservation->check_out);
                             $currentDate = $this->dateParser($date);
@@ -150,7 +150,6 @@ trait ReservationHelper
 
             return collect();
         }
-
 
         return $availableAllotments;
     }

@@ -13,6 +13,7 @@ class ApprovalMail extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+
     public $hotel;
 
     public function __construct($user, $hotel)

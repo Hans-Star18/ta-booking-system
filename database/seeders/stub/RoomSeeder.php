@@ -120,7 +120,7 @@ class RoomSeeder extends Seeder
             'Deluxe Room' => [
                 'double-bed',
                 'queen-bed',
-                'king-bed'
+                'king-bed',
             ],
             'Single Room' => [
                 'single-bed',
@@ -128,21 +128,21 @@ class RoomSeeder extends Seeder
             'Family Room' => [
                 'double-bed',
                 'queen-bed',
-                'king-bed'
+                'king-bed',
             ],
             'Standard Room' => [
                 'double-bed',
-                'queen-bed'
+                'queen-bed',
             ],
             'Suite Room' => [
                 'double-bed',
                 'queen-bed',
-                'king-bed'
+                'king-bed',
             ],
         ];
 
         foreach ($rooms as $room) {
-            $rm = Room::create($room);
+            $rm              = Room::create($room);
             $allowedBedSlugs = $roomBeds[$room['name']] ?? [];
 
             foreach ($beds as $bed) {
@@ -182,7 +182,7 @@ class RoomSeeder extends Seeder
                 ]);
             }
 
-            logger()->info('Room created: ' . $rm->name);
+            logger()->info('Room created: '.$rm->name);
         }
     }
 }

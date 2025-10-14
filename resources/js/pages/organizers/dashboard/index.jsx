@@ -1,86 +1,33 @@
 import OrganizerLayout from '@/layouts/organizer-layout'
 import { Head } from '@inertiajs/react'
 import { useState } from 'react'
-import ReactApexChart from 'react-apexcharts'
-import { FilterSection } from './components/filter-section'
+import ReservationSummary from './components/reservation-summary'
+import TransactionSummary from './components/transaction-summary'
+import GuestSummary from './components/guest-summary'
 
-export default function Index({ chartDataReservation, period }) {
-    const defaultChartData = {
-        series: [
-            { name: 'Confirmed', data: [] },
-            { name: 'Cancelled', data: [] },
-            { name: 'Pending', data: [] },
-        ],
-        xaxis: {
-            type: 'datetime',
-            categories: [],
-            labels: {
-                format: 'dd/MM/yyyy',
-            },
+export default function Index({ charts, period, guestSummary }) {
+    const [activeTab, setActiveTab] = useState('reservations')
+
+    const tabs = [
+        {
+            name: 'Reservations',
+            value: 'reservations',
         },
-    }
-
-    const safeChartData = chartDataReservation || defaultChartData
-
-    const [chartData, _] = useState({
-        series: safeChartData.series || defaultChartData.series,
-        options: {
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    borderRadius: 2,
-                    borderRadiusApplication: 'end', // 'around', 'end'
-                    borderRadiusWhenStacked: 'last', // 'all', 'last'
-                    dataLabels: {
-                        total: {
-                            enabled: true,
-                            style: {
-                                fontSize: '12px',
-                                fontWeight: 900,
-                            },
-                        },
-                    },
-                },
-            },
-            chart: {
-                height: 350,
-                type: 'bar',
-                stacked: true,
-                toolbar: {
-                    show: true,
-                },
-                zoom: {
-                    enabled: true,
-                },
-            },
-            xaxis: safeChartData.xaxis || defaultChartData.xaxis,
-            legend: {
-                position: 'bottom',
-            },
-            fill: {
-                opacity: 1,
-            },
-            colors: ['#00c951', '#f0b100', '#fb2c36'],
-            responsive: [
-                {
-                    breakpoint: 768,
-                    options: {
-                        chart: {
-                            width: '100%',
-                        },
-                        legend: {
-                            position: 'bottom',
-                        },
-                    },
-                },
-            ],
+        {
+            name: 'Transactions',
+            value: 'transactions',
         },
-    })
+        {
+            name: 'Guests',
+            value: 'guests',
+        },
+    ]
 
     if (
-        !chartDataReservation ||
-        !chartDataReservation.series ||
-        chartDataReservation.series.length === 0
+        !charts['reservation'] ||
+        charts['reservation'].length === 0 ||
+        !charts['transaction'] ||
+        charts['transaction'].length === 0
     ) {
         return (
             <>
@@ -112,55 +59,39 @@ export default function Index({ chartDataReservation, period }) {
 
             <OrganizerLayout>
                 <div className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6">
-                    <div className="mb-4 flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">Dashboard</h1>
-
-                        <FilterSection period={period} />
+                    <div className="mb-5 border-b border-blue-200 text-center text-sm font-medium text-gray-500">
+                        <ul className="-mb-px flex flex-wrap">
+                            {tabs.map((tab) => (
+                                <li className="me-2" key={tab.value}>
+                                    <button
+                                        className={`inline-block rounded-t-lg border-b-2 border-transparent p-4 hover:cursor-pointer hover:border-blue-300 hover:text-gray-600 ${activeTab === tab.value ? 'bg-blue-100 text-gray-600' : ''}`}
+                                        onClick={() => setActiveTab(tab.value)}
+                                    >
+                                        {tab.name}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
-                    <div className="w-full overflow-x-auto">
-                        <ReactApexChart
-                            options={chartData.options}
-                            series={chartData.series}
-                            type="bar"
-                            height={350}
-                            width={1148}
-                        />
-                    </div>
+                    <div>
+                        {activeTab === 'reservations' && (
+                            <ReservationSummary
+                                chartData={charts['reservation']}
+                                period={period}
+                            />
+                        )}
 
-                    <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-                        {chartData.series.map((item, index) => {
-                            const total = item.data.reduce(
-                                (sum, val) => sum + val,
-                                0
-                            )
-                            const colors = [
-                                'bg-green-500',
-                                'bg-yellow-500',
-                                'bg-red-500',
-                            ]
+                        {activeTab === 'transactions' && (
+                            <TransactionSummary
+                                chartData={charts['transaction']}
+                                period={period}
+                            />
+                        )}
 
-                            return (
-                                <div
-                                    key={index}
-                                    className="rounded-lg border border-gray-200 p-4"
-                                >
-                                    <div className="flex items-center">
-                                        <div
-                                            className={`h-3 w-3 rounded-full ${colors[index]} mr-2`}
-                                        ></div>
-                                        <div>
-                                            <p className="text-sm text-gray-600">
-                                                {item.name}
-                                            </p>
-                                            <p className="text-2xl font-bold">
-                                                {total}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        })}
+                        {activeTab === 'guests' && (
+                            <GuestSummary guestSummary={guestSummary} />
+                        )}
                     </div>
                 </div>
             </OrganizerLayout>

@@ -34,7 +34,7 @@ class ReservationsExport implements FromCollection, WithHeadings, WithStyles
         //     ]);
         // });
         //
-        return $reservations->map(fn($reservation) => collect([
+        return $reservations->map(fn ($reservation) => collect([
             $index++,
             $reservation->reservationCustomer->first_name.' '.$reservation->reservationCustomer->last_name,
             $reservation->reservationCustomer->email,

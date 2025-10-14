@@ -12,15 +12,20 @@ class ReservationSeeder extends Seeder
 {
     public function run(): void
     {
-        $reservationCount  = 50;
+        $reservationCount  = 100;
+
+        $fakeMails = [];
+        for ($i = 0; $i < 10; $i++) {
+            $fakeMails[] = fake()->unique()->email();
+        }
 
         for ($i = 0; $i < $reservationCount; $i++) {
             $hotel             = Hotel::find(fake()->randomElement(Hotel::pluck('id')));
-            $totalNights       = fake()->numberBetween(1, 5);
-            $checkIn           = fake()->dateTimeBetween('now', '+3 weeks')->format('Y-m-d');
+            $totalNights       = fake()->numberBetween(1, 3);
+            $checkIn           = fake()->dateTimeBetween('now', '+5 weeks')->format('Y-m-d');
             $checkOut          = Carbon::parse($checkIn)->addDays($totalNights)->format('Y-m-d');
             $allotment         = fake()->numberBetween(1, 3);
-            $transactionStatus = fake()->randomElement(['pending', 'settlement', 'success', 'expire']);
+            $transactionStatus = fake()->randomElement(['pending', 'settlement', 'success']);
             $reservationStatus = $transactionStatus === 'pending' ? Reservation::PENDING
                 : ($transactionStatus === 'expire' ? Reservation::CANCELLED : Reservation::CONFIRMED
                 );
@@ -56,7 +61,7 @@ class ReservationSeeder extends Seeder
 
             $firstName   = fake()->firstName();
             $lastName    = fake()->lastName();
-            $email       = fake()->email();
+            $email       = fake()->randomElement($fakeMails);
             $address     = fake()->address();
             $phone       = fake()->phoneNumber();
             $city        = fake()->city();
@@ -92,6 +97,7 @@ class ReservationSeeder extends Seeder
                 'total_price'        => $totalPrice,
                 'pay_now'            => $payNow,
                 'balance_to_be_paid' => $balanceToBePaid,
+                'created_at'         => $checkIn,
             ]);
         }
     }
